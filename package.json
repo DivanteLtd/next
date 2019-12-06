@@ -41,5 +41,8 @@
     "nohoist": [
       "**/**/**"
     ]
+  },
+  "dependencies": {
+    "@vue/composition-api": "^0.3.4"
   }
 }
