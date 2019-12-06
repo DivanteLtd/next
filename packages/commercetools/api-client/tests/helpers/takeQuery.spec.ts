@@ -20,8 +20,7 @@ describe('takeQuery', () => {
         }
       }
     `
-    const query = takeQuery(originalQuery, { include: ['newField', 'newField.dupa'] })
+    const query = takeQuery(originalQuery, { include: ['newField', 'newField.xxx'] })
     console.log(JSON.stringify(query))
-    // expect(query).toBe('{ original query }')
   })
 })
