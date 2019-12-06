@@ -18,7 +18,6 @@
     "test:ct": "yarn test:ct:api-client && yarn test:ct:composables && yarn test:ct:helpers",
     "start:ct": "cd packages/commercetools/theme && yarn start",
     "dev:ct": "cd packages/commercetools/theme && yarn dev",
-    "web": "yarn start:ct"
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",
