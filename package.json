@@ -20,10 +20,6 @@
     "start:ct": "cd packages/commercetools/theme && yarn start",
     "dev:ct": "cd packages/commercetools/theme && yarn dev"
   },
-  "jest": {
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true
-  },
   "devDependencies": {
     "@types/jest": "^24.0.23",
     "@types/node": "^12.12.14",
