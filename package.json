@@ -16,6 +16,7 @@
     "test:ct:composables": "cd packages/commercetools/composables && yarn test",
     "test:ct:helpers": "cd packages/commercetools/helpers && yarn test",
     "test:ct": "yarn test:ct:api-client && yarn test:ct:composables && yarn test:ct:helpers",
+    "start:ct": "cd packages/commercetools/theme && yarn start",
     "dev:ct": "cd packages/commercetools/theme && yarn dev"
   },
   "devDependencies": {
@@ -42,7 +43,5 @@
       "**/**/**"
     ]
   },
-  "dependencies": {
-    "@vue/composition-api": "^0.3.4"
-  }
+  "dependencies": {}
 }
