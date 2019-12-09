@@ -9,9 +9,9 @@ coverage:
   status:
     project:
       default: no
-    commercetools:
-      flags: commercetools
-      target: 90%
+      commercetools:
+        flags: commercetools
+        target: 90%
 
 flags:
   commercetools:
