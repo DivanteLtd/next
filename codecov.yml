@@ -8,8 +8,11 @@ codecov:
 
   status:
     project:
-      target: 90%
-    patch: yes
+      default: off
+      commercetools:
+        flags: commercetools
+        target: 90%
+    patch: no
     changes: no
 
   parsers:
@@ -24,3 +27,8 @@ codecov:
     layout: "reach,diff,flags,tree"
     behavior: default
     require_changes: no
+
+  flags:
+    commercetools:
+      paths:
+        - packages/commercetools
