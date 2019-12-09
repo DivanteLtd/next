@@ -31,8 +31,3 @@ flags:
   commercetools-helpers:
     paths:
       - packages/commercetools/helpers
-
-ignore:
-  - packages/commercetools/api-client/tests
-  - packages/commercetools/composables/tests
-  - packages/commercetools/helpers/tests
