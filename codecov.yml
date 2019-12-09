@@ -17,3 +17,5 @@ flags:
   commercetools:
     paths:
       - packages/commercetools/api-client
+      - packages/commercetools/composables
+      - packages/commercetools/helpers
