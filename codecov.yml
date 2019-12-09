@@ -16,4 +16,4 @@ coverage:
 flags:
   commercetools:
     paths:
-      - packages/commercetools
+      - packages/commercetools/api-client
