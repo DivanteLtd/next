@@ -3,7 +3,6 @@ import { setContext } from 'apollo-link-context'
 import createCommerceToolsLink from './../../src/helpers/createCommerceToolsLink'
 
 jest.unmock('./../../src/helpers/createCommerceToolsLink')
-
 jest.mock('./../../src/helpers/createCommerceToolsLink/getAccessToken', () =>
   jest.fn().mockImplementation(() => 'access token')
 )
