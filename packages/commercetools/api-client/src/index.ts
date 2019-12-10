@@ -7,16 +7,6 @@ import getProduct from './api/getProduct'
 let apolloClient: ApolloClient<any> = null
 
 const setup = <TCacheShape>(setupConfig?: SetupConfig<TCacheShape>): ApolloClient<TCacheShape> => {
-  if (process.env.APP_ENV === 'test') {
-    const path = require('path')
-    const createTestApolloClient = require(
-      path.resolve(__dirname + './../tests/createTestApolloClient')
-    ).default
-    apolloClient = createTestApolloClient()
-
-    return apolloClient
-  }
-
   apolloClient = new ApolloClient({
     link: createCommerceToolsLink(setupConfig.config),
     cache: new InMemoryCache(),

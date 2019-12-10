@@ -1,3 +1,6 @@
 import { setup } from './../src/index'
 
-setup()
+jest.mock('./../src/helpers/createCommerceToolsLink')
+jest.mock('apollo-client')
+
+setup({ config: null })

@@ -155,12 +155,23 @@ import {
   SfImage,
   SfBannerGrid
 } from "@storefront-ui/vue";
-import { setup, getProduct } from '@vue-storefront/commercetools-api'
+import { getProduct } from '@vue-storefront/commercetools-api'
+
+function encodeURIAll(text) {
+  return encodeURIComponent(text).replace(/[!'()~*]/g, (c) => {
+    return '%' + c.charCodeAt(0).toString(16);
+  });
+}
 
 export default {
   name: "Home",
   transition: 'fade',
   data() {
+    getProduct({ variables: {
+      where: 'masterData(current(categories(id="724b250d-9805-4657-ae73-3c02a63a9a13")))',
+      locale: 'en',
+      currency: 'USD'
+    } })
     return {
       heroes: [
         {
