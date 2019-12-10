@@ -16,8 +16,8 @@ export default {
   router: {
     extendRoutes (routes, resolve) {
       // TEMPORARY, will be removed
-      // @todo move to common middleware in core moduel and add cover use case where we don't have slug at all
-      // then we need to determine to which category we want to redirect
+      // @todo move to common middleware in core module and cover use case where we don't have slug at all
+      // aka URL dispatcher
       routes.push({
         name: 'custom',
         path: '/l/:slug_1/:slug_2?/:slug_3?/:slug_4?/:slug_5?',
