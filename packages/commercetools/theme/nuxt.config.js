@@ -16,6 +16,9 @@ export default {
   buildModules: [
     '@nuxt/typescript-build'
   ],
+  plugins: [
+    '~/plugins/commercetools'
+  ],
   modules: [
     ['@vue-storefront/nuxt', {
       coreDevelopment: true
