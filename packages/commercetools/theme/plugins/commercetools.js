@@ -1,6 +1,6 @@
-import { setup as setupApi } from '@vue-storefront/commercetools-api'
+import { setup } from '@vue-storefront/commercetools-api'
 
-setupApi({
+setup({
   config: {
     uri: 'https://api.commercetools.com/vue-storefront-next/graphql',
     authHost: 'https://auth.sphere.io',

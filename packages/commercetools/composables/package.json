@@ -13,6 +13,7 @@
   "dependencies": {
     "@vue-storefront/interfaces": "^0.0.1",
     "@vue/composition-api": "^0.3.4",
+    "@vue-storefront/commercetools-api" : "^0.0.1",
     "vue": "^2.6.x"
   },
   "devDependencies": {

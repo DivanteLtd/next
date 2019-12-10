@@ -20,7 +20,7 @@ export default {
       // then we need to determine to which category we want to redirect
       routes.push({
         name: 'custom',
-        path: '/l/:slug_1/:slug_2?',
+        path: '/l/:slug_1/:slug_2?/:slug_3?/:slug_4?/:slug_5?',
         component: resolve(__dirname, 'pages/Category.vue')
       })
     }
