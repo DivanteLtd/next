@@ -9,7 +9,6 @@ jest.mock('./../../src/helpers/createCommerceToolsLink/getAccessToken', () =>
 jest.mock('apollo-link-http')
 jest.mock('apollo-link-context')
 
-
 describe('[commercetools-api-client] createCommerceToolsLink', () => {
   beforeEach(() => {
     jest.clearAllMocks()
