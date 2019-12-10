@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@vue-storefront/interfaces": "^0.0.1",
-    "@vue/composition-api": "^0.3.4"
+    "@vue/composition-api": "^0.3.4",
+    "vue": "^2.6.x"
   },
   "devDependencies": {
   },

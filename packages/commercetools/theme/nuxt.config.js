@@ -20,7 +20,7 @@ export default {
       // then we need to determine to which category we want to redirect
       routes.push({
         name: 'custom',
-        path: '/c/:slug_1/:slug_2?/:slug_3?/:slug_4?/:slug_5?/:slug_6?/:slug_7?/:slug_8?//:slug_9?//:slug_10?//:slug_11?/:slug_12?',
+        path: '/l/:slug_1/:slug_2?',
         component: resolve(__dirname, 'pages/Category.vue')
       })
     }
@@ -33,7 +33,11 @@ export default {
   ],
   modules: [
     ['@vue-storefront/nuxt', {
-      coreDevelopment: true
+      coreDevelopment: true,
+      useRawSource: {
+        dev: ['@vue-storefront/commercetools-composables'],
+        prod: ['@vue-storefront/commercetools-composables']
+      }
     }]
   ]
 }

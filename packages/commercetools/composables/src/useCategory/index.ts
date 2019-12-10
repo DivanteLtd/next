@@ -2,7 +2,7 @@ import { UseCategory } from '@vue-storefront/interfaces'
 import { ref } from '@vue/composition-api'
 
 export default function useCategory (): UseCategory<any, any, any, any, any> {
-  const category = ref(null)
+  const category = ref('category')
   const search = () => { console.log('useCategory:search') }
   const appliedFilters = ref(null)
   const applyFilter = () => { () => { console.log('useCategory:applyFilter') } }
