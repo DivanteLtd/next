@@ -11,7 +11,9 @@ const commercetoolsApi = () => {
       clientId: 'ULi2QVos7ZoeBD_cY90aFNmc',
       clientSecret: '2eX7tGiZsZt0uexGQlcF2tgwbWEXIgbf',
       scopes: ['manage_products:vue-storefront-next'],
-    }
+    },
+    locale: 'en',
+    currency: 'USD'
   })
 }
 

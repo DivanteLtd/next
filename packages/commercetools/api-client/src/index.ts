@@ -5,6 +5,8 @@ import createCommerceToolsLink from './helpers/createCommerceToolsLink'
 import getProduct from './api/getProduct'
 
 let apolloClient: ApolloClient<any> = null
+let locale = 'en'
+let currency = 'USD'
 
 const setup = <TCacheShape>(setupConfig?: SetupConfig<TCacheShape>): ApolloClient<TCacheShape> => {
   apolloClient = new ApolloClient({
@@ -12,8 +14,10 @@ const setup = <TCacheShape>(setupConfig?: SetupConfig<TCacheShape>): ApolloClien
     cache: new InMemoryCache(),
     ...setupConfig.customOptions
   })
+  locale = setupConfig.locale
+  currency = setupConfig.currency
 
   return apolloClient
 }
 
-export { apolloClient, setup, getProduct }
+export { apolloClient, setup, locale, currency, getProduct }
