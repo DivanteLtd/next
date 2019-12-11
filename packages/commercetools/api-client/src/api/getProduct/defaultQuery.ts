@@ -42,7 +42,6 @@ export default gql`
         id
         masterData {
           current {
-            id
             name(locale: $locale)
             metaTitle(locale: $locale)
             metaKeywords(locale: $locale)

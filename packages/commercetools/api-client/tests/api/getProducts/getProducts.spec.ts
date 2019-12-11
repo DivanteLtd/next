@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
-import getProduct from './../../../src/api/getProduct'
-import { apolloClient } from './../../../src/index'
-import defaultQuery from './../../../src/api/getProduct/defaultQuery'
+import getProduct from 'api-client/src/api/getProduct'
+import { apolloClient } from 'api-client/src/index'
+import defaultQuery from 'api-client/src/api/getProduct/defaultQuery'
 
 describe('[commercetools-api-client] getProduct', () => {
   it('fetches product with default query', async () => {
@@ -18,7 +18,7 @@ describe('[commercetools-api-client] getProduct', () => {
       return { data: 'product response' }
     })
 
-    const { data } = await getProduct({ variables: givenVariables })
+    const { data } = await getProduct({ catId: "724b250d-9805-4657-ae73-3c02a63a9a13" })
 
     expect(data).toBe('product response')
   });
@@ -56,7 +56,7 @@ describe('[commercetools-api-client] getProduct', () => {
       return { data: 'product response' }
     })
 
-    const { data } = await getProduct({ variables: givenVariables, customQuery: givenQuery })
+    const { data } = await getProduct({ customQuery: { query: givenQuery, variables: givenVariables} })
 
     expect(data).toBe('product response')
   });
