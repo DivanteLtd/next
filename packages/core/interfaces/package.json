@@ -11,5 +11,8 @@
     "@vue/composition-api": "^0.3.4"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@vue/composition-api": "^0.3.4"
+  }
 }
