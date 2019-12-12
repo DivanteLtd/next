@@ -26,13 +26,12 @@ setup({
 
 ### `getProduct`
 
-Method responsible for fetching single or multiple products from commercetools GraphQL API. It accepts configuration object with following parameters:
+Method responsible for fetching single or multiple products from commercetools GraphQL API. It accepts configuration object with following properties:
 
 - `query` (optional) - alternative GraphQL query. Please keep in mind that modifying this property can break helper functions.
   <details>
   <summary>See default query</summary>
   <p>
-
   ```
   fragment Images on ProductVariant {
     images {
@@ -90,7 +89,7 @@ Method responsible for fetching single or multiple products from commercetools G
       }
     }
   }
-  \```
+  ```
 
   </p>
   </details>  
