@@ -3,7 +3,7 @@
 
 <!-- description of used technologies, purpose etc -->
 
-# Setup
+## Setup
 
 Before you can use any of the commercetools API Client methods you need to set it up with following properties
 
@@ -22,7 +22,7 @@ setup({
 })
 ```
 
-# Methods
+## Methods
 
 ### `getProduct`
 
