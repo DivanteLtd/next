@@ -15,6 +15,7 @@ module.exports = {
         collapsable: false,
         children: [
           ['/commerce-tools/introduction', 'Getting started'],
+          ['/commerce-tools/introduction', 'Getting started'],
         ],
       },
     ]
