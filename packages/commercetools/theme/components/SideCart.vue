@@ -95,7 +95,6 @@ export default {
   setup() {
     const { cart } = useCart()
     return {
-      isCartSidebarOpen: isCartSidebarOpen.value,
       products: cart.value.products
     };
   },
@@ -116,6 +115,9 @@ export default {
           return totalPrice + summary;
         }, 0)
         .toFixed(2);
+    },
+    isCartSidebarOpen() {
+      return isCartSidebarOpen.value
     }
   },
   methods: {

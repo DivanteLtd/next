@@ -18,7 +18,7 @@
       </nuxt-link>
       <nuxt-link to="/l/cat">
         <SfHeaderNavigationItem>
-          {{ isCartSidebarOpen }}
+          KIDS
         </SfHeaderNavigationItem>
       </nuxt-link>
     </template>
@@ -37,11 +37,6 @@ export default {
   methods: {
     showCartSidebar: () => {
       isCartSidebarOpen.value = true
-    }
-  },
-  setup() {
-    return {
-      isCartSidebarOpen: isCartSidebarOpen.value
     }
   }
 }

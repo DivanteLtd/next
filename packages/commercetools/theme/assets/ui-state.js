@@ -4,7 +4,7 @@ import VueCompositionApi, { reactive, ref, computed } from '@vue/composition-api
 Vue.use(VueCompositionApi);
 
 const UiState = reactive({
-  isCartSidebarOpen: true
+  isCartSidebarOpen: false
 })
 
 const isCartSidebarOpen = computed({
