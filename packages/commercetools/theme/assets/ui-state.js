@@ -1,5 +1,17 @@
 import Vue from 'vue'
+import VueCompositionApi, { reactive, ref, computed } from '@vue/composition-api'
 
-export const UiState = Vue.observable({
-    isCartSidebarOpen: true
+Vue.use(VueCompositionApi);
+
+const UiState = reactive({
+  isCartSidebarOpen: true
 })
+
+const isCartSidebarOpen = computed({
+  get: () => UiState.isCartSidebarOpen,
+  set: val => { UiState.isCartSidebarOpen = val }
+})
+
+export {
+  isCartSidebarOpen
+}
