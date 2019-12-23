@@ -1,7 +1,7 @@
 <template>
   <div id="cart">
     <SfSidebar
-      :visible="isCartSidebarOpen"
+      :visible="UiState.isCartSidebarOpen"
       headingTitle="My Cart"
       @close="this.onClose"
       class="sf-sidebar--right"
@@ -75,7 +75,8 @@ import {
   SfPrice,
   SfCollectedProduct
 } from "@storefront-ui/vue";
-import { useCart } from "@vue-storefront/commercetools-composables" 
+import { useCart } from "@vue-storefront/commercetools-composables"
+import { UiState } from "../assets/ui-state"
 export default {
   name: "Cart",
   components: {
@@ -94,7 +95,7 @@ export default {
   setup() {
     const { cart } = useCart();
     return {
-      isCartSidebarOpen: true,
+      UiState,
       products: cart.value.products
     };
   },
@@ -123,7 +124,7 @@ export default {
       this.products = products.filter(element => element.id !== product.id);
     },
     onClose() {
-      this.isCartSidebarOpen = false;
+      UiState.isCartSidebarOpen = false;
     }
   }
 };
