@@ -4,6 +4,7 @@
     <nuxt />
     <BottomNavigation />
     <AppFooter />
+    <SideCart />
   </div>
 </template>
 
@@ -11,12 +12,14 @@
 import AppHeader from '~/components/AppHeader.vue'
 import BottomNavigation from '~/components/BottomNavigation.vue'
 import AppFooter from '~/components/AppFooter.vue'
+import SideCart from '~/components/SideCart.vue'
 
 export default {
   components: {
     AppHeader,
     BottomNavigation,
-    AppFooter
+    AppFooter,
+    SideCart
   }
 }
 </script>
