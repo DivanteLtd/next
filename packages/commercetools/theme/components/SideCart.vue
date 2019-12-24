@@ -76,7 +76,7 @@ import {
   SfCollectedProduct
 } from '@storefront-ui/vue'
 import { useCart } from '@vue-storefront/commercetools-composables'
-import { isCartSidebarOpen } from '../assets/ui-state'
+import { UiState, setIsCartSidebarOpen } from '../assets/ui-state'
 export default {
   name: 'Cart',
   components: {
@@ -117,7 +117,7 @@ export default {
         .toFixed(2);
     },
     isCartSidebarOpen() {
-      return isCartSidebarOpen.value
+      return UiState.isCartSidebarOpen
     }
   },
   methods: {
@@ -126,7 +126,7 @@ export default {
       this.products = products.filter(element => element.id !== product.id);
     },
     onClose() {
-      isCartSidebarOpen.value = false
+      setIsCartSidebarOpen(false)
     }
   }
 };

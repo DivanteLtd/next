@@ -27,7 +27,7 @@
 
 <script>
 import { SfHeader, SfImage } from '@storefront-ui/vue'
-import { isCartSidebarOpen } from '../assets/ui-state'
+import { setIsCartSidebarOpen } from '../assets/ui-state'
 
 export default {
   components: {
@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     showCartSidebar: () => {
-      isCartSidebarOpen.value = true
+      setIsCartSidebarOpen(true)
     }
   }
 }
