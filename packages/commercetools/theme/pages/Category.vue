@@ -228,13 +228,14 @@ import {
 import { useCategory } from '@vue-storefront/commercetools-composables' 
 
 export default {
+  transition: 'fade',
   setup () {
-    const { category, search } = useCategory()
+    const { categories, search } = useCategory()
 
-    search({ id: "724b250d-9805-4657-ae73-3c02a63a9a13" })
+    search({ slug: "men-clothing" })
 
     return {
-      category
+      categories
     }
   },
   components: {
@@ -444,6 +445,7 @@ export default {
     @content;
   }
 }
+
 .breadcrumbs {
   padding: $spacer-big $spacer-extra-big $spacer-extra-big;
 }
