@@ -88,33 +88,33 @@ export default {
   },
   filters: {
     price: function(price) {
-      if (!price) return;
-      return `$${price}`;
+      if (!price) return
+      return `$${price}`
     }
   },
   setup() {
     const { cart } = useCart()
     return {
-      products: cart.value.products
-    };
+      products: cart.value.products,
+    }
   },
   computed: {
     totalItems() {
       return this.products.reduce(
         (totalItems, product) => totalItems + parseInt(product.qty, 10),
         0
-      );
+      )
     },
     totalPrice() {
       return this.products
         .reduce((totalPrice, product) => {
           const price = product.price.special
             ? product.price.special
-            : product.price.regular;
-          const summary = parseFloat(price).toFixed(2) * product.qty;
-          return totalPrice + summary;
+            : product.price.regular
+          const summary = parseFloat(price).toFixed(2) * product.qty
+          return totalPrice + summary
         }, 0)
-        .toFixed(2);
+        .toFixed(2)
     },
     isCartSidebarOpen() {
       return UiState.isCartSidebarOpen
@@ -122,14 +122,14 @@ export default {
   },
   methods: {
     removeHandler(product) {
-      const products = [...this.products];
-      this.products = products.filter(element => element.id !== product.id);
+      const products = [...this.products]
+      this.products = products.filter(element => element.id !== product.id)
     },
     onClose() {
       setIsCartSidebarOpen(false)
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/variables";
