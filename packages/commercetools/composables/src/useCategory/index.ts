@@ -36,22 +36,27 @@ export default function useCategory (ssrContext?: SsrContext<SsrContextData>): U
   const loading = ref(true)
   const error = ref(null)
 
+  let isServer = false
+
   const ssrData = getSsrData(ssrContext)
 
   if (ssrData) {
     ssrData.categories = categories
     ssrData.loading = loading
     ssrData.products = products
+    isServer = true
   }
 
-  const search = async (params: UseCategorySearchParams) => {
-    onServerPrefetch(async () => {
-      ssrData.categories.value = await loadCategories(params)
-      ssrData.loading.value = false
+  const onSearch = async (params: UseCategorySearchParams) => {
+    categories.value = await loadCategories(params)
+    loading.value = false
 
-      getCategoryProducts(ssrData.categories.value[0], { master: true }).map(prod => ssrData.products.push(prod))
-    })
+    getCategoryProducts(categories.value[0], { master: true }).map(prod => products.push(prod))
   }
+
+  const search = async (params: UseCategorySearchParams) => isServer
+    ? onServerPrefetch(() => onSearch(params))
+    : onSearch(params)
 
   return {
     categories,

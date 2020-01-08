@@ -1,5 +1,6 @@
 export interface SsrContext<T = {}> {
   nuxt: {
-    data: [T]
+    data: [T],
+    serverRendered: boolean
   }
 }

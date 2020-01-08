@@ -242,18 +242,17 @@ import {
 
 export default {
   transition: 'fade',
-  setup (props, context) {
-    const { params } = context.root.$route
+  setup (props, { root, ssrContext }) {
+    const { params } = root.$route
     const lastSlug = Object.keys(params).reduce(
       (prev, curr) => params[curr] ? params[curr] : prev,
       params['slug_1']
     )
 
-    const { categories, search } = useCategory()
+    const { categories, search, products } = useCategory(ssrContext)
 
     search({ slug: lastSlug })
 
-    const products = computed(() => getCategoryProducts(categories.value[0], { master: true }))
     const categoryTree = computed(() => getCategoryTree(categories.value[0]))
 
     const getCategoryUrl = slug => `/c/${params['slug_1']}/${slug}`
