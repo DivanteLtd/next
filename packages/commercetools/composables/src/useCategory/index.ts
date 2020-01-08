@@ -1,10 +1,16 @@
 import { UseCategory } from '@vue-storefront/interfaces'
-import { ref } from '@vue/composition-api'
+import { ref, Ref } from '@vue/composition-api'
 import { getCategory, getProduct } from '@vue-storefront/commercetools-api'
-import { enhanceProduct, enhanceCategory } from './../helpers/internals'
+import { enhanceProduct, enhanceCategory, getSsrData } from './../helpers/internals'
+import { SsrContext } from '../types/SSR';
 
 interface UseCategorySearchParams {
   slug?: string
+}
+
+interface SsrContextData {
+  categories: Ref<any[]>,
+  loading: Ref<boolean>,
 }
 
 const loadCategories = async (params: UseCategorySearchParams) => {
@@ -17,13 +23,20 @@ const loadCategories = async (params: UseCategorySearchParams) => {
   return enhancedCategory.data.categories.results
 }
 
-export default function useCategory (): UseCategory<any, any, any, any, any> {
+export default function useCategory (ssrContext?: SsrContext<SsrContextData>): UseCategory<any, any, any, any, any> & { ssrData?: SsrContextData } {
   const categories = ref([])
   const appliedFilters = ref(null)
   const applyFilter = () => { () => { console.log('useCategory:applyFilter') } }
   const clearFilters = () => { () => { console.log('useCategory:clearFilters') } }
   const loading = ref(true)
   const error = ref(null)
+
+  const ssrData = getSsrData(ssrContext)
+
+  if (ssrData) {
+    ssrData.categories = categories
+    ssrData.loading = loading
+  }
 
   const search = async (params: UseCategorySearchParams) => {
     categories.value = await loadCategories(params)
@@ -37,6 +50,7 @@ export default function useCategory (): UseCategory<any, any, any, any, any> {
     applyFilter,
     clearFilters,
     loading,
-    error
+    error,
+    ssrData,
   }
 }

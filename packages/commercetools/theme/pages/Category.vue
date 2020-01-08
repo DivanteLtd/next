@@ -224,7 +224,7 @@ import {
   SfSelect,
   SfBreadcrumbs
 } from "@storefront-ui/vue";
-import { computed } from '@vue/composition-api'
+import { onServerPrefetch, reactive } from '@vue/composition-api'
 import { useCategory } from '@vue-storefront/commercetools-composables'
 import {
   getCategoryProducts,
@@ -236,17 +236,23 @@ import {
 
 export default {
   transition: 'fade',
-  setup () {
-    const { categories, search, loading } = useCategory()
+  setup (props, { ssrContext }) {
+    const { search, categories, loading, ssrData } = useCategory(ssrContext)
+    const products = reactive([])
 
-    search({ slug: "men" })
+    onServerPrefetch(async () => {
+      ssrData.products = products // I can create for this helper function like: attachData(ssrData, { products }) if you like the idea
 
-    const products = computed(() => getCategoryProducts(categories.value[0], { master: true }))
+      await search({ slug: 'men' })
+
+      getCategoryProducts(categories.value[0], { master: true })
+        .map(prod => ssrData.products.push(prod))
+    })
 
     return {
       categories,
-      products,
-      loading
+      loading,
+      products
     }
   },
   components: {
