@@ -1,17 +1,20 @@
 <template>
-  <SfHeader active-sidebar="activeSidebar">
+  <SfHeader 
+    active-sidebar="activeSidebar" 
+    @click:cart="toggleCartSidebar"
+    >
     <template #logo>
       <nuxt-link to="/" class="sf-header__logo">
         <SfImage src="/icons/logo.svg" alt="Vue Storefront Next" class="sf-header__logo-image"/>
       </nuxt-link>
     </template>
     <template #navigation>
-      <nuxt-link to="/c/cat">
+      <nuxt-link to="/c/women">
         <SfHeaderNavigationItem>
           WOMEN
         </SfHeaderNavigationItem>
       </nuxt-link>
-      <nuxt-link to="/c/cat">
+      <nuxt-link to="/c/men">
         <SfHeaderNavigationItem>
           MEN
         </SfHeaderNavigationItem>
@@ -27,12 +30,18 @@
 
 <script>
 import { SfHeader, SfImage } from '@storefront-ui/vue'
+import { toggleCartSidebar } from '../assets/ui-state'
 
 export default {
+  setup () {
+    return {
+      toggleCartSidebar
+    }
+  },
   components: {
     SfHeader,
     SfImage
-  },
+  }
 }
 </script>
 

@@ -4,6 +4,7 @@ import { getCategory, getProduct } from '@vue-storefront/commercetools-api'
 import { getCategoryProducts } from '@vue-storefront/commercetools-helpers'
 import { enhanceProduct, enhanceCategory, getSsrData } from './../helpers/internals'
 import { SsrContext } from '../types/SSR';
+import { Category } from './../types/GraphQL'
 
 interface UseCategorySearchParams {
   slug?: string
@@ -14,6 +15,7 @@ interface SsrContextData {
   loading: Ref<boolean>,
   products: any[]
 }
+type Search = (params: UseCategorySearchParams) => void
 
 const loadCategories = async (params: UseCategorySearchParams) => {
   const categoryResponse = await getCategory(params)
