@@ -15,6 +15,7 @@ export interface UseCategory
   APPLIED_FILTERS,
   APPLY_FILTER,
   CLEAR_FILTERS,
+  PRODUCT,
 > {
   categories: Ref<Array<CATEGORY>>;
   search: SEARCH;
@@ -23,6 +24,7 @@ export interface UseCategory
   clearFilters: CLEAR_FILTERS;
   loading: Ref<boolean>;
   error: Ref<any>;
+  products: Array<PRODUCT>;
 }
 
 export interface UseCart

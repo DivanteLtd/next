@@ -27,7 +27,7 @@ const loadCategories = async (params: UseCategorySearchParams) => {
   return enhancedCategory.data.categories.results
 }
 
-export default function useCategory (ssrContext?: SsrContext<SsrContextData>): UseCategory<any, any, any, any, any> & { products: any[] } {
+export default function useCategory (ssrContext?: SsrContext<SsrContextData>): UseCategory<any, any, any, any, any, any> {
   const categories = ref([])
   const products = reactive([])
   const appliedFilters = ref(null)
