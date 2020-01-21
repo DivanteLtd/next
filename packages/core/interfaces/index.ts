@@ -110,6 +110,12 @@ export interface UseContent<CONTENT, SEARCH> {
   error: any
 }
 
+export interface UseLanguage<CHANGE, DETECT> {
+  language: Ref<string | null>
+  change: CHANGE
+  detect: DETECT
+}
+
 export interface UiMediaGalleryItem {
   small: string
   normal: string
