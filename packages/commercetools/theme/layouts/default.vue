@@ -6,6 +6,7 @@
     <BottomNavigation />
     <AppFooter />
     <CartSidebar />
+    <LoginModal />
   </div>
 </template>
 
@@ -14,8 +15,8 @@ import AppHeader from '~/components/AppHeader.vue'
 import AppTopBar from '~/components/AppTopBar.vue'
 import BottomNavigation from '~/components/BottomNavigation.vue'
 import AppFooter from '~/components/AppFooter.vue'
-import CartSidebar from '~/components/CartSidebar.vue'
-import { useLanguage } from '@vue-storefront/commercetools-composables'
+const CartSidebar = () => import(/* webpackChunkName: "CartSidebar" */ '~/components/CartSidebar.vue')
+const LoginModal = () => import(/* webpackChunkName: "LoginModal" */ '~/components/LoginModal.vue')
 
 export default {
   components: {
@@ -23,17 +24,8 @@ export default {
     AppTopBar,
     BottomNavigation,
     AppFooter,
-    CartSidebar
-  },
-  setup(props, context) {
-    const DEFAULT_LANGUAGE = 'en'
-    const { language, detect, change } = useLanguage()
-
-    const detectedLanguage = detect('http://localhost:3000/pl/some-product-slug', null) || DEFAULT_LANGUAGE
-
-    if (language !== detectedLanguage) {
-      change(detectedLanguage, 'http://localhost:3000/pl/some-product-slug')
-    }
+    CartSidebar,
+    LoginModal
   }
 }
 </script>
