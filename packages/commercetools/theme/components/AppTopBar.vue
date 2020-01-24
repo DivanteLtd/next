@@ -3,7 +3,7 @@
     <div class="sf-topbar__content">
       <div class="sf-topbar__content__item"></div>
       <div class="sf-topbar__content__item">Download our application. <a href="#">Find out more.</a></div>
-      <div @click="changeLanguage" class="sf-topbar__content__item i18n">{{languageFullName}}</div>
+      <div @click="toggleLanguage" class="sf-topbar__content__item i18n">{{languageFullName}}</div>
     </div>
   </div>
 </template>
@@ -12,8 +12,10 @@
 import { useLocale } from '@vue-storefront/commercetools-composables'
 
 export default {
-  setup() {
+  setup(props, { isServer }) {
     const { language, setLanguage } = useLocale()
+
+    !isServer && setLanguage(localStorage.getItem('language') || 'en')
 
     return {
       language,
@@ -21,8 +23,11 @@ export default {
     }
   },
   methods: {
-    changeLanguage() {
+    toggleLanguage() {
       this.setLanguage(this.language === 'en' ? 'de' : 'en')
+
+      localStorage.setItem('language', this.language)
+      window.location.reload()
     },
   },
   computed: {
