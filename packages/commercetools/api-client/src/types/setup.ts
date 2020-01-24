@@ -1,4 +1,5 @@
 import { ApolloClientOptions } from 'apollo-client'
+import { Ref } from '@vue/composition-api'
 
 export interface ApiConfig {
   uri: string,

@@ -1,4 +1,7 @@
 import { setup } from '@vue-storefront/commercetools-api'
+import { useLocale } from '@vue-storefront/commercetools-composables'
+
+const { language } = useLocale()
 
 setup({
   api: {
@@ -17,6 +20,6 @@ setup({
       'view_published_products:vsf-ct-dev'
     ],
   },
-  locale: 'en',
+  locale: language,
   currency: 'USD',
 })

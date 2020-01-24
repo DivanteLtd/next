@@ -14,8 +14,13 @@ import getMe from './api/getMe'
 import getStorage from './helpers/createCommerceToolsLink/getStorage'
 
 let apolloClient: ApolloClient<any> = null
-let locale = 'en'
+let locale = null
 let currency = 'USD'
+
+const localizedVariables = (variables: object = {}) => ({
+  ...variables,
+  locale: locale === null ? 'en' : locale.value
+})
 
 const setup = <TCacheShape>(setupConfig?: SetupConfig<TCacheShape>): ApolloClient<TCacheShape> => {
   apolloClient = new ApolloClient({
@@ -33,6 +38,7 @@ export {
   apolloClient,
   setup,
   locale,
+  localizedVariables,
   currency,
   getStorage,
   getProduct,

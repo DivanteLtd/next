@@ -110,10 +110,11 @@ export interface UseContent<CONTENT, SEARCH> {
   error: any
 }
 
-export interface UseLanguage<CHANGE, DETECT> {
+export interface UseLocale<SET_LANGUAGE, SET_COUNTRY> {
+  country: Ref<string | null>
   language: Ref<string | null>
-  change: CHANGE
-  detect: DETECT
+  setLanguage: SET_LANGUAGE
+  setCountry: SET_COUNTRY
 }
 
 export interface UiMediaGalleryItem {
