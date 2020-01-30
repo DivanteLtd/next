@@ -6,26 +6,29 @@
     />
     <div class="product">
       <div class="product__gallery">
-        <SfImage
-          src="/productpage/productA.jpg"
-          class="desktop-only"
-        />
-        <SfImage
-          src="/productpage/productB.jpg"
-          class="desktop-only"
-        />
         <SfGallery
           class="gallery-mobile mobile-only"
+          :image-width="375"
+          :image-height="490"
           :images="[
             {
-              small: { url: '/productpage/productM.jpg' },
+              mobile: { url: '/productpage/productM.jpg' },
+              desktop: { url: '/productpage/productM.jpg' },
               big: { url: '/productpage/productM.jpg' }
             },
             {
-              small: { url: '/productpage/productM.jpg' },
+              mobile: { url: '/productpage/productM.jpg' },
+              desktop: { url: '/productpage/productM.jpg' },
               big: { url: '/productpage/productM.jpg' }
             }
           ]"
+        />
+        <SfImage
+          v-for="(image, i) in getProductGallery(product).splice(0, 2)" :key="i"
+          :src="image.big"
+          :width="590"
+          :height="700"
+          class="desktop-only"
         />
       </div>
       <div class="product__description">
@@ -33,13 +36,13 @@
           <div class="product-details__mobile-top">
             <div>
               <SfHeading
-                title="Cashmere Sweater"
+                :title="getProductName(product)"
                 :level="1"
                 class="sf-heading--no-underline sf-heading--left product-details__heading"
               />
               <div class="product-details__sub">
                 <SfPrice
-                  regular="$50.00"
+                  :regular="'$' + getProductPrice(product)"
                   class="sf-price--big product-details__sub-price"
                 />
                 <div class="product-details__sub-rating">
@@ -99,7 +102,9 @@
             <SfAddToCart
               :stock="stock"
               v-model="qty"
+              :disabled="loading"
               :canAddToCart="stock > 0"
+              @click="addToCart(product, parseInt(qty))"
               class="product-details__add-to-cart"
             />
             <div class="product-details__action">
@@ -191,48 +196,7 @@
         </SfCarouselItem>
       </SfCarousel>
     </SfSection>
-    <SfSection
-      title-heading="Share Your Look"
-      subtitle-heading="#YOURLOOK"
-      class="section"
-    >
-      <div class="images-grid">
-        <div class="images-grid__row">
-          <div class="images-grid__col">
-            <SfImage src="/homepage/imageA.jpg"
-              >katherina_trn</SfImage
-            >
-          </div>
-          <div class="images-grid__col">
-            <SfImage src="/homepage/imageB.jpg"
-              >katherina_trn</SfImage
-            >
-          </div>
-          <div class="images-grid__col">
-            <SfImage src="/homepage/imageC.jpg"
-              >katherina_trn</SfImage
-            >
-          </div>
-        </div>
-        <div class="images-grid__row">
-          <div class="images-grid__col">
-            <SfImage src="/homepage/imageC.jpg"
-              >katherina_trn</SfImage
-            >
-          </div>
-          <div class="images-grid__col">
-            <SfImage src="/homepage/imageD.jpg"
-              >katherina_trn</SfImage
-            >
-          </div>
-          <div class="images-grid__col">
-            <SfImage src="/homepage/imageA.jpg"
-              >katherina_trn</SfImage
-            >
-          </div>
-        </div>
-      </div>
-    </SfSection>
+    <InstagramFeed />
     <SfBanner
       title="Download our application to your mobile"
       image="/homepage/bannerD.png"
@@ -283,19 +247,44 @@ import {
   SfSticky,
   SfReview,
   SfBreadcrumbs
-} from "@storefront-ui/vue";
+} from '@storefront-ui/vue'
+import InstagramFeed from '~/components/InstagramFeed.vue'
+import { ref, computed } from '@vue/composition-api'
 
-import { useProduct } from '@vue-storefront/commercetools-composables'
+import { useProduct, useCart } from '@vue-storefront/commercetools-composables'
+import {
+  getProductVariants,
+  getProductName,
+  getProductGallery,
+  getProductPrice,
+  getProductAttributes
+} from '@vue-storefront/commercetools-helpers'
 
 export default {
   name: "Product",
   transition: 'fade',
-  setup () {
+  setup (props, context) {
+    const { slug } = context.root.$route.params
+    const qty = ref(1)
+    const { params } = context.root.$route
     const { products, search } = useProduct()
+    const { cart, addToCart,loading } = useCart()
 
-    search()
+    search({ slug })
+
+    const product = computed(() => getProductVariants(products.value, { master: true }))
+
+    const attributes = computed(() => getProductAttributes(product.value))
+
     return {
-
+      product,
+      attributes,
+      getProductName,
+      getProductPrice,
+      getProductGallery,
+      qty,
+      addToCart,
+      loading
     }
   },
   components: {
@@ -316,11 +305,12 @@ export default {
     SfBanner,
     SfSticky,
     SfReview,
-    SfBreadcrumbs
+    SfBreadcrumbs,
+    InstagramFeed
   },
   data() {
     return {
-      qty: "1",
+      // qty: "1",
       stock: 5,
       size: "",
       sizes: [
@@ -457,6 +447,7 @@ export default {
     };
   },
   methods: {
+
     toggleWishlist(index) {
       this.products[index].isOnWishlist = !this.products[index].isOnWishlist;
     }
@@ -513,47 +504,13 @@ export default {
   @supports (-webkit-overflow-scrolling: touch) {
     height: calc(100vh - #{$height-iOS});
   }
-  ::v-deep .glide {
-    &,
-    * {
-      height: 100%;
-    }
-    &__slide {
-      position: relative;
-      overflow: hidden;
-    }
+  ::v-deep .sf-image {
     img {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      min-width: calc((375 / 490) * (100vh - #{$height-other}));
-      @supports (-webkit-overflow-scrolling: touch) {
-        min-width: calc((375 / 490) * (100vh - #{$height-iOS}));
-      }
+      width: 100%;
     }
   }
   ::v-deep .sf-gallery__stage {
     width: 100%;
-  }
-}
-.images-grid {
-  &__row {
-    display: flex;
-    & + & {
-      margin-top: $spacer-big / 2;
-      @include for-desktop {
-        margin-top: $spacer-big;
-      }
-    }
-  }
-  &__col {
-    margin: 0;
-    & + & {
-      margin-left: $spacer-big / 2;
-      @include for-desktop {
-        margin-left: $spacer-big;
-      }
-    }
   }
 }
 .product {

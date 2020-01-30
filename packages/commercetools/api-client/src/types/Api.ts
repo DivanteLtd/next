@@ -1,23 +1,40 @@
-interface CustomQuery {
+import { ApolloQueryResult } from 'apollo-client'
+import { FetchResult } from 'apollo-link'
+import { Cart, Me, Order, ShippingMethod } from './GraphQL'
+
+export interface CustomQuery {
   query: string
   variables: any
 }
 
-interface BaseSearch {
+export interface BaseSearch {
   customQuery?: CustomQuery
   limit?: number
   offset?: number
   sort?: string[]
 }
 
-interface ProductSearch extends BaseSearch {
+export interface ProductSearch extends BaseSearch {
   catIds?: string[]
   skus?: string[]
+  slug?: string
 }
 
-interface CategorySearch extends BaseSearch {
+export interface CategorySearch extends BaseSearch {
   catId?: string
   slug?: string
 }
 
-export { ProductSearch, CategorySearch }
+
+export type QueryResponse <K extends string, V> = ApolloQueryResult<Record<K, V>>
+export type MutationResponse <K extends string, V> = FetchResult<Record<K, V>>
+export type ProfileResponse = QueryResponse<"me", Me>
+export type CartQueryResponse = QueryResponse<"cart", Cart>
+export type OrderQueryResponse = QueryResponse<"order", Order>
+export type CartMutationResponse = MutationResponse<"cart", Cart>
+export type CartResponse = CartQueryResponse | CartMutationResponse
+export type OrderMutationResponse = MutationResponse<"order", Order>
+export type OrderResponse = OrderQueryResponse | OrderMutationResponse
+export type ShippingMethodsResponse = QueryResponse<"shippingMethods", ShippingMethod>
+
+

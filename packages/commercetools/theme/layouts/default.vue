@@ -4,6 +4,8 @@
     <nuxt />
     <BottomNavigation />
     <AppFooter />
+    <CartSidebar />
+    <LoginModal />
   </div>
 </template>
 
@@ -11,15 +13,20 @@
 import AppHeader from '~/components/AppHeader.vue'
 import BottomNavigation from '~/components/BottomNavigation.vue'
 import AppFooter from '~/components/AppFooter.vue'
+const CartSidebar = () => import(/* webpackChunkName: "CartSidebar" */ '~/components/CartSidebar.vue')
+const LoginModal = () => import(/* webpackChunkName: "LoginModal" */ '~/components/LoginModal.vue')
 
 export default {
   components: {
     AppHeader,
     BottomNavigation,
-    AppFooter
+    AppFooter,
+    CartSidebar,
+    LoginModal
   }
 }
 </script>
+
 <style lang="scss">
 @import "~@storefront-ui/vue/styles";
 @import "~@storefront-ui/shared/styles/helpers/visibility";
