@@ -8,35 +8,39 @@
         <currency-switcher position="right"/>
       </template>
     </SfTopBar>
-  <SfHeader
-    active-sidebar="activeSidebar"
-    @click:cart="toggleCartSidebar"
-    @click:account="onAccountClicked"
-    >
-    <template #logo>
-      <nuxt-link to="/" class="sf-header__logo">
-        <SfImage :src="mobileLogo" alt="Vue Storefront Next" class="sf-header__logo-image sf-header__logo-image--mobile"/>
-        <SfImage :src="desktopLogo" alt="Vue Storefront Next" class="sf-header__logo-image sf-header__logo-image--desktop"/>
-      </nuxt-link>
-    </template>
-    <template #navigation>
-      <nuxt-link to="/c/women">
-        <SfHeaderNavigationItem>
-          WOMEN
-        </SfHeaderNavigationItem>
-      </nuxt-link>
-      <nuxt-link to="/c/men">
-        <SfHeaderNavigationItem>
-          MEN
-        </SfHeaderNavigationItem>
-      </nuxt-link>
-      <nuxt-link to="/c/cat">
-        <SfHeaderNavigationItem>
-          KIDS
-        </SfHeaderNavigationItem>
-      </nuxt-link>
-    </template>
-  </SfHeader>
+    <SfHeader
+      active-sidebar="activeSidebar"
+      @click:cart="toggleCartSidebar"
+      @click:account="onAccountClicked"
+      has-mobile-search
+      >
+      <template #logo>
+        <div class="sf-header__top-section">
+          <nuxt-link to="/" class="sf-header__logo">
+            <SfImage :src="mobileLogo" alt="Vue Storefront Next" class="sf-header__logo-image sf-header__logo-image--mobile"/>
+            <SfImage :src="desktopLogo" alt="Vue Storefront Next" class="sf-header__logo-image sf-header__logo-image--desktop"/>
+          </nuxt-link>
+          <currency-switcher class="sf-header__top-section-currency-switcher" position="right"/>
+        </div>
+      </template>
+      <template #navigation>
+        <nuxt-link to="/c/women">
+          <SfHeaderNavigationItem>
+            WOMEN
+          </SfHeaderNavigationItem>
+        </nuxt-link>
+        <nuxt-link to="/c/men">
+          <SfHeaderNavigationItem>
+            MEN
+          </SfHeaderNavigationItem>
+        </nuxt-link>
+        <nuxt-link to="/c/cat">
+          <SfHeaderNavigationItem>
+            KIDS
+          </SfHeaderNavigationItem>
+        </nuxt-link>
+      </template>
+    </SfHeader>
   </div>
 </template>
 
@@ -78,19 +82,39 @@ export default {
 <style lang="scss" scoped>
   @import "~@storefront-ui/shared/styles/variables";
 
-.sf-header__logo-image {
-  height: 100%;
+  .sf-header__top-section {
+    @media screen and (max-width: $desktop-min) {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
 
-  @media screen and (min-width: $desktop-min) {
+    .currency-switcher {
+      display: none;
+
+      @media screen and (max-width: $desktop-min) {
+        display: block;
+        margin: auto 0px;
+      }
+    }
+  }
+  .sf-header__logo {
+    display: block;
+  }
+  .sf-header__logo-image {
+    height: 100%;
+
     &--mobile {
-      display: none
+      @media screen and (min-width: $desktop-min) {
+        display: none
+      }
     }
-  }
 
-  @media screen and (max-width: $desktop-min) {
     &--desktop {
-      display: none
+      @media screen and (max-width: $desktop-min) {
+        display: none
+      }
     }
+
   }
-}
 </style>

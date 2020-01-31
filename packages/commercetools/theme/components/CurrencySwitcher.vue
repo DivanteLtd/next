@@ -7,7 +7,6 @@
       <SfSelectOption v-for="(option, key) in options" :key="key" :value="option.value">
         <FlagOption :flag="option.flag" :label="option.label"></FlagOption>
       </SfSelectOption>
-    <template #label>Currency</template>
   </SfSelect>
 </template>
 
@@ -45,19 +44,32 @@
 </script>
 
 <style lang="scss">
-  .currency-switcher {
+  @import "~@storefront-ui/shared/styles/variables";
 
-    .sf-select__selected {
-      padding: 0;
-    }
+  .currency-switcher {
+    margin-top: 0;
 
     &--position-right {
       .sf-select__label {
         right: 0;
       }
       .sf-select__dropdown {
-        left: initial;
+        @media screen and (min-width: $desktop-min) {
+          left: initial;
+        }
       }
+    }
+
+    .sf-select__selected {
+      padding: 0;
+    }
+
+    /** @todo: change to variables when https://github.com/DivanteLtd/storefront-ui/issues/680 gets merged **/
+    .sf-overlay {
+      z-index: 2;
+    }
+    .sf-select__dropdown {
+      z-index: 2;
     }
   }
 </style>
