@@ -1,22 +1,42 @@
 import { UseLocale } from '@vue-storefront/interfaces'
-import { Ref, ref } from '@vue/composition-api'
-
-const language: Ref<string | null> = ref('en');
-const country: Ref<string | null> = ref(null);
+import { updateStoreConfig, locale, country, currency } from '@vue-storefront/commercetools-api'
 
 type SetLanguage = (languageCode: string) => void;
+type GetLanguage = () => string;
 type SetCountry = (countryCode: string) => void;
+type GetCountry = () => string;
+type GetCountries = () => { value: string, label: string }[];
 
-export default function useLocale (): UseLocale<SetLanguage, SetCountry> {
+export default function useLocale (): UseLocale<SetLanguage, GetLanguage, SetCountry, GetCountry, GetCountries> {
   const setLanguage: SetLanguage = (languageCode: string) => {
-    language.value = languageCode
+    updateStoreConfig({
+      locale: languageCode,
+      currency,
+      country
+    })
   }
-  const setCountry: SetCountry = (countryCode: string) => console.log('useLocale:setCountry')
+  const getLanguage: GetLanguage = () => locale
+  const setCountry: SetCountry = (countryCode: string) => updateStoreConfig({
+    locale,
+    currency,
+    country: countryCode
+  })
+  const getCountry: GetCountry = () => country
+  // TODO: Mocked country list. Need to do: async GQL request
+  const getCountries: GetCountries = () => {
+    return [
+      { value: 'US', label: 'United States' },
+      { value: 'AT', label: 'Austria' },
+      { value: 'DE', label: 'Germany' },
+      { value: 'NL', label: 'Netherlands' }
+    ]
+  }
 
   return {
-    country,
-    language,
     setLanguage,
+    getLanguage,
     setCountry,
+    getCountry,
+    getCountries
   }
 }

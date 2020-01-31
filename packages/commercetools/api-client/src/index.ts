@@ -1,6 +1,6 @@
 import ApolloClient from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import { SetupConfig } from './types/setup'
+import { SetupConfig, StoreConfig } from './types/setup'
 import createCommerceToolsLink from './helpers/createCommerceToolsLink'
 import getProduct from './api/getProduct'
 import getCategory from './api/getCategory'
@@ -14,13 +14,9 @@ import getMe from './api/getMe'
 import getStorage from './helpers/createCommerceToolsLink/getStorage'
 
 let apolloClient: ApolloClient<any> = null
-let locale = null
+let locale = 'en'
 let currency = 'USD'
-
-const localizedVariables = (variables: object = {}) => ({
-  ...variables,
-  locale: locale === null ? 'en' : locale.value
-})
+let country = 'usa'
 
 const setup = <TCacheShape>(setupConfig?: SetupConfig<TCacheShape>): ApolloClient<TCacheShape> => {
   apolloClient = new ApolloClient({
@@ -29,17 +25,22 @@ const setup = <TCacheShape>(setupConfig?: SetupConfig<TCacheShape>): ApolloClien
     ...setupConfig.customOptions
   })
   locale = setupConfig.locale
-  currency = setupConfig.currency
+  currency = (setupConfig.currency || '').toUpperCase()
 
   return apolloClient
+}
+
+const updateStoreConfig = (storeConfig: StoreConfig) => {
+  locale = storeConfig.locale
+  currency = (storeConfig.currency || '').toUpperCase()
 }
 
 export {
   apolloClient,
   setup,
   locale,
-  localizedVariables,
   currency,
+  country,
   getStorage,
   getProduct,
   getCategory,
@@ -49,5 +50,6 @@ export {
   addToCart,
   removeFromCart,
   getMe,
-  updateCartQuantity
+  updateCartQuantity,
+  updateStoreConfig
 }

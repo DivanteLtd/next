@@ -1,5 +1,4 @@
 import { ApolloClientOptions } from 'apollo-client'
-import { Ref } from '@vue/composition-api'
 
 export interface ApiConfig {
   uri: string,
@@ -18,9 +17,15 @@ export interface Token {
   token_type: string
 }
 
-export interface SetupConfig<TCacheShape> {
+export interface StoreConfig {
+  currency: string,
+  country: string,
+  locale: string
+}
+
+export interface BaseSetupConfig<TCacheShape> {
   api?: ApiConfig,
   customOptions?: ApolloClientOptions<TCacheShape>
-  currency: string,
-  locale: string,
 }
+
+export type SetupConfig<T> = BaseSetupConfig<T> & StoreConfig

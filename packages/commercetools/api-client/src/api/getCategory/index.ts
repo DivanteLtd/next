@@ -1,6 +1,6 @@
 import { ApolloQueryResult } from 'apollo-client'
 import gql from 'graphql-tag'
-import { apolloClient, locale, localizedVariables } from './../../index'
+import { apolloClient, locale } from './../../index'
 import { CategorySearch } from './../../types/Api'
 import { CategoryQueryResult } from './../../types/GraphQL'
 import defaultQuery from './defaultQuery'
@@ -14,7 +14,7 @@ const getCategory = async (search?: CategorySearch): Promise<ApolloQueryResult<C
   if (!search) {
     return await apolloClient.query<CategoryData>({
       query: defaultQuery,
-      variables: localizedVariables()
+      variables: { locale }
     })
   }
 
@@ -23,17 +23,21 @@ const getCategory = async (search?: CategorySearch): Promise<ApolloQueryResult<C
 
     return await apolloClient.query<CategoryData>({
       query: gql`${query}`,
-      variables: localizedVariables(variables)
+      variables: {
+        ...variables,
+        locale
+      }
     })
   }
 
   return await apolloClient.query<CategoryData>({
     query: defaultQuery,
-    variables: localizedVariables({
+    variables: {
       where: buildCategoryWhere(search),
       limit: search.limit,
       offset: search.offset,
-    })
+      locale
+    }
   })
 }
 

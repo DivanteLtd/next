@@ -110,11 +110,12 @@ export interface UseContent<CONTENT, SEARCH> {
   error: any
 }
 
-export interface UseLocale<SET_LANGUAGE, SET_COUNTRY> {
-  country: Ref<string | null>
-  language: Ref<string | null>
-  setLanguage: SET_LANGUAGE
-  setCountry: SET_COUNTRY
+export interface UseLocale<SET_LANGUAGE, GET_LANGUAGE, SET_COUNTRY, GET_COUNTRY, GET_COUNTRIES> {
+  setLanguage: SET_LANGUAGE,
+  getLanguage: GET_LANGUAGE,
+  setCountry: SET_COUNTRY,
+  getCountry: GET_COUNTRY,
+  getCountries: GET_COUNTRIES
 }
 
 export interface UiMediaGalleryItem {

@@ -8,7 +8,7 @@ const buildProductWhere = (search: ProductSearch) => {
   }
 
   if (search && search.slug) {
-    return `masterData(current(slug(${locale.value}="${search.slug}")))`
+    return `masterData(current(slug(${locale}="${search.slug}")))`
   }
 
   return ''
@@ -20,7 +20,7 @@ const buildCategoryWhere = (search: CategorySearch) => {
   }
 
   if (search && search.slug) {
-    return `slug(${locale.value}="${search.slug}")`
+    return `slug(${locale}="${search.slug}")`
   }
 
   return ''

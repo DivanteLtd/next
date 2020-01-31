@@ -1,5 +1,5 @@
 import { CartDraft } from './../../types/GraphQL'
-import { apolloClient, locale, currency, localizedVariables } from './../../index'
+import { apolloClient, locale, currency } from './../../index'
 import CreateCartMutation from './defaultMutation'
 import { CartMutationResponse } from './../../types/Api'
 
@@ -10,12 +10,13 @@ interface CartData extends Omit<CartDraft, "currency"> {
 const createCart = async (cartDraft: CartData = {}): Promise<CartMutationResponse> => {
   return await apolloClient.mutate({
     mutation: CreateCartMutation,
-    variables: localizedVariables({
+    variables: {
       draft: {
         currency,
         ...cartDraft
-      }
-    })
+      },
+      locale
+    }
   })
 }
 

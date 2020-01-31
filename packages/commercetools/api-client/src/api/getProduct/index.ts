@@ -1,6 +1,6 @@
 import { ApolloQueryResult } from 'apollo-client'
 import gql from 'graphql-tag'
-import { apolloClient, locale, currency, localizedVariables } from './../../index'
+import { apolloClient, locale, currency } from './../../index'
 import { ProductSearch } from './../../types/Api'
 import { ProductQueryResult } from './../../types/GraphQL'
 import defaultQuery from './defaultQuery'
@@ -22,13 +22,14 @@ const getProduct = async (search: ProductSearch): Promise<ApolloQueryResult<Prod
 
   return await apolloClient.query<ProductData>({
     query: defaultQuery,
-    variables: localizedVariables({
+    variables: {
       where: buildProductWhere(search),
       skus: search.skus,
       limit: search.limit,
       offset: search.offset,
       currency,
-    }),
+      locale
+    },
     // temporary, seems like bug in apollo:
     // @link: https://github.com/apollographql/apollo-client/issues/3234
     fetchPolicy: 'no-cache'
