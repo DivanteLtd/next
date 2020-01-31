@@ -18,6 +18,6 @@ setup({
     ],
   },
   locale: 'en',
-  country: 'usa',
+  country: 'US',
   currency: 'USD'
 })
