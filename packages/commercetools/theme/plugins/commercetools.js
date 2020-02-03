@@ -5,8 +5,8 @@ setup({
     uri: 'https://api.commercetools.com/vsf-ct-dev/graphql',
     authHost: 'https://auth.sphere.io',
     projectKey: 'vsf-ct-dev',
-    clientId: 'bn7V95AWGKmTAfldoc7Y6SwU',
-    clientSecret: 'Z1E_zX2cXyUY8blRshXj9UCWKq3Vt1v5',
+    clientId: 'tKT3rKhAc5s3LXX-zuLooqjh',
+    clientSecret: '7v1gLW03HfbmpouRfrcGvMz1pnXbRBTp',
     scopes: [
       'create_anonymous_token:vsf-ct-dev',
       'manage_my_orders:vsf-ct-dev',
