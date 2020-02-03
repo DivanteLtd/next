@@ -15,6 +15,7 @@ import placeOrder from './api/placeOrder'
 import createMyOrderFromCart from './api/createMyOrderFromCart'
 import getShippingMethods from './api/getShippingMethods'
 import updateShippingDetails from './api/updateShippingDetails'
+import getProjectProjection from './api/getProjectProjection'
 import getStorage from './helpers/createCommerceToolsLink/getStorage'
 
 let apolloClient: ApolloClient<any> = null
@@ -36,8 +37,9 @@ const setup = <TCacheShape>(setupConfig?: SetupConfig<TCacheShape>): ApolloClien
 }
 
 const updateStoreConfig = (storeConfig: StoreConfig) => {
-  locale = storeConfig.locale
+  locale = (storeConfig.locale || '').toLowerCase()
   currency = (storeConfig.currency || '').toUpperCase()
+  country = (storeConfig.country || '').toUpperCase()
 }
 
 export {
@@ -60,5 +62,6 @@ export {
   placeOrder,
   createMyOrderFromCart,
   getShippingMethods,
-  updateShippingDetails
+  updateShippingDetails,
+  getProjectProjection,
 }

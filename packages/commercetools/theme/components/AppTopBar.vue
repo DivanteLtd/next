@@ -5,27 +5,29 @@
       <div class="sf-topbar__content__item">Download our application. <a href="#">Find out more.</a></div>
       <div class="sf-topbar__content__item selector-container">
         <SfSelect
-          v-model="selectedLanguage"
+          v-if="availableLanguages.length > 0"
+          :selected="language"
           @change="onLanguageSelect"
       >
         <SfSelectOption
-          v-for="language in languages"
-          :key="language.value"
-          :value="language.value"
+          v-for="availableLanguage in availableLanguages"
+          :key="availableLanguage"
+          :value="availableLanguage"
         >
-          {{language.label}}
+          {{LANGUAGES_MAP[availableLanguage] || availableLanguage}}
         </SfSelectOption>
       </SfSelect>
       <SfSelect
-          v-model="selectedCountry"
+          v-if="availableCountries.length > 0"
+          :selected="country"
           @change="onCountrySelect"
       >
         <SfSelectOption
-          v-for="country in countries"
-          :key="country.value"
-          :value="country.value"
+          v-for="availableCountry in availableCountries"
+          :key="availableCountry"
+          :value="availableCountry"
         >
-          {{country.label}}
+          {{COUNTRIES_MAP[availableCountry] || availableCountry}}
         </SfSelectOption>
       </SfSelect>
       </div>
@@ -41,36 +43,35 @@ import { SfSelect } from "@storefront-ui/vue";
 
 export default {
   setup(props, { isServer }) {
-    const { getLanguage, setLanguage, getCountry, setCountry, getCountries } = useLocale()
-    const countries = reactive([])
+    const { availableLanguages, availableCountries, language, country, loadData, update } = useLocale()
 
-    let selectedLanguage = '';
-    let selectedCountry = '';
+    const LANGUAGES_MAP = {
+      'en': 'English',
+      'de': 'Deutsch'
+    }
+    const COUNTRIES_MAP = {
+      'DE': 'Germany',
+      'AT': 'Austria',
+      'US': 'United States',
+      'NL': 'Netherlands'
+    }
 
     if (!isServer) {
-      selectedLanguage = (localStorage.getItem('language') || 'en').toLowerCase()
-      selectedCountry = (localStorage.getItem('country') || 'US').toUpperCase()
-
-      setLanguage(selectedLanguage)
-      setCountry(selectedCountry)
+      loadData().then(() => update({
+        language: (localStorage.getItem('language') || 'en').toLowerCase(),
+        country: (localStorage.getItem('country') || 'US').toUpperCase(),
+        currency: (localStorage.getItem('currency') || 'USD').toUpperCase(),
+      }))
     }
 
     return {
-      selectedLanguage,
-      selectedCountry,
-      countries: getCountries(),
-      setLanguage,
-      getLanguage,
-      setCountry,
-      getCountry,
-    }
-  },
-  data () {
-    return {
-      languages: [
-        { value: 'en', label: 'English' },
-        { value: 'de', label: 'Deutsch' },
-      ]
+      language,
+      country,
+      availableLanguages,
+      availableCountries,
+      update,
+      COUNTRIES_MAP,
+      LANGUAGES_MAP
     }
   },
   components: {
@@ -89,7 +90,8 @@ export default {
       }
     },
     onLanguageSelect (language) {
-      this.setLanguage(language)
+      this.update({ language })
+
       localStorage.setItem('language', language)
       
       window.location.reload()
@@ -97,13 +99,18 @@ export default {
     onCountrySelect(country) {
       const preferredLanguage = this.getPreferredLanguage(country)
 
-      this.setCountry(country)
-      localStorage.setItem('country', country)
+      if (this.language !== preferredLanguage) {
+        this.update({
+          language: preferredLanguage,
+          country,
+        })
 
-      if (this.getLanguage() !== preferredLanguage) {
-        this.setLanguage(preferredLanguage)
         localStorage.setItem('language', preferredLanguage)
+      } else {
+        this.update({ country })
       }
+
+      localStorage.setItem('country', country)
 
       window.location.reload()
     }

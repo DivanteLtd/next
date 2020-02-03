@@ -1,42 +1,57 @@
 import { UseLocale } from '@vue-storefront/interfaces'
-import { updateStoreConfig, locale, country, currency } from '@vue-storefront/commercetools-api'
+import { Ref, ref, reactive } from '@vue/composition-api'
+import { updateStoreConfig, getProjectProjection } from '@vue-storefront/commercetools-api'
 
-type SetLanguage = (languageCode: string) => void;
-type GetLanguage = () => string;
-type SetCountry = (countryCode: string) => void;
-type GetCountry = () => string;
-type GetCountries = () => { value: string, label: string }[];
+interface UpdateDto {
+  language?: string
+  country?: string
+  currency?: string
+}
 
-export default function useLocale (): UseLocale<SetLanguage, GetLanguage, SetCountry, GetCountry, GetCountries> {
-  const setLanguage: SetLanguage = (languageCode: string) => {
+type Update = (data: UpdateDto) => void
+type LoadData = () => Promise<void>
+
+export default function useLocale (): UseLocale<Update, LoadData> {
+  const language: Ref<string> = ref('')
+  const country: Ref<string> = ref('')
+  const currency: Ref<string> = ref('')
+
+  const availableLanguages: Array<string> = reactive([])
+  const availableCountries: Array<string> = reactive([])
+  const availableCurrencies: Array<string> = reactive([])
+  
+  const update: Update = (updateDto: UpdateDto) => {
+    if (updateDto.language) language.value = updateDto.language
+    if (updateDto.country) country.value = updateDto.country
+    if (updateDto.currency) currency.value = updateDto.currency
+
     updateStoreConfig({
-      locale: languageCode,
-      currency,
-      country
+      locale: language.value,
+      country: country.value,
+      currency: currency.value
     })
   }
-  const getLanguage: GetLanguage = () => locale
-  const setCountry: SetCountry = (countryCode: string) => updateStoreConfig({
-    locale,
-    currency,
-    country: countryCode
-  })
-  const getCountry: GetCountry = () => country
-  // TODO: Mocked country list. Need to do: async GQL request
-  const getCountries: GetCountries = () => {
-    return [
-      { value: 'US', label: 'United States' },
-      { value: 'AT', label: 'Austria' },
-      { value: 'DE', label: 'Germany' },
-      { value: 'NL', label: 'Netherlands' }
-    ]
+
+  const loadData: LoadData = async () => {
+    const { data: { project } } = await getProjectProjection()
+
+    if (availableLanguages.length > 0) availableLanguages.length = 0
+    if (availableCountries.length > 0) availableCountries.length = 0
+    if (availableCurrencies.length > 0) availableCurrencies.length = 0
+
+    availableLanguages.push(...project.languages)
+    availableCountries.push(...project.countries)
+    availableCurrencies.push(...project.currencies)
   }
 
   return {
-    setLanguage,
-    getLanguage,
-    setCountry,
-    getCountry,
-    getCountries
+    language,
+    country,
+    currency,
+    availableLanguages,
+    availableCountries,
+    availableCurrencies,
+    update,
+    loadData
   }
 }
