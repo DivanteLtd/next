@@ -258,7 +258,6 @@ import {
   getCategoryTree,
 } from '<%= options.helpers %>'
 
-
 export default {
   transition: 'fade',
   setup (props, context) {

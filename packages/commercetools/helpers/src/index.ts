@@ -13,14 +13,14 @@ interface ProductVariantFilters {
 }
 
 // Product
-export const getProductName = (product: ProductVariant): string => product ? (product as any)._name : ''
+export const getProductName = (product: ProductVariant | Readonly<ProductVariant>): string => product ? (product as any)._name : ''
 
-export const getProductSlug = (product: ProductVariant): string => product ? (product as any)._slug : ''
+export const getProductSlug = (product: ProductVariant | Readonly<ProductVariant>): string => product ? (product as any)._slug : ''
 
 // todo change to getProductPrices returning different types of prices https://github.com/DivanteLtd/next/issues/128
-export const getProductPrice = (product: ProductVariant): number | null => product ? product.price.value.centAmount / 100 : null
+export const getProductPrice = (product: ProductVariant | Readonly<ProductVariant>): number | null => product ? product.price.value.centAmount / 100 : null
 
-export const getProductGallery = (product: ProductVariant): UiMediaGalleryItem[] =>
+export const getProductGallery = (product: ProductVariant | Readonly<ProductVariant>): UiMediaGalleryItem[] =>
   (product ? product.images : [])
   .map((image: Image) => ({
     small: image.url,
@@ -29,7 +29,7 @@ export const getProductGallery = (product: ProductVariant): UiMediaGalleryItem[]
   }))
 
 /** Returns array of product variants meeting criteria */
-export const getProductVariants = (products: ProductVariant[], filters: ProductVariantFilters | any = {}): ProductVariant | ProductVariant[]  => {
+export const getProductVariants = (products: ProductVariant[] | Readonly<ProductVariant[]>, filters: ProductVariantFilters | any = {}): ProductVariant | ProductVariant[] | Readonly<ProductVariant> | Readonly<ProductVariant[]> => {
   if (!products) {
     return []
   }
@@ -45,7 +45,7 @@ export const getProductVariants = (products: ProductVariant[], filters: ProductV
   return products
 }
 
-export const getProductAttributes = (products: ProductVariant[], filterByAttributeName?: Array<string>): Record<string, AgnosticProductAttribute | string> => {
+export const getProductAttributes = (products: ProductVariant[] | Readonly<ProductVariant[]>, filterByAttributeName?: Array<string>): Record<string, AgnosticProductAttribute | string> | Readonly<AgnosticProductAttribute> => {
   const isSingleProduct = !Array.isArray(products)
   const productList = (isSingleProduct ? [products] : products) as ProductVariant[]
 

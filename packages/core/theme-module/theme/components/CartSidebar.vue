@@ -103,7 +103,7 @@ export default {
     const products = computed(() => getCartProducts(cart.value, ['color', 'size']))
     const totalPrice = computed(() => getCartSubtotalPrice(cart.value))
     const totalItems = computed(() => getCartTotalItems(cart.value))
-
+    
     return {
       products,
       removeFromCart,
@@ -116,6 +116,7 @@ export default {
   }
 };
 </script>
+
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/variables";
 @mixin for-desktop {

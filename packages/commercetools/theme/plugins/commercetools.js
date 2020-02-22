@@ -1,4 +1,5 @@
 import { setup } from '@vue-storefront/commercetools-api'
+import { format } from 'path'
 
 setup({
   api: {
@@ -21,3 +22,15 @@ setup({
   currency: 'USD',
   country: 'US'
 })
+
+
+const { search } = useProduct() 
+
+search({ id: '123', stock: true })
+
+
+
+const { search } = useCategory()
+
+
+search({ id: '123', products: true })

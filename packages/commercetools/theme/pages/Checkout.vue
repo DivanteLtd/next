@@ -22,7 +22,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 
 import { SfSteps } from "@storefront-ui/vue";
 import CartPreview from "~/components/checkout/CartPreview"
@@ -54,7 +54,7 @@ export default {
     const currentStep = ref(0)
     const { cart } = useCart()
     const products = computed(() => getCartProducts(cart.value, ['color', 'size']))
-
+    
     const handleShowReview = () => {
       showCartPreview.value = false
     }

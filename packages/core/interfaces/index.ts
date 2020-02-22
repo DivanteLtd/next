@@ -1,25 +1,45 @@
 import { Ref } from '@vue/composition-api'
 
-export interface UseProduct<PRODUCT, SEARCH> {
-  products: Ref<Array<PRODUCT>>;
-  search: SEARCH,
+// ---------------------------------------------------
+// UseProduct
+// ---------------------------------------------------
+
+export interface UseProduct<PRODUCT> {
+  products: Readonly<Ref<Readonly<Array<PRODUCT>>>>;
+  search: (params: { 
+    slug?: string, 
+    catId?: string | string[]
+    sku?: string | string[]
+    [x: string]: any;
+  }) => Promise<void>
   loading: Ref<boolean>;
   error: Ref<any>;
   [x: string]: any;
 }
 
+// ---------------------------------------------------
+// UseUser
+// ---------------------------------------------------
+
 export interface UseUser
 <
-  USER,
-  REGISTER,
-  LOGIN,
-  LOGOUT,
+  USER
 > {
-  user: USER
-  register: REGISTER
-  login: LOGIN
-  logout: LOGOUT
-  isAuthenticated: Ref<boolean>
+  user: Ref<USER>,
+  register: (user: {
+    email: string
+    password: string
+    firstName?: string
+    lastName?: string
+    [x: string]: any;
+  }) => Promise<void>
+  login: (user: {
+    username: string
+    password: string
+    [x: string]: any;
+  }) => Promise<void>
+  logout: () => Promise<void>
+  isAuthenticated: Ref<boolean> 
   loading: Ref<boolean>
   error: Ref<any>
 }
@@ -154,15 +174,5 @@ export interface AgnosticProductAttribute {
   label: string
 }
 
-export interface AgnosticUserRegister {
-  email: string
-  password: string
-  firstName?: string
-  lastName?: string
-}
 
-export interface AgnosticUserLogin {
-  username: string
-  password: string
-}
 
