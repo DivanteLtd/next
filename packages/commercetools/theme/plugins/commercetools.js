@@ -22,15 +22,3 @@ setup({
   currency: 'USD',
   country: 'US'
 })
-
-
-const { search } = useProduct() 
-
-search({ id: '123', stock: true })
-
-
-
-const { search } = useCategory()
-
-
-search({ id: '123', products: true })
