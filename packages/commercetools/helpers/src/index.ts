@@ -29,17 +29,17 @@ export const getProductGallery = (product: ProductVariant | Readonly<ProductVari
   }))
 
 /** Returns array of product variants meeting criteria */
-export const getProductVariants = (products: ProductVariant[] | Readonly<ProductVariant[]>, filters: ProductVariantFilters | any = {}): ProductVariant | ProductVariant[] | Readonly<ProductVariant> | Readonly<ProductVariant[]> => {
+export const getProductVariants = (products: ProductVariant[] | Readonly<ProductVariant[]>, filters: ProductVariantFilters | any = {}): ProductVariant[] | Readonly<ProductVariant[]> => {
   if (!products) {
     return []
   }
 
   if (filters.attributes && Object.keys(filters.attributes).length > 0) {
-    return getVariantByAttributes(products, filters.attributes)
+    return [getVariantByAttributes(products, filters.attributes)]
   }
 
   if (filters.master) {
-    return products.find(product => (product as any)._master)
+    return [products.find(product => (product as any)._master)]
   }
 
   return products
