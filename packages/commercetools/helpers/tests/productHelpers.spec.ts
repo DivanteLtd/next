@@ -73,10 +73,10 @@ describe('[commercetools-helpers] product helpers', () => {
       { _name: 'variant 2',
         _master: true }
     ];
-    expect(getProductVariants(variants as any, { master: true })).toEqual({
+    expect(getProductVariants(variants as any, { master: true })).toEqual([{
       _name: 'variant 2',
       _master: true
-    });
+    }]);
   });
 
   it('returns master variants', () => {
@@ -90,7 +90,7 @@ describe('[commercetools-helpers] product helpers', () => {
       { _name: 'variant 2_2',
         _master: false }
     ];
-    expect(getProductVariants(variants as any, { masters: true })).toEqual([
+    expect(getProductVariants(variants as any, { master: true })).toEqual([
       { _name: 'variant 1_2',
         _master: true },
       { _name: 'variant 2_1',

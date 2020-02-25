@@ -23,7 +23,7 @@ export interface UseUser
 <
   USER
 > {
-  user: Ref<USER>;
+  user: Readonly<Ref<Readonly<USER>>>;
   register: (user: {
     email: string;
     password: string;

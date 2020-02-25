@@ -9,7 +9,6 @@ import { formatAttributeList, getVariantByAttributes } from './_utils';
 
 interface ProductVariantFilters {
   master?: boolean;
-  masters?: boolean;
   attributes?: Record<string, string>;
 }
 
@@ -40,7 +39,7 @@ export const getProductVariants = (products: ProductVariant[] | Readonly<Product
   }
 
   if (filters.master) {
-    return [products.find((product) => (product as any)._master)];
+    return products.filter((product) => (product as any)._master);
   }
 
   return products;
