@@ -7,7 +7,7 @@ import {
   customerSignOut,
   getMe
 } from '@vue-storefront/commercetools-api';
-import { cart } from './../useCart';
+import { _cart as cart } from './../useCart';
 import { enhanceUser } from './../helpers/internals';
 
 type UserData = CustomerSignMeUpDraft | CustomerSignMeInDraft
