@@ -1,9 +1,5 @@
 import { Ref } from '@vue/composition-api';
 
-// ---------------------------------------------------
-// UseProduct
-// ---------------------------------------------------
-
 export interface UseProduct<PRODUCT> {
   products: Readonly<Ref<Readonly<Array<PRODUCT>>>>;
   search: (params: {
@@ -14,10 +10,6 @@ export interface UseProduct<PRODUCT> {
   error: Ref<any>;
   [x: string]: any;
 }
-
-// ---------------------------------------------------
-// UseUser
-// ---------------------------------------------------
 
 export interface UseUser
 <
