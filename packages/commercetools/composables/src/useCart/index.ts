@@ -15,7 +15,7 @@ const loading: Ref<boolean> = ref<boolean>(false);
 
 // TODO: Think how to incorporate this into core (updateItem?)
 interface UseCart extends BaseUseCart<Cart, ProductVariant, LineItem, any> {
-  updateQuantity: (product: LineItem) => void;
+  updateQuantity: (product: LineItem, quantity: number) => void;
 }
 
 export default function useCart(): UseCart {
