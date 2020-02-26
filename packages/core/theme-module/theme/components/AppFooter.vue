@@ -107,9 +107,17 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@mixin for-desktop {
+  @media screen and (min-width: $desktop-min) {
+    @content;
+  }
+}
+
 #footer {
   /* temporary */
-  padding: 0 2.5rem;
+  @include for-desktop {
+    padding: 0 2.5rem;
+  }
 }
 </style>
