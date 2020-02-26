@@ -10,10 +10,6 @@ jest.mock('@vue-storefront/commercetools-api', () => ({
   updateCartQuantity: jest.fn()
 }));
 
-jest.mock('./../../src/helpers/internals', () => ({
-  enhanceCart: (args) => args
-}));
-
 describe('[commercetools-composables] useCart', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -26,7 +22,7 @@ describe('[commercetools-composables] useCart', () => {
     const wrapper = mountComposable(useCart);
 
     await wrapper.vm.$nextTick();
-    expect(wrapper.vm.$data.loading).toBeTruthy();
+    expect(loadCurrentCart).toBeCalled();
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.$data.loading).toBeFalsy();
     expect(wrapper.vm.$data.cart).toEqual(cartData);
@@ -80,7 +76,7 @@ describe('[commercetools-composables] useCart', () => {
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
 
-    wrapper.vm.$data.updateQuantity({ qty: '2' });
+    wrapper.vm.$data.updateQuantity({ prod: 1}, 2);
     expect(wrapper.vm.$data.loading).toBeTruthy();
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.$data.loading).toBeFalsy();

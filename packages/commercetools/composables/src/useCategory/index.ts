@@ -17,16 +17,8 @@ const loadCategories = async (params) => {
 export default function useCategory(): UseCategory<Category, any, any> {
   const categories = ref([]);
   const appliedFilters = ref(null);
-  const applyFilter = () => {
-    () => {
-      console.log('useCategory:applyFilter');
-    };
-  };
-  const clearFilters = () => {
-    () => {
-      console.log('useCategory:clearFilters');
-    };
-  };
+  const applyFilter = () => {};
+  const clearFilters = () => {};
   const loading = ref(true);
   const error = ref(null);
 
