@@ -9,8 +9,8 @@ import { ProductVariant, Cart } from './../types/GraphQL';
 import { enhanceCart } from './../helpers/internals';
 import loadCurrentCart from './currentCart';
 
-export const _cart: Ref<Cart> = ref<Cart>(null);
-const _coupon = ref(null);
+export const cart: Ref<Cart> = ref<Cart>(null);
+const coupon = ref(null);
 const error = ref(null);
 const loading: Ref<boolean> = ref<boolean>(false);
 
@@ -22,32 +22,32 @@ interface UseCart extends BaseUseCart<Cart, ProductVariant, UiCartProduct, any> 
 export default function useCart(): UseCart {
 
   watch(async () => {
-    if (!_cart.value && !loading.value) {
+    if (!cart.value && !loading.value) {
       loading.value = true;
-      _cart.value = await loadCurrentCart();
+      cart.value = await loadCurrentCart();
       loading.value = false;
     }
   });
 
   const addToCart = async (variant: ProductVariant, quantity: number) => {
     loading.value = true;
-    const updateResponse = await apiAddToCart(_cart.value, variant, quantity);
-    _cart.value = enhanceCart(updateResponse).data.cart;
+    const updateResponse = await apiAddToCart(cart.value, variant, quantity);
+    cart.value = enhanceCart(updateResponse).data.cart;
     loading.value = false;
   };
 
   const removeFromCart = async (product: UiCartProduct) => {
     loading.value = true;
-    const updateResponse = await apiRemoveFromCart(_cart.value, product);
-    _cart.value = enhanceCart(updateResponse).data.cart;
+    const updateResponse = await apiRemoveFromCart(cart.value, product);
+    cart.value = enhanceCart(updateResponse).data.cart;
     loading.value = false;
   };
 
   const updateQuantity = async (product: UiCartProduct) => {
     if (parseInt(product.qty) > 0) {
       loading.value = true;
-      const updateResponse = await apiUpdateCartQuantity(_cart.value, product);
-      _cart.value = enhanceCart(updateResponse).data.cart;
+      const updateResponse = await apiUpdateCartQuantity(cart.value, product);
+      cart.value = enhanceCart(updateResponse).data.cart;
       loading.value = false;
     }
   };
@@ -56,19 +56,16 @@ export default function useCart(): UseCart {
   const applyCoupon = () => console.log('useCart:applyCoupon');
   const removeCoupon = () => console.log('useCart:removeCoupon');
 
-  const cart = computed(() => _cart.value);
-  const coupon = computed(() => _coupon.value);
-
   return {
-    cart,
+    cart: computed(() => cart.value),
     addToCart,
     removeFromCart,
     clearCart,
     updateQuantity,
-    coupon,
+    coupon: computed(() => coupon.value),
     applyCoupon,
     removeCoupon,
-    loading,
-    error
+    loading: computed(() => loading.value),
+    error: computed(() => error.value)
   };
 }

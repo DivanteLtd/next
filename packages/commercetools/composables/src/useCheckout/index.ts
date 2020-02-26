@@ -2,8 +2,8 @@
 
 import { UseCheckout } from '@vue-storefront/interfaces';
 import { placeOrder as processOrder, getShippingMethods } from '@vue-storefront/commercetools-api';
-import { ref, Ref, watch } from '@vue/composition-api';
-import { _cart as cart } from './../useCart';
+import { ref, Ref, watch, computed } from '@vue/composition-api';
+import { cart } from './../useCart';
 import { ShippingMethod, AddressInput, Customer } from '@vue-storefront/commercetools-api/lib/src/types/GraphQL';
 
 const PAYMENT_METHODS_MOCK = [
@@ -68,7 +68,7 @@ export default function useCheckout(): UseCheckout<any, any, any, any, any, any,
     chosenPaymentMethod,
     chosenShippingMethod,
     placeOrder,
-    loading,
-    error
+    loading: computed(() => loading.value),
+    error: computed(() => error.value)
   };
 }

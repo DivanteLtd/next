@@ -180,4 +180,3 @@ export interface AgnosticProductAttribute {
   value: string | Record<string, any>;
   label: string;
 }
-

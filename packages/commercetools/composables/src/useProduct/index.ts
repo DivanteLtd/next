@@ -12,22 +12,20 @@ const loadProductVariants = async (params): Promise<ProductVariant[]> => {
 };
 
 export default function useProduct(): UseProduct<ProductVariant> {
-  const _products: Ref<ProductVariant[]> = ref([]);
+  const products: Ref<ProductVariant[]> = ref([]);
   const loading = ref(false);
   const error = ref(null);
 
   const search = async (params) => {
     loading.value = true;
-    _products.value = await loadProductVariants(params);
+    products.value = await loadProductVariants(params);
     loading.value = false;
   };
 
-  const products = computed(() => _products.value);
-
   return {
-    products,
+    products: computed(() => products.value),
     search,
-    loading,
-    error
+    loading: computed(() => loading.value),
+    error: computed(() => error.value)
   };
 }

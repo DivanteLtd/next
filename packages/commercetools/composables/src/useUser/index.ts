@@ -7,7 +7,7 @@ import {
   customerSignOut,
   getMe
 } from '@vue-storefront/commercetools-api';
-import { _cart as cart } from './../useCart';
+import { cart } from './../useCart';
 import { enhanceUser } from './../helpers/internals';
 
 type UserData = CustomerSignMeUpDraft | CustomerSignMeInDraft
@@ -65,12 +65,12 @@ export default function useUser(): UseUser<Customer> {
   };
 
   return {
-    user,
+    user: computed(() => user.value),
     register,
     login,
     logout,
     isAuthenticated,
-    loading,
-    error
+    loading: computed(() => loading.value),
+    error: computed(() => error.value)
   };
 }

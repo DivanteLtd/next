@@ -15,7 +15,7 @@ const loadCategories = async (params) => {
 };
 
 export default function useCategory(): UseCategory<Category, any, any> {
-  const _categories = ref([]);
+  const categories = ref([]);
   const appliedFilters = ref(null);
   const applyFilter = () => {
     () => {
@@ -31,19 +31,17 @@ export default function useCategory(): UseCategory<Category, any, any> {
   const error = ref(null);
 
   const search = async (params) => {
-    _categories.value = await loadCategories(params);
+    categories.value = await loadCategories(params);
     loading.value = false;
   };
 
-  const categories = computed(() => _categories.value);
-
   return {
-    categories,
+    categories: computed(() => categories.value),
     search,
-    appliedFilters,
+    appliedFilters: computed(() => appliedFilters.value),
     applyFilter,
     clearFilters,
-    loading,
-    error
+    loading: computed(() => loading.value),
+    error: computed(() => error.value)
   };
 }
