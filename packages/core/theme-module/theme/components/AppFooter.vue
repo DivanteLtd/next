@@ -108,14 +108,11 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~@storefront-ui/shared/styles/variables";
-
 @mixin for-desktop {
   @media screen and (min-width: $desktop-min) {
     @content;
   }
 }
-
 #footer {
   /* temporary */
   @include for-desktop {
