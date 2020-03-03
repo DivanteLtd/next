@@ -11,13 +11,13 @@ const loadProductVariants = async (params): Promise<ProductVariant[]> => {
 
   return (enhancedProductResponse.data as any)._variants;
 };
-
+// todo: add total products count
 export default function useProduct(id: string): UseProduct<ProductVariant> {
   const { state, persistedResource } = usePersistedState(id);
 
   const products: Ref<ProductVariant[]> = ref(state || []);
   const loading = ref(false);
-  const error = ref(null);
+  const totalproducts = ref(0);
 
   const search = async (params) => {
     loading.value = true;
@@ -29,6 +29,6 @@ export default function useProduct(id: string): UseProduct<ProductVariant> {
     products: computed(() => products.value),
     search,
     loading: computed(() => loading.value),
-    error: computed(() => error.value)
+    totalProducts: computed(() => totalproducts.value)
   };
 }

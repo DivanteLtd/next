@@ -1,21 +1,29 @@
 import { Ref } from '@vue/composition-api';
 
+type ComputedProperty<T> = Readonly<Ref<Readonly<T>>>;
+
 export interface UseProduct<PRODUCT> {
-  products: Readonly<Ref<Readonly<Array<PRODUCT>>>>;
+  products: ComputedProperty<PRODUCT[]>;
+  totalProducts: ComputedProperty<number>;
   search: (params: {
-    slug?: string;
+    perPage?: number;
+    page?: number;
+    sort?: any;
+    term?: any;
+    filters?: any;
     [x: string]: any;
   }) => Promise<void>;
-  loading: Ref<boolean>;
-  error: Ref<any>;
+  loading: ComputedProperty<boolean>;
   [x: string]: any;
 }
 
 export interface UseUser
 <
-  USER
+  USER,
+  UPDATE_USER_PARAMS
 > {
-  user: Readonly<Ref<Readonly<USER>>>;
+  user: ComputedProperty<USER>;
+  updateUser: (params: UPDATE_USER_PARAMS) => Promise<void>;
   register: (user: {
     email: string;
     password: string;
@@ -31,25 +39,43 @@ export interface UseUser
   logout: () => Promise<void>;
   isAuthenticated: Ref<boolean>;
   loading: Ref<boolean>;
-  error: Ref<any>;
+}
+
+export interface UseUserOrders<ORDER> {
+  orders: {
+    data: ComputedProperty<ORDER[]>;
+    total: ComputedProperty<number[]>;
+  };
+  searchOrders: (params?: {
+    id?: any;
+    page?: number;
+    perPage?: number;
+    [x: string]: any;
+  }) => Promise<void>;
+  loading: Ref<boolean>;
+}
+
+/** check if we always have those addresses together or we need pagination  */
+export interface UseUserAddress<ADDRESS> {
+  addresses: ComputedProperty<ADDRESS[]>;
+  addAddress: (address: ADDRESS) => Promise<void>;
+  deleteAddress: (address: ADDRESS) => Promise<void>;
+  updateAddress: (address: ADDRESS) => Promise<void>;
+  searchAddresses: (params?: {
+    [x: string]: any;
+  }) => Promise<void>;
+  loading: Ref<boolean>;
 }
 
 export interface UseCategory
 <
-  CATEGORY,
-  APPLIED_FILTERS,
-  APPLY_FILTER,
+  CATEGORY
 > {
-  categories: Readonly<Ref<Readonly<Array<CATEGORY>>>>;
+  categories: ComputedProperty<CATEGORY[]>;
   search: (params: {
-    slug?: string;
     [x: string]: any;
   }) => Promise<void>;
-  appliedFilters: APPLIED_FILTERS;
-  applyFilter: APPLY_FILTER;
-  clearFilters: () => Promise<void> | void;
   loading: Ref<boolean>;
-  error: Ref<any>;
 }
 
 export interface UseCart
@@ -59,15 +85,14 @@ export interface UseCart
   CART_PRODUCT,
   COUPON
 > {
-  cart: Readonly<Ref<Readonly<CART>>>;
+  cart: ComputedProperty<CART>;
   addToCart: (product: PRODUCT, quantity: number) => Promise<void>;
   removeFromCart: (product: CART_PRODUCT, quantity?: number) => Promise<void>;
   clearCart: () => Promise<void> | void;
-  coupon: Readonly<Ref<Readonly<COUPON>>>;
+  coupon: ComputedProperty<COUPON>;
   applyCoupon: (coupon: string) => Promise<void> | void;
   removeCoupon: () => Promise<void> | void;
   loading: Ref<boolean>;
-  error: any;
 }
 
 export interface UseWishlist
@@ -82,7 +107,6 @@ export interface UseWishlist
   removeFromWishlist: REMOVE_FROM_WISHLIST;
   clearWishlist: CLEAR_WISHLIST;
   loading: Ref<boolean>;
-  error: any;
 }
 
 export interface UseCompare
@@ -97,7 +121,6 @@ export interface UseCompare
   removeFromCompare: REMOVE_FROM_COMPARE;
   clearCompare: CLEAR_COMPARE;
   loading: boolean;
-  error: any;
 }
 
 export interface UseCheckout
@@ -120,7 +143,6 @@ export interface UseCheckout
   chosenShippingMethod: CHOOSEN_SHIPPING_METHOD;
   placeOrder: PLACE_ORDER;
   loading: Ref<boolean>;
-  error: any;
 }
 
 export interface UseLocale
@@ -139,14 +161,12 @@ export interface UseLocale
   availableCountries: AVAILABLE_COUNTRIES;
   availableCurrencies: AVAILABLE_CURRENCIES;
   loading: Ref<boolean>;
-  error: any;
 }
 
 export interface UseContent<CONTENT, SEARCH> {
   content: CONTENT;
   search: SEARCH;
   loading: boolean;
-  error: any;
 }
 
 export interface UiMediaGalleryItem {

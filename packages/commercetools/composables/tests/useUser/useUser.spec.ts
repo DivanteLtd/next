@@ -16,10 +16,9 @@ describe('[commercetools-composables] useUser', () => {
   });
 
   it('creates properties', () => {
-    const { loading, error } = useUser();
+    const { loading } = useUser();
 
     expect(loading.value).toEqual(true);
-    expect(error.value).toEqual(null);
   });
 
   it('registers new customer', async () => {

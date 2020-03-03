@@ -15,15 +15,10 @@ const loadCategories = async (params) => {
   return enhancedCategory.data.categories.results;
 };
 
-export default function useCategory(id: string): UseCategory<Category, any, any> {
+export default function useCategory(id: string): UseCategory<Category> {
   const { state, persistedResource } = usePersistedState(id);
   const categories: Ref<Category[]> = ref(state || []);
-  const appliedFilters = ref(null);
   const loading = ref(false);
-  const error = ref(null);
-
-  const applyFilter = () => {};
-  const clearFilters = () => {};
 
   const search = async (params) => {
     if (!state) {
@@ -35,11 +30,7 @@ export default function useCategory(id: string): UseCategory<Category, any, any>
 
   return {
     search,
-    applyFilter,
-    clearFilters,
     loading: computed(() => loading.value),
-    error: computed(() => error.value),
-    categories: computed(() => categories.value),
-    appliedFilters: computed(() => appliedFilters.value)
+    categories: computed(() => categories.value)
   };
 }

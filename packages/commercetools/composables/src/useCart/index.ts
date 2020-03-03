@@ -10,7 +10,6 @@ import loadCurrentCart from './currentCart';
 
 export const cart: Ref<Cart> = ref<Cart>(null);
 const coupon = ref(null);
-const error = ref(null);
 const loading: Ref<boolean> = ref<boolean>(false);
 
 // TODO: Think how to incorporate this into core (updateItem?)
@@ -70,7 +69,6 @@ export default function useCart(): UseCart {
     coupon: computed(() => coupon.value),
     applyCoupon,
     removeCoupon,
-    loading: computed(() => loading.value),
-    error: computed(() => error.value)
+    loading: computed(() => loading.value)
   };
 }

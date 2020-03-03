@@ -49,7 +49,7 @@ export default {
   },
 
   setup({ product }) {
-    const { products, search, loading, error } = useProduct('related-products');
+    const { products, search, loading } = useProduct('related-products');
     const categories = getProductCategories(product);
     const relatedProducts = computed(() => getProductVariants(products.value, { masters: true }).filter((prod) => getProductId(prod) !== getProductId(product)));
 
@@ -61,7 +61,6 @@ export default {
       relatedProducts,
       search,
       loading,
-      error,
       getProductSlug,
       getProductName,
       getProductGallery,

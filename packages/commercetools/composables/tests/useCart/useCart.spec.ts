@@ -16,12 +16,11 @@ describe('[commercetools-composables] useCart', () => {
   });
 
   it('creates properties', () => {
-    const { cart, coupon, loading, error } = useCart();
+    const { cart, coupon, loading } = useCart();
 
     expect(cart.value).toEqual(null);
     expect(coupon.value).toEqual(null);
     expect(loading.value).toEqual(false);
-    expect(error.value).toEqual(null);
   });
 
   it('loads cart', async () => {

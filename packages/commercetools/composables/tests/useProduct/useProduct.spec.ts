@@ -29,11 +29,10 @@ jest.mock('@vue-storefront/commercetools-api', () => ({
 
 describe('[commercetools-composables] useProduct', () => {
   it('creates properties', () => {
-    const { products, loading, error } = useProduct('test-product');
+    const { products, loading } = useProduct('test-product');
 
     expect(products.value).toEqual([]);
     expect(loading.value).toEqual(false);
-    expect(error.value).toEqual(null);
   });
 
   it('returns product response', async () => {
