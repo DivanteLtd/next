@@ -17,7 +17,7 @@ export default function useProduct(id: string): UseProduct<ProductVariant> {
 
   const products: Ref<ProductVariant[]> = ref(state || []);
   const loading = ref(false);
-  const totalproducts = ref(0);
+  const totalProducts = ref(0);
 
   const search = async (params) => {
     loading.value = true;
@@ -29,6 +29,6 @@ export default function useProduct(id: string): UseProduct<ProductVariant> {
     products: computed(() => products.value),
     search,
     loading: computed(() => loading.value),
-    totalProducts: computed(() => totalproducts.value)
+    totalProducts: computed(() => totalProducts.value)
   };
 }
