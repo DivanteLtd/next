@@ -13,7 +13,7 @@ const coupon = ref(null);
 const loading: Ref<boolean> = ref<boolean>(false);
 
 // TODO: Think how to incorporate this into core (updateItem?)
-interface UseCart extends BaseUseCart<Cart, ProductVariant, LineItem, any> {
+interface UseCart extends BaseUseCart<Cart, LineItem, ProductVariant, any> {
   updateQuantity: (product: LineItem, quantity: number) => void;
 }
 
@@ -59,10 +59,18 @@ export default function useCart(): UseCart {
   const clearCart = () => console.log('useCart:clearCart');
   const applyCoupon = () => console.log('useCart:applyCoupon');
   const removeCoupon = () => console.log('useCart:removeCoupon');
+  const refreshCart = async () => console.log('useCart:refreshCart');
+  const changeQuantity = async (product: LineItem, quantity: number) => console.log('useCart:changeQty', product, quantity);
+  const isOnCart = (product: ProductVariant) => {
+    return computed(() => !product);
+  };
 
   return {
     cart: computed(() => cart.value),
+    isOnCart,
     addToCart,
+    changeQuantity,
+    refreshCart,
     removeFromCart,
     clearCart,
     updateQuantity,

@@ -1,0 +1,8 @@
+{
+  "extends": "../../commercetools/tsconfig.base.json",
+  "include": ["src"],
+  "exclude": ["node_modules", "lib"],
+  "references": [
+    { "path": "apollo-client" }
+  ]
+}
