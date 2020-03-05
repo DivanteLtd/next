@@ -81,46 +81,47 @@ export interface UseCategory
 export interface UseCart
 <
   CART,
+  CART_ITEM,
   PRODUCT,
-  CART_PRODUCT,
   COUPON
 > {
   cart: ComputedProperty<CART>;
-  addToCart: (product: PRODUCT, quantity: number) => Promise<void>;
-  removeFromCart: (product: CART_PRODUCT, quantity?: number) => Promise<void>;
+  addToCart: (product: CART_ITEM | PRODUCT, quantity: number) => Promise<void>;
+  isOnCart: (product: PRODUCT) => ComputedProperty<boolean>;
+  removeFromCart: (product: CART_ITEM,) => Promise<void>;
+  changeQuantity: (product: CART_ITEM, quantity?: number) => Promise<void>;
   clearCart: () => Promise<void> | void;
   coupon: ComputedProperty<COUPON>;
   applyCoupon: (coupon: string) => Promise<void> | void;
   removeCoupon: () => Promise<void> | void;
+  refreshCart: () => Promise<void>;
   loading: Ref<boolean>;
 }
 
 export interface UseWishlist
 <
   WISHLIST,
-  ADD_TO_WISHLIST,
-  REMOVE_FROM_WISHLIST,
-  CLEAR_WISHLIST,
+  PRODUCT,
+  WISHLIST_ITEM,
 > {
-  wishlist: WISHLIST;
-  addToWishlist: ADD_TO_WISHLIST;
-  removeFromWishlist: REMOVE_FROM_WISHLIST;
-  clearWishlist: CLEAR_WISHLIST;
+  wishlist: ComputedProperty<WISHLIST>;
+  addToWishlist: (product: PRODUCT, quantity: number) => Promise<void>;
+  isOnWishlist: (product: PRODUCT) => ComputedProperty<boolean>;
+  removeFromWishlist: (product: WISHLIST_ITEM) => Promise<void>;
+  clearWishlist: () => Promise<void>;
+  refreshWishlist: () => Promise<void>;
   loading: Ref<boolean>;
 }
 
 export interface UseCompare
 <
-  COMPARE,
-  ADD_TO_COMPARE,
-  REMOVE_FROM_COMPARE,
-  CLEAR_COMPARE,
+  PRODUCT
 > {
-  compare: COMPARE;
-  addToCompare: ADD_TO_COMPARE;
-  removeFromCompare: REMOVE_FROM_COMPARE;
-  clearCompare: CLEAR_COMPARE;
-  loading: boolean;
+  compare: ComputedProperty<PRODUCT[]>;
+  addToCompare: (product: PRODUCT) => Promise<void>;
+  removeFromCompare: (product: PRODUCT) => Promise<void>;
+  clearCompare: () => Promise<void>;
+  loading: Ref<boolean>;
 }
 
 export interface UseCheckout
@@ -161,12 +162,6 @@ export interface UseLocale
   availableCountries: AVAILABLE_COUNTRIES;
   availableCurrencies: AVAILABLE_CURRENCIES;
   loading: Ref<boolean>;
-}
-
-export interface UseContent<CONTENT, SEARCH> {
-  content: CONTENT;
-  search: SEARCH;
-  loading: boolean;
 }
 
 export interface UiMediaGalleryItem {
