@@ -54,7 +54,7 @@ export default {
     const relatedProducts = computed(() => getProductVariants(products.value, { masters: true }).filter((prod) => getProductId(prod) !== getProductId(product)));
 
     if (categories.length > 0) {
-      search({ catIds: [categories[0]] });
+      search({ catId: [categories[0]] });
     }
 
     return {

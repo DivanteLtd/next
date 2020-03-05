@@ -1,5 +1,5 @@
 import { UseProduct } from '@vue-storefront/interfaces';
-import { usePersistedState } from '@vue-storefront/utils';
+// import { usePersistedState } from '@vue-storefront/utils';
 import { ref, Ref, computed } from '@vue/composition-api';
 import { getProduct } from '@vue-storefront/commercetools-api';
 import { enhanceProduct } from './../helpers/internals';
@@ -11,17 +11,20 @@ const loadProductVariants = async (params): Promise<ProductVariant[]> => {
 
   return (enhancedProductResponse.data as any)._variants;
 };
-// todo: add total products count
-export default function useProduct(id: string): UseProduct<ProductVariant> {
-  const { state, persistedResource } = usePersistedState(id);
 
-  const products: Ref<ProductVariant[]> = ref(state || []);
-  const loading = ref(false);
+export default function useProduct(id: string): UseProduct<ProductVariant> {
+  console.info('SSR Temporarly disbled for product composable https://github.com/DivanteLtd/next/issues/232', id);
+  // const { state, persistedResource } = usePersistedState(id);
+
+  // const products: Ref<ProductVariant[]> = ref(state || []);
+  const products: Ref<ProductVariant[]> = ref([]);
+  const loading = products.value.length ? ref(false) : ref(true);
   const totalProducts = ref(0);
 
   const search = async (params) => {
     loading.value = true;
-    products.value = await persistedResource<ProductVariant[]>(loadProductVariants, params);
+    // products.value = await persistedResource<ProductVariant[]>(loadProductVariants, params);
+    products.value = await loadProductVariants(params);
     loading.value = false;
   };
 
