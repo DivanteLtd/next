@@ -89,7 +89,7 @@ export interface UseCart
   addToCart: (product: PRODUCT, quantity: number) => Promise<void>;
   isOnCart: (product: PRODUCT) => ComputedProperty<boolean>;
   removeFromCart: (product: CART_ITEM,) => Promise<void>;
-  changeQuantity: (product: CART_ITEM, quantity?: number) => Promise<void>;
+  updateQuantity: (product: CART_ITEM, quantity?: number) => Promise<void>;
   clearCart: () => Promise<void> | void;
   coupon: ComputedProperty<COUPON>;
   applyCoupon: (coupon: string) => Promise<void> | void;

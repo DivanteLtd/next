@@ -2,7 +2,7 @@ import { UseCategory } from '@vue-storefront/interfaces';
 import { usePersistedState } from '@vue-storefront/utils';
 import { ref, Ref, computed } from '@vue/composition-api';
 
-type UseCategoryFactoryParams<CATEGORY, CATEGORY_SEARCH_PARAMS> = {
+export type UseCategoryFactoryParams<CATEGORY, CATEGORY_SEARCH_PARAMS> = {
   categorySearch: (searchParams: CATEGORY_SEARCH_PARAMS) => Promise<CATEGORY[]>;
 }
 

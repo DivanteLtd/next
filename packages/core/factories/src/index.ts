@@ -1,5 +1,9 @@
-import { useCategoryFactory } from './useCategory';
+import { useCategoryFactory, UseCategoryFactoryParams } from './useCategory';
+import { useCartFactory, UseCartFactoryParams } from './useCart';
 
 export {
-  useCategoryFactory
+  useCategoryFactory,
+  UseCategoryFactoryParams,
+  useCartFactory,
+  UseCartFactoryParams
 };

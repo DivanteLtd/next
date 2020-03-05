@@ -10,6 +10,7 @@
     "build:core:interfaces": "cd packages/core/interfaces && tsc",
     "build:core:utils": "cd packages/core/utils && yarn build",
     "build:core": "yarn build:core:interfaces && yarn build:core:utils",
+    "build:core:factories": "cd packages/core/factories && yarn build",
     "build:ct:api-client": "cd packages/commercetools/api-client && yarn build",
     "build:ct:composables": "cd packages/commercetools/composables && yarn build",
     "build:ct:helpers": "cd packages/commercetools/helpers && yarn build",
@@ -73,7 +74,9 @@
       "**/**/**"
     ]
   },
-  "dependencies": {},
+  "dependencies": {
+    "rollup-plugin-sourcemaps": "^0.5.0"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
