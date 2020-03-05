@@ -1,5 +1,2 @@
-import { useCategoryFactory } from './useCategory';
-
-export {
-  useCategoryFactory
-};
+export * from './useCategoryFactory';
+export * from './useProductFactory';

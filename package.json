@@ -8,6 +8,7 @@
     "build:docs": "cd packages/commercetools/docs && yarn build",
     "dev:docs": "cd packages/commercetools/docs && yarn dev",
     "build:core:interfaces": "cd packages/core/interfaces && tsc",
+    "build:core:factories": "cd packages/core/factories && yarn build",
     "build:core:utils": "cd packages/core/utils && yarn build",
     "build:core": "yarn build:core:interfaces && yarn build:core:utils",
     "build:ct:api-client": "cd packages/commercetools/api-client && yarn build",
