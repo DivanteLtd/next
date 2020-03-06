@@ -38,6 +38,7 @@ const fullProfile = gql`
           country
           apartment
         }
+        shippingAddressIds
       }
     }
   }

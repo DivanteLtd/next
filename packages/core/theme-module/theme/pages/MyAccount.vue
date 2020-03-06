@@ -21,7 +21,7 @@
         <SfContentPage title="Shipping details">
           <ShippingDetails
             :account="account"
-            :addresses="user.addresses"
+            :addresses="account.shipping"
             @update:shipping="account = { ...account, ...$event }"
           />
         </SfContentPage>
@@ -100,13 +100,15 @@ export default {
       root.$router.push(`/my-account/${title.toLowerCase().replace(' ', '-')}`);
     };
 
-    const addresses = computed(() => user.addresses || []);
+    const getShippingAddresses = () => (
+      (user.value.addresses || []).filter(address => (user.value.shippingAddressIds || []).includes(address.id))
+    );
 
     const account = computed(() => ({
       firstName: user.value.firstName,
       lastName: user.value.lastName,
       email: user.value.email,
-      shipping: addresses,
+      shipping: getShippingAddresses(),
       orders: [
         ['#35765', '4th Nov, 2019', 'Visa card', '$12.00', 'In process'],
         ['#35766', '4th Nov, 2019', 'Paypal', '$12.00', 'Finalised'],
