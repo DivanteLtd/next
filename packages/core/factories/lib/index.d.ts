@@ -1,3 +1,3 @@
-import { useCategoryFactory, UseCategoryFactoryParams } from './useCategory';
-import { useCartFactory, UseCartFactoryParams } from './useCart';
-export { useCategoryFactory, UseCategoryFactoryParams, useCartFactory, UseCartFactoryParams };
+export * from './useCartFactory';
+export * from './useCategoryFactory';
+export * from './useProductFactory';
