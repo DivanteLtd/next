@@ -1,4 +1,4 @@
-7<template>
+<template>
   <div>
     <h1>Working with themes</h1>
     <p>
