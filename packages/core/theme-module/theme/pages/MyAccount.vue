@@ -21,7 +21,6 @@
         <SfContentPage title="Shipping details">
           <ShippingDetails
             :account="account"
-            :addresses="account.shipping"
             @update:shipping="account = { ...account, ...$event }"
           />
         </SfContentPage>

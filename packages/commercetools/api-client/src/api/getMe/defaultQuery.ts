@@ -37,6 +37,9 @@ const fullProfile = gql`
           state
           country
           apartment
+          contactInfo {
+            phone
+          }
         }
         shippingAddressIds
       }

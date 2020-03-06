@@ -128,8 +128,8 @@
         </p>
         <transition-group tag="div" name="fade" class="shipping-list">
           <div
-            v-for="(address, key) in addresses"
-            :key="address.streetName + address.streetNumber"
+            v-for="(address) in account.shipping"
+            :key="address.id"
             class="shipping"
           >
             <div class="shipping__content">
@@ -153,12 +153,12 @@
                 size="14px"
                 role="button"
                 class="mobile-only"
-                @click="deleteAddress(key)"
+                @click="deleteAddress(address.id)"
               />
-              <SfButton @click="changeAddress(key)">Change</SfButton>
+              <SfButton @click="changeAddress(address.id)">Change</SfButton>
               <SfButton
                 class="shipping__button-delete desktop-only"
-                @click="deleteAddress(key)"
+                @click="deleteAddress(address.id)"
                 >Delete</SfButton
               >
             </div>
@@ -213,127 +213,142 @@ export default {
     account: {
       type: Object,
       default: () => ({})
-    },
-    addresses: {
-      type: Array,
-      default: () => []
     }
   },
-  setup(props) {
-    const customer = ref(props.account);
+  setup({ account }) {
+    const editAddress = ref(false);
+    const editedAddress = ref(-1);
+    const countries = [
+      'Austria',
+      'Azerbaijan',
+      'Belarus',
+      'Belgium',
+      'Bosnia and Herzegovina',
+      'Bulgaria',
+      'Croatia',
+      'Cyprus',
+      'Czech Republic',
+      'Denmark',
+      'Estonia',
+      'Finland',
+      'France',
+      'Georgia',
+      'Germany',
+      'Greece',
+      'Hungary',
+      'Iceland',
+      'Ireland',
+      'Italy',
+      'Kosovo',
+      'Latvia',
+      'Liechtenstein',
+      'Lithuania',
+      'Luxembourg',
+      'Macedonia',
+      'Malta',
+      'Moldova',
+      'Monaco',
+      'Montenegro',
+      'The Netherlands',
+      'Norway',
+      'Poland',
+      'Portugal',
+      'Romania',
+      'Russia',
+      'San Marino',
+      'Serbia',
+      'Slovakia',
+      'Slovenia',
+      'Spain',
+      'Sweden',
+      'Switzerland',
+      'Turkey',
+      'Ukraine',
+      'United Kingdom',
+      'Vatican City'
+    ];
+    const firstName = ref('');
+    const lastName = ref('');
+    const streetName = ref('');
+    const streetNumber = ref('');
+    const city = ref('');
+    const state = ref('');
+    const postalCode = ref('');
+    const country = ref('');
+    const phone = ref('');
 
-    return { customer };
-  },
-  data() {
-    return {
-      editAddress: false,
-      editedAddress: -1,
-      firstName: '',
-      lastName: '',
-      streetName: '',
-      streetNumber: '',
-      city: '',
-      state: '',
-      postalCode: '',
-      country: '',
-      phone: '',
-      countries: [
-        'Austria',
-        'Azerbaijan',
-        'Belarus',
-        'Belgium',
-        'Bosnia and Herzegovina',
-        'Bulgaria',
-        'Croatia',
-        'Cyprus',
-        'Czech Republic',
-        'Denmark',
-        'Estonia',
-        'Finland',
-        'France',
-        'Georgia',
-        'Germany',
-        'Greece',
-        'Hungary',
-        'Iceland',
-        'Ireland',
-        'Italy',
-        'Kosovo',
-        'Latvia',
-        'Liechtenstein',
-        'Lithuania',
-        'Luxembourg',
-        'Macedonia',
-        'Malta',
-        'Moldova',
-        'Monaco',
-        'Montenegro',
-        'The Netherlands',
-        'Norway',
-        'Poland',
-        'Portugal',
-        'Romania',
-        'Russia',
-        'San Marino',
-        'Serbia',
-        'Slovakia',
-        'Slovenia',
-        'Spain',
-        'Sweden',
-        'Switzerland',
-        'Turkey',
-        'Ukraine',
-        'United Kingdom',
-        'Vatican City'
-      ]
+    const changeAddress = (id) => {
+      const address = account.shipping.find(shippingAddress => id === shippingAddress.id);
+
+      if (!address) {
+        return;
+      }
+
+      firstName.value = address.firstName || account.firstName || '';
+      lastName.value = address.lastName || account.lastName || '';
+      streetName.value = address.streetName || '';
+      city.value = address.city || '';
+      state.value = address.state || '';
+      postalCode.value = address.postalCode || '';
+      country.value = address.country || '';
+      phone.value = address.contactInfo ? address.contactInfo.phone || '' : '';
+
+      editAddress.value = true;
     };
-  },
-  methods: {
-    changeAddress(index) {
-      const account = this.account;
-      const shipping = this.$props.addresses[index];
-      if (index > -1) {
-        this.firstName = account.firstName;
-        this.lastName = account.lastName;
-        this.streetName = shipping.streetName;
-        this.streetNumber = shipping.streetNumber;
-        this.city = shipping.city;
-        this.state = shipping.state;
-        this.postalCode = shipping.postalCode;
-        this.country = shipping.country;
-        this.phone = shipping.phone;
-        this.editedAddress = index;
-      }
-      this.editAddress = true;
-    },
-    updateAddress() {
-      const account = { ...this.account };
-      const shipping = {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        streetNumber: this.streetNumber,
-        streetName: this.streetName,
-        city: this.city,
-        state: this.state,
-        postalCode: this.postalCode,
-        country: this.country,
-        phone: this.phone
-      };
-      const index = this.editedAddress;
-      if (index > -1) {
-        this.$props.addresses[index] = shipping;
-        this.editedAddress = -1;
-      } else {
-        this.$props.addresses.push(shipping);
-      }
-      this.editAddress = false;
-      this.$emit('update:shipping', account);
-    },
-    deleteAddress(index) {
-      const account = { ...this.account };
-      this.$props.addresses.splice(index, 1);
-      this.$emit('update:shipping', account);
-    }
+
+    const updateAddress = (id) => {
+      console.log(`updateAddress: ${id}`);
+      // TODO: Integrate with API in other task
+      // OLD CODE HERE:
+      // const account = { ...this.account };
+      // const shipping = {
+      //   firstName: this.firstName,
+      //   lastName: this.lastName,
+      //   streetNumber: this.streetNumber,
+      //   streetName: this.streetName,
+      //   city: this.city,
+      //   state: this.state,
+      //   postalCode: this.postalCode,
+      //   country: this.country,
+      //   phone: this.phone
+      // };
+      // const index = this.editedAddress;
+      // if (index > -1) {
+      //   this.$props.addresses[index] = shipping;
+      //   this.editedAddress = -1;
+      // } else {
+      //   this.$props.addresses.push(shipping);
+      // }
+      // this.editAddress = false;
+      // this.$emit('update:shipping', account);
+    };
+
+    const deleteAddress = (id) => {
+      console.log(`deleteAddress: ${id}`);
+      // TODO: Integrate with API in other task
+      // OLD CODE HERE:
+      // const account = { ...this.account };
+      // this.$props.addresses.splice(index, 1);
+      // this.$emit('update:shipping', account);
+    };
+
+    return {
+      countries,
+      firstName,
+      lastName,
+      streetName,
+      streetNumber,
+      city,
+      state,
+      postalCode,
+      country,
+      phone,
+      editAddress,
+      editedAddress,
+      changeAddress,
+      updateAddress,
+      deleteAddress
+    };
   }
 };
 </script>
