@@ -122,7 +122,7 @@
     <SfTabs v-else key="address-list" :open-tab="1" class="tab-orphan">
       <SfTab title="Shipping details">
         <p class="message">
-          Manage all the shipping shipping you want (work place, home address
+          Manage all the shipping addresses you want (work place, home address
           ...) This way you won"t have to enter the shipping address manually
           with each order.
         </p>

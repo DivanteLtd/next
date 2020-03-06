@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { CartFragment, CustomerFragment } from './../../fragments';
+import { CartFragment, CustomerFragment, AddressFragment } from './../../fragments';
 
 const basicProfile = gql`
   ${CartFragment}
@@ -16,6 +16,7 @@ const basicProfile = gql`
 const fullProfile = gql`
   ${CartFragment}
   ${CustomerFragment}
+  ${AddressFragment}
 
   query getMe($locale: Locale!) {
     me {
@@ -25,23 +26,16 @@ const fullProfile = gql`
       customer {
         ...DefaultCustomer
         addresses {
-          id
-          title
-          firstName
-          lastName
-          streetName
-          streetNumber
-          postalCode
-          city
-          region
-          state
-          country
-          apartment
-          contactInfo {
-            phone
-          }
+          ...DefaultAddress
+        }
+        defaultBillingAddress {
+          ...DefaultAddress
+        }
+        defaultShippingAddress {
+          ...DefaultAddress
         }
         shippingAddressIds
+        billingAddressIds
       }
     }
   }
