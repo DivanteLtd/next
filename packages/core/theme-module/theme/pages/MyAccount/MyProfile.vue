@@ -54,7 +54,7 @@
       <p class="message">
         If you want to change the password to access your account, enter the
         following information:<br />Your current email address is
-        <span class="message__label">example@email.com</span>
+        <span class="message__label">{{account.email}}</span>
       </p>
       <ValidationObserver v-slot="{ handleSubmit }">
         <form class="form" @submit.prevent="handleSubmit(updatePassword)">

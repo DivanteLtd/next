@@ -8,7 +8,7 @@
     >
       <SfTab title="Change the address">
         <p class="message">
-          Keep your addresses and contact details updated.
+          Keep your shipping and contact details updated.
         </p>
 
         <ValidationObserver v-slot="{ handleSubmit }">
@@ -46,8 +46,8 @@
               />
             </ValidationProvider>
             <SfInput
-              v-model="apartment"
-              name="apartment"
+              v-model="streetNumber"
+              name="streetNumber"
               label="House/Apartment number"
               required
               class="form__element"
@@ -77,8 +77,8 @@
             <div class="form__horizontal">
               <ValidationProvider rules="required|min:4" v-slot="{ errors }" class="form__element">
                 <SfInput
-                  v-model="zipCode"
-                  name="zipCode"
+                  v-model="postalCode"
+                  name="postalCode"
                   label="Zip-code"
                   required
                   :valid="!errors[0]"
@@ -106,7 +106,7 @@
             </div>
             <ValidationProvider rules="required|min:8" v-slot="{ errors }" class="form__element">
               <SfInput
-                v-model="phoneNumber"
+                v-model="phone"
                 name="phone"
                 label="Phone number"
                 required
@@ -122,28 +122,28 @@
     <SfTabs v-else key="address-list" :open-tab="1" class="tab-orphan">
       <SfTab title="Shipping details">
         <p class="message">
-          Manage all the shipping addresses you want (work place, home address
+          Manage all the shipping shipping you want (work place, home address
           ...) This way you won"t have to enter the shipping address manually
           with each order.
         </p>
         <transition-group tag="div" name="fade" class="shipping-list">
           <div
-            v-for="(shipping, key) in account.shipping"
-            :key="shipping.streetName + shipping.apartment"
+            v-for="(address, key) in addresses"
+            :key="address.streetName + address.streetNumber"
             class="shipping"
           >
             <div class="shipping__content">
               <p class="shipping__address">
                 <span class="shipping__client-name"
-                  >{{ shipping.firstName }} {{ shipping.lastName }}</span
+                  >{{ address.firstName }} {{ address.lastName }}</span
                 ><br />
-                {{ shipping.streetName }} {{ shipping.apartment }}<br />{{
-                  shipping.zipCode
+                {{ address.streetName }} {{ address.streetNumber }}<br />{{
+                  address.postalCode
                 }}
-                {{ shipping.city }},<br />{{ shipping.country }}
+                {{ address.city }},<br />{{ address.country }}
               </p>
               <p class="shipping__address">
-                {{ shipping.phoneNumber }}
+                {{ address.phone }}
               </p>
             </div>
             <div class="shipping__actions">
@@ -179,6 +179,7 @@ import {
   SfSelect,
   SfIcon
 } from '@storefront-ui/vue';
+import { ref } from '@vue/composition-api';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, min, oneOf } from 'vee-validate/dist/rules';
 
@@ -212,7 +213,16 @@ export default {
     account: {
       type: Object,
       default: () => ({})
+    },
+    addresses: {
+      type: Array,
+      default: () => []
     }
+  },
+  setup(props) {
+    const customer = ref(props.account);
+
+    return { customer };
   },
   data() {
     return {
@@ -221,12 +231,12 @@ export default {
       firstName: '',
       lastName: '',
       streetName: '',
-      apartment: '',
+      streetNumber: '',
       city: '',
       state: '',
-      zipCode: '',
+      postalCode: '',
       country: '',
-      phoneNumber: '',
+      phone: '',
       countries: [
         'Austria',
         'Azerbaijan',
@@ -281,17 +291,17 @@ export default {
   methods: {
     changeAddress(index) {
       const account = this.account;
-      const shipping = account.shipping[index];
+      const shipping = this.$props.addresses[index];
       if (index > -1) {
         this.firstName = account.firstName;
         this.lastName = account.lastName;
         this.streetName = shipping.streetName;
-        this.apartment = shipping.apartment;
+        this.streetNumber = shipping.streetNumber;
         this.city = shipping.city;
         this.state = shipping.state;
-        this.zipCode = shipping.zipCode;
+        this.postalCode = shipping.postalCode;
         this.country = shipping.country;
-        this.phoneNumber = shipping.phoneNumber;
+        this.phone = shipping.phone;
         this.editedAddress = index;
       }
       this.editAddress = true;
@@ -301,27 +311,27 @@ export default {
       const shipping = {
         firstName: this.firstName,
         lastName: this.lastName,
-        apartment: this.apartment,
+        streetNumber: this.streetNumber,
         streetName: this.streetName,
         city: this.city,
         state: this.state,
-        zipCode: this.zipCode,
+        postalCode: this.postalCode,
         country: this.country,
-        phoneNumber: this.phoneNumber
+        phone: this.phone
       };
       const index = this.editedAddress;
       if (index > -1) {
-        account.shipping[index] = shipping;
+        this.$props.addresses[index] = shipping;
         this.editedAddress = -1;
       } else {
-        account.shipping.push(shipping);
+        this.$props.addresses.push(shipping);
       }
       this.editAddress = false;
       this.$emit('update:shipping', account);
     },
     deleteAddress(index) {
       const account = { ...this.account };
-      account.shipping.splice(index, 1);
+      this.$props.addresses.splice(index, 1);
       this.$emit('update:shipping', account);
     }
   }

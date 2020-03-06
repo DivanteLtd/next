@@ -24,6 +24,20 @@ const fullProfile = gql`
       }
       customer {
         ...DefaultCustomer
+        addresses {
+          id
+          title
+          firstName
+          lastName
+          streetName
+          streetNumber
+          postalCode
+          city
+          region
+          state
+          country
+          apartment
+        }
       }
     }
   }
