@@ -1,8 +1,9 @@
 import { ref, Ref, watch, computed } from '@vue/composition-api';
 import { UseUser } from '@vue-storefront/interfaces';
 
-export type UseUserFactoryParams<USER, UPDATE_USER_PARAMS> = {
+export type UseUserFactoryParams<USER, USER_DATA, UPDATE_USER_PARAMS> = {
   user: Ref<USER>;
+  getUser: () => Promise<USER>;
   updateUser: (currentUser: USER, params: UPDATE_USER_PARAMS) => Promise<USER>;
   register: (user: {
     email: string;
@@ -14,18 +15,25 @@ export type UseUserFactoryParams<USER, UPDATE_USER_PARAMS> = {
   logout: () => Promise<void>;
 };
 
-export function useUserFactory<USER, UPDATE_USER_PARAMS>(
-  factoryParams: UseUserFactoryParams<USER, UPDATE_USER_PARAMS>
+export function useUserFactory<USER, USER_DATA, UPDATE_USER_PARAMS>(
+  factoryParams: UseUserFactoryParams<USER, USER_DATA, UPDATE_USER_PARAMS>
 ) {
-
   const user: Ref<USER> = ref({});
   const loading: Ref<boolean> = ref(false);
   const isAuthenticated = computed(
     () => user.value && Object.keys(user.value).length > 0
   );
 
-  return function useUser(): UseUser<USER, UPDATE_USER_PARAMS> {
-    watch(user, async () => {});
+  return function useUser(): UseUser<USER, USER_DATA, UPDATE_USER_PARAMS> {
+    watch(user, async () => {
+      if (isAuthenticated.value) {
+        return;
+      }
+      loading.value = true;
+      const profile: USER = await factoryParams.getUser();
+      user.value = profile.data.me.customer;
+      loading.value = false;
+    });
 
     const updateUser = async (params: UPDATE_USER_PARAMS) => {
       loading.value = true;

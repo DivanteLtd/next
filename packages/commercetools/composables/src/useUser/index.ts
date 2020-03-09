@@ -1,76 +1,61 @@
-import { ref, Ref, watch, computed } from '@vue/composition-api';
 import { UseUser } from '@vue-storefront/interfaces';
-import { Customer, CustomerSignMeUpDraft, CustomerSignMeInDraft } from '@vue-storefront/commercetools-api/lib/src/types/GraphQL';
 import {
-  customerSignMeUp,
-  customerSignMeIn,
-  customerSignOut,
-  getMe
+  customerSignMeUp as apiCustomerSignMeUp,
+  customerSignMeIn as apiCustomerSignMeIn,
+  customerSignOut as apiCustomerSignOut,
+  getMe as apiGetMe
 } from '@vue-storefront/commercetools-api';
-import { cart } from './../useCart';
+import {
+  Customer,
+  CustomerSignMeUpDraft,
+  CustomerSignMeInDraft
+} from '@vue-storefront/commercetools-api/lib/src/types/GraphQL';
+import {
+  useUserFactory,
+  UseUserFactoryParams
+} from '@vue-storefront/factories';
 
-type UserData = CustomerSignMeUpDraft | CustomerSignMeInDraft
-
-const user: Ref<Customer> = ref({});
-const loading: Ref<boolean> = ref(false);
-const isAuthenticated = computed(() => user.value && Object.keys(user.value).length > 0);
+type UserData = CustomerSignMeUpDraft | CustomerSignMeInDraft;
 
 const authenticate = async (userData: UserData, fn) => {
-  loading.value = true;
   try {
     const userResponse = await fn(userData);
-    user.value = userResponse.data.user.customer;
-    cart.value = userResponse.data.user.cart;
+    return {
+      user: userResponse.data.user.customer,
+      cart: userResponse.data.user.cart
+    };
   } catch (err) {
     console.error(err.graphQLErrors ? err.graphQLErrors[0].message : err);
   }
-  loading.value = false;
 };
 
-export default function useUser(): UseUser<Customer, any> {
+const params: UseUserFactoryParams<Customer, UserData, any> = {
+  getUser: async (customer = true) => {
+    await apiGetMe({ customer });
+  },
 
-  watch(user, async () => {
-    if (isAuthenticated.value) {
-      return;
-    }
-
-    loading.value = true;
-
-    try {
-      const profile = await getMe({ customer: true });
-      user.value = profile.data.me.customer;
-    } catch (err) {} // eslint-disable-line
-
-    loading.value = false;
-  });
-
-  const updateUser = async (params: any) => {
+  updateUser: async (params: any) => {
     console.log(params);
-  };
+  },
 
-  const register = async (userData) => {
-    await authenticate(userData, customerSignMeUp);
-  };
+  register: async userData => {
+    await authenticate(userData, apiCustomerSignMeUp);
+  },
 
-  const login = async (userData) => {
-    const customerLoginDraft = { email: userData.username,
-      password: userData.password };
-    await authenticate(customerLoginDraft, customerSignMeIn);
-  };
+  login: async userData => {
+    const customerLoginDraft = {
+      email: userData.username,
+      password: userData.password
+    };
+    await authenticate(customerLoginDraft, apiCustomerSignMeIn);
+  },
 
-  const logout = async () => {
-    customerSignOut();
-    user.value = {} as Customer;
-    cart.value = null;
-  };
+  logout: async () => {
+    apiCustomerSignOut();
+  }
+};
+const useUser: () => UseUser<Customer, any> = useUserFactory<Customer, any>(
+  params
+);
 
-  return {
-    user: computed(() => user.value),
-    updateUser,
-    register,
-    login,
-    logout,
-    isAuthenticated,
-    loading: computed(() => loading.value)
-  };
-}
+export default useUser;
