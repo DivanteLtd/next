@@ -4,11 +4,13 @@ import {
   customerSignMeIn as apiCustomerSignMeIn,
   customerSignOut as apiCustomerSignOut,
   getMe as apiGetMe
+  // customerChangeMyPassword as apiCustomerChangeMyPassword
 } from '@vue-storefront/commercetools-api';
 import {
   Customer,
   CustomerSignMeUpDraft,
-  CustomerSignMeInDraft
+  CustomerSignMeInDraft,
+  Cart
 } from '@vue-storefront/commercetools-api/lib/src/types/GraphQL';
 import {
   useUserFactory,
@@ -29,7 +31,7 @@ const authenticate = async (userData: UserData, fn) => {
   }
 };
 
-const params: UseUserFactoryParams<Customer, UserData, any> = {
+const params: UseUserFactoryParams<Customer, Cart, any> = {
   getUser: async (customer = true) => {
     await apiGetMe({ customer });
   },
@@ -42,17 +44,28 @@ const params: UseUserFactoryParams<Customer, UserData, any> = {
     await authenticate(userData, apiCustomerSignMeUp);
   },
 
-  login: async userData => {
-    const customerLoginDraft = {
-      email: userData.username,
-      password: userData.password
-    };
+  login: async ({ username, password }) => {
+    const customerLoginDraft = { email: username, password };
     await authenticate(customerLoginDraft, apiCustomerSignMeIn);
   },
 
   logout: async () => {
-    apiCustomerSignOut();
+    await apiCustomerSignOut();
   }
+
+  // changePassword: async (currentPassword: string, newPassword: string) => {
+  //   loading.value = true;
+  //   try {
+  //     const userResponse = await apiCustomerChangeMyPassword(user.value.version, currentPassword, newPassword);
+  //     // we do need to re-authenticate user to acquire new token - otherwise all subsequent requests will fail as unauthorized
+  //     await logout();
+  //     await authenticate({ email: userResponse.data.user.email, password: newPassword }, customerSignMeIn);
+  //     user.value = userResponse.data.user;
+  //   } catch (err) {
+  //     error.value = err.graphQLErrors ? err.graphQLErrors[0].message : err;
+  //   }
+  //   loading.value = false;
+  // };
 };
 const useUser: () => UseUser<Customer, any> = useUserFactory<Customer, any>(
   params
