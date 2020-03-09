@@ -3,8 +3,8 @@ import {
   customerSignMeUp as apiCustomerSignMeUp,
   customerSignMeIn as apiCustomerSignMeIn,
   customerSignOut as apiCustomerSignOut,
-  getMe as apiGetMe
-  // customerChangeMyPassword as apiCustomerChangeMyPassword
+  getMe as apiGetMe,
+  customerChangeMyPassword as apiCustomerChangeMyPassword
 } from '@vue-storefront/commercetools-api';
 import {
   Customer,
@@ -51,21 +51,21 @@ const params: UseUserFactoryParams<Customer, Cart, any> = {
 
   logout: async () => {
     await apiCustomerSignOut();
-  }
+  },
 
-  // changePassword: async (currentPassword: string, newPassword: string) => {
-  //   loading.value = true;
-  //   try {
-  //     const userResponse = await apiCustomerChangeMyPassword(user.value.version, currentPassword, newPassword);
-  //     // we do need to re-authenticate user to acquire new token - otherwise all subsequent requests will fail as unauthorized
-  //     await logout();
-  //     await authenticate({ email: userResponse.data.user.email, password: newPassword }, customerSignMeIn);
-  //     user.value = userResponse.data.user;
-  //   } catch (err) {
-  //     error.value = err.graphQLErrors ? err.graphQLErrors[0].message : err;
-  //   }
-  //   loading.value = false;
-  // };
+  changePassword: async (user: Customer, currentPassword: string, newPassword: string) => {
+    try {
+      const userResponse = await apiCustomerChangeMyPassword(user.value.version, currentPassword, newPassword);
+      // we do need to re-authenticate user to acquire new token - otherwise all subsequent requests will fail as unauthorized
+      await this.logout();
+      const userLogged = await authenticate({ email: userResponse.data.user.email, password: newPassword }, apiCustomerSignMeIn);
+      return {
+        user: userLogged.user.value
+      };
+    } catch (err) {
+      // error.value = err.graphQLErrors ? err.graphQLErrors[0].message : err;
+    }
+  }
 };
 const useUser: () => UseUser<Customer, any> = useUserFactory<Customer, any>(
   params

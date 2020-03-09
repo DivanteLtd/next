@@ -14,6 +14,7 @@ export type UseUserFactoryParams<USER, CART, UPDATE_USER_PARAMS> = {
   }) => Promise<USER>;
   login: (user: { username: string; password: string }) => Promise<USER>;
   logout: () => Promise<void>;
+  changePassword: (currentUser: USER, params: {email: string; password: string}) => Promise<USER>;
 };
 
 export function useUserFactory<USER, CART, UPDATE_USER_PARAMS>(
@@ -72,6 +73,16 @@ export function useUserFactory<USER, CART, UPDATE_USER_PARAMS>(
       cart.value = null;
     };
 
+    const changePassword = async (params: {
+      email: string;
+      password: string;
+    }) => {
+      loading.value = true;
+      const userResponse = await factoryParams.changePassword(user.value, params);
+      user.value = userResponse.data.user;
+      loading.value = false;
+    };
+
     return {
       user: computed(() => user.value),
       updateUser,
@@ -79,6 +90,7 @@ export function useUserFactory<USER, CART, UPDATE_USER_PARAMS>(
       login,
       logout,
       isAuthenticated,
+      changePassword,
       loading: computed(() => loading.value)
     };
   };
