@@ -1,4 +1,5 @@
 import { UseUser } from '@vue-storefront/interfaces';
+import { ref, Ref } from '@vue/composition-api';
 import {
   customerSignMeUp as apiCustomerSignMeUp,
   customerSignMeIn as apiCustomerSignMeIn,
@@ -19,6 +20,8 @@ import {
 
 type UserData = CustomerSignMeUpDraft | CustomerSignMeInDraft;
 
+export const error: Ref<any> = ref({});
+
 const authenticate = async (userData: UserData, fn) => {
   try {
     const userResponse = await fn(userData);
@@ -32,17 +35,20 @@ const authenticate = async (userData: UserData, fn) => {
 };
 
 const params: UseUserFactoryParams<Customer, Cart, any> = {
+  error,
   getUser: async (customer = true) => {
     const profile = await apiGetMe({ customer });
     return profile.data.me.customer;
   },
 
-  updateUser: async (params: any) => {
-    console.log(params);
+  updateUser: async (currentUser: Customer): Promise<Customer> => {
+    // Change code below if the apiClient receive userUpdate method
+    return Promise.resolve(currentUser);
   },
 
   register: async userData => {
-    await authenticate(userData, apiCustomerSignMeUp);
+    const user = await authenticate(userData, apiCustomerSignMeUp);
+    return user.user;
   },
 
   login: async ({ username, password }) => {
@@ -57,13 +63,13 @@ const params: UseUserFactoryParams<Customer, Cart, any> = {
 
   changePassword: async (user: Customer, currentPassword: string, newPassword: string) => {
     try {
-      const userResponse = await apiCustomerChangeMyPassword(user.value.version, currentPassword, newPassword);
+      const userResponse = await apiCustomerChangeMyPassword(user.version, currentPassword, newPassword);
       // we do need to re-authenticate user to acquire new token - otherwise all subsequent requests will fail as unauthorized
       await this.logout();
       const userLogged = await authenticate({ email: userResponse.data.user.email, password: newPassword }, apiCustomerSignMeIn);
       return userLogged.user.value;
     } catch (err) {
-      // error.value = err.graphQLErrors ? err.graphQLErrors[0].message : err;
+      error.value = err.graphQLErrors ? err.graphQLErrors[0].message : err;
     }
   }
 };

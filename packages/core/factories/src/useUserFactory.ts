@@ -2,8 +2,6 @@ import { ref, Ref, watch, computed } from '@vue/composition-api';
 import { UseUser } from '@vue-storefront/interfaces';
 
 export type UseUserFactoryParams<USER, CART, UPDATE_USER_PARAMS> = {
-  user: Ref<USER>;
-  cart: Ref<CART>;
   getUser: () => Promise<USER>;
   updateUser: (currentUser: USER, params: UPDATE_USER_PARAMS) => Promise<USER>;
   register: (user: {
@@ -15,6 +13,7 @@ export type UseUserFactoryParams<USER, CART, UPDATE_USER_PARAMS> = {
   login: (user: { username: string; password: string }) => Promise<({user: USER; cart: CART})>;
   logout: () => Promise<void>;
   changePassword: (currentUser: USER, currentPassword: string, newPassword: string) => Promise<USER>;
+  error: Ref<any>;
 };
 
 export function useUserFactory<USER, CART, UPDATE_USER_PARAMS>(
