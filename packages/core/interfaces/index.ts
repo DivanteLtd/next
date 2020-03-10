@@ -44,7 +44,7 @@ export interface UseUser
 export interface UseUserOrders<ORDER> {
   orders: {
     data: ComputedProperty<ORDER[]>;
-    total: ComputedProperty<number[]>;
+    total: ComputedProperty<number>;
   };
   searchOrders: (params?: {
     id?: any;

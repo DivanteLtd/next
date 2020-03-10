@@ -9,7 +9,7 @@ export type UseCartFactoryParams<CART, CART_ITEM, PRODUCT, COUPON> = {
   updateQuantity: (currentCart: CART, product: CART_ITEM, quantity: number) => Promise<CART>;
   clearCart: (currentCart: CART) => Promise<CART>;
   applyCoupon: (currentCart: CART, coupon: string) => Promise<{ cart: CART; coupon: COUPON }>;
-  removeCoupon: (currenCart: CART) => Promise<CART>;
+  removeCoupon: (currentCart: CART) => Promise<CART>;
   isOnCart: (currentCart: CART, product: PRODUCT) => boolean;
 };
 
