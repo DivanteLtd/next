@@ -33,7 +33,8 @@ const authenticate = async (userData: UserData, fn) => {
 
 const params: UseUserFactoryParams<Customer, Cart, any> = {
   getUser: async (customer = true) => {
-    await apiGetMe({ customer });
+    const profile = await apiGetMe({ customer });
+    return profile.data.me.customer;
   },
 
   updateUser: async (params: any) => {
@@ -46,7 +47,8 @@ const params: UseUserFactoryParams<Customer, Cart, any> = {
 
   login: async ({ username, password }) => {
     const customerLoginDraft = { email: username, password };
-    await authenticate(customerLoginDraft, apiCustomerSignMeIn);
+    const user = await authenticate(customerLoginDraft, apiCustomerSignMeIn);
+    return ({user: user.user, cart: user.cart});
   },
 
   logout: async () => {
@@ -59,15 +61,13 @@ const params: UseUserFactoryParams<Customer, Cart, any> = {
       // we do need to re-authenticate user to acquire new token - otherwise all subsequent requests will fail as unauthorized
       await this.logout();
       const userLogged = await authenticate({ email: userResponse.data.user.email, password: newPassword }, apiCustomerSignMeIn);
-      return {
-        user: userLogged.user.value
-      };
+      return userLogged.user.value;
     } catch (err) {
       // error.value = err.graphQLErrors ? err.graphQLErrors[0].message : err;
     }
   }
 };
-const useUser: () => UseUser<Customer, any> = useUserFactory<Customer, any>(
+const useUser: () => UseUser<Customer, any> = useUserFactory<Customer, Cart, any>(
   params
 );
 

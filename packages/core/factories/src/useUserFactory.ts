@@ -12,9 +12,9 @@ export type UseUserFactoryParams<USER, CART, UPDATE_USER_PARAMS> = {
     firstName?: string;
     lastName?: string;
   }) => Promise<USER>;
-  login: (user: { username: string; password: string }) => Promise<USER>;
+  login: (user: { username: string; password: string }) => Promise<({user: USER; cart: CART})>;
   logout: () => Promise<void>;
-  changePassword: (currentUser: USER, params: {email: string; password: string}) => Promise<USER>;
+  changePassword: (currentUser: USER, currentPassword: string, newPassword: string) => Promise<USER>;
 };
 
 export function useUserFactory<USER, CART, UPDATE_USER_PARAMS>(
@@ -33,15 +33,13 @@ export function useUserFactory<USER, CART, UPDATE_USER_PARAMS>(
         return;
       }
       loading.value = true;
-      const profile: USER = await factoryParams.getUser();
-      user.value = profile.data.me.customer;
+      user.value = await factoryParams.getUser();
       loading.value = false;
     });
 
     const updateUser = async (params: UPDATE_USER_PARAMS) => {
       loading.value = true;
-      const updatedUser = await factoryParams.updateUser(user.value, params);
-      user.value = updatedUser;
+      user.value = await factoryParams.updateUser(user.value, params);
       loading.value = false;
     };
 
@@ -52,8 +50,7 @@ export function useUserFactory<USER, CART, UPDATE_USER_PARAMS>(
       lastName?: string;
     }) => {
       loading.value = true;
-      const registeredUser = await factoryParams.register(registerUserData);
-      user.value = registeredUser;
+      user.value = await factoryParams.register(registerUserData);
       loading.value = false;
     };
 
@@ -73,13 +70,9 @@ export function useUserFactory<USER, CART, UPDATE_USER_PARAMS>(
       cart.value = null;
     };
 
-    const changePassword = async (params: {
-      email: string;
-      password: string;
-    }) => {
+    const changePassword = async (currentPassword: string, newPassword: string) => {
       loading.value = true;
-      const userResponse = await factoryParams.changePassword(user.value, params);
-      user.value = userResponse.data.user;
+      user.value = await factoryParams.changePassword(user.value, currentPassword, newPassword);
       loading.value = false;
     };
 
