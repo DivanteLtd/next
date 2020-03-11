@@ -35,7 +35,6 @@ const authenticate = async (userData: UserData, fn) => {
 };
 
 const params: UseUserFactoryParams<Customer, Cart, any> = {
-  error,
   getUser: async (customer = true) => {
     const profile = await apiGetMe({ customer });
     return profile.data.me.customer;
@@ -76,5 +75,4 @@ const params: UseUserFactoryParams<Customer, Cart, any> = {
 const useUser: () => UseUser<Customer, any> = useUserFactory<Customer, Cart, any>(
   params
 );
-
 export default useUser;

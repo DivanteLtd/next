@@ -13,7 +13,6 @@ export type UseUserFactoryParams<USER, CART, UPDATE_USER_PARAMS> = {
   login: (user: { username: string; password: string }) => Promise<({user: USER; cart: CART})>;
   logout: () => Promise<void>;
   changePassword: (currentUser: USER, currentPassword: string, newPassword: string) => Promise<USER>;
-  error: Ref<any>;
 };
 
 export function useUserFactory<USER, CART, UPDATE_USER_PARAMS>(
@@ -22,6 +21,7 @@ export function useUserFactory<USER, CART, UPDATE_USER_PARAMS>(
   const user: Ref<USER> = ref({});
   const cart: Ref<CART> = ref(null);
   const loading: Ref<boolean> = ref(false);
+
   const isAuthenticated = computed(
     () => user.value && Object.keys(user.value).length > 0
   );
