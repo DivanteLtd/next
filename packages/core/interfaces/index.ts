@@ -87,13 +87,13 @@ export interface UseCart
 > {
   cart: ComputedProperty<CART>;
   addToCart: (product: PRODUCT, quantity: number) => Promise<void>;
-  isOnCart: (product: PRODUCT) => ComputedProperty<boolean>;
+  isOnCart: (product: PRODUCT) => boolean;
   removeFromCart: (product: CART_ITEM,) => Promise<void>;
   updateQuantity: (product: CART_ITEM, quantity?: number) => Promise<void>;
-  clearCart: () => Promise<void> | void;
+  clearCart: () => Promise<void>;
   coupon: ComputedProperty<COUPON>;
-  applyCoupon: (coupon: string) => Promise<void> | void;
-  removeCoupon: () => Promise<void> | void;
+  applyCoupon: (coupon: string) => Promise<void>;
+  removeCoupon: () => Promise<void>;
   refreshCart: () => Promise<void>;
   loading: Ref<boolean>;
 }

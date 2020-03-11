@@ -29,8 +29,8 @@ function createComposable () {
     applyCoupon: async (currentCart: any, coupon: string) => {
       return Promise.resolve({ cart: currentCart, coupon: 'couponApplied' });
     },
-    removeCoupon: async (currenCart: any) => {
-      return currenCart;
+    removeCoupon: async (currentCart: any) => {
+      return Promise.resolve({ cart: currentCart, coupon: 'couponRemoved' });
     },
     isOnCart: (currentCart: any) => {
       return true;
@@ -38,8 +38,6 @@ function createComposable () {
   };
   useCart = useCartFactory<any, any, any, any>(params);
 }
-
-export default useCart;
 
 describe('[commercetools-composables] useCart', () => {
   beforeEach(() => {
@@ -114,7 +112,7 @@ describe('[commercetools-composables] useCart', () => {
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
-    expect(wrapper.vm.$data.isOnCart().value).toEqual(true);
+    expect(wrapper.vm.$data.isOnCart()).toEqual(true);
   });
 
   it('updates quantity for given product', async () => {
@@ -144,12 +142,18 @@ describe('[commercetools-composables] useCart', () => {
     expect(wrapper.vm.$data.cart).toEqual('cartLoaded');
   });
 
-  it.skip('clears entire cart', async () => {
+  it('clears entire cart', async () => {
     const wrapper = mountComposable(useCart);
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
-
+    await wrapper.vm.$nextTick();
     wrapper.vm.$data.clearCart();
+    await wrapper.vm.$nextTick();
+    expect(wrapper.vm.$data.loading).toBeTruthy();
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick();
+    expect(wrapper.vm.$data.loading).toBeFalsy();
+    expect(wrapper.vm.$data.cart).toEqual('cartCleared');
   });
 
   it.skip('applies coupon', async () => {
