@@ -46,8 +46,8 @@ const params: UseUserFactoryParams<Customer, Cart, any> = {
   },
 
   register: async userData => {
-    const user = await authenticate(userData, apiCustomerSignMeUp);
-    return user.user;
+    const registeredUser = await authenticate(userData, apiCustomerSignMeUp);
+    return registeredUser.user;
   },
 
   login: async ({ username, password }) => {
@@ -72,6 +72,7 @@ const params: UseUserFactoryParams<Customer, Cart, any> = {
     }
   }
 };
+
 const useUser: () => UseUser<Customer, any> = useUserFactory<Customer, Cart, any>(
   params
 );
