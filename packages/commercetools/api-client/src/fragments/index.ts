@@ -24,6 +24,7 @@ export const AddressFragment = `
 
 export const CustomerFragment = `
   fragment DefaultCustomer on Customer {
+    version
     firstName
     lastName
     email
