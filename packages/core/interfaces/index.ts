@@ -63,8 +63,10 @@ export interface UseUserOrders<ORDER> {
 export interface UseUserAddress<ADDRESS> {
   addresses: ComputedProperty<ADDRESS[]>;
   addAddress: (address: ADDRESS) => Promise<void>;
-  deleteAddress: (address: ADDRESS) => Promise<void>;
   updateAddress: (address: ADDRESS) => Promise<void>;
+  deleteAddress: (address: ADDRESS) => Promise<void>;
+  getBillingAddresses: () => ADDRESS[];
+  getShippingAddresses: () => ADDRESS[];
   searchAddresses: (params?: {
     [x: string]: any;
   }) => Promise<void>;

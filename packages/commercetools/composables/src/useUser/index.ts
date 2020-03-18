@@ -16,7 +16,8 @@ import { cart } from './../useCart';
 
 type UserData = CustomerSignMeUpDraft | CustomerSignMeInDraft
 
-const user: Ref<Customer> = ref({});
+export const user: Ref<Customer> = ref({});
+
 const loading: Ref<boolean> = ref(false);
 const isAuthenticated = computed(() => user.value && Object.keys(user.value).length > 0);
 

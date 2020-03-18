@@ -52,6 +52,7 @@ import LoyaltyCard from './MyAccount/LoyaltyCard';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
 import MyReviews from './MyAccount/MyReviews';
+import useUserAddress from '@vue-storefront/commercetools-composables';
 
 export default {
   name: 'MyAccount',
@@ -67,6 +68,8 @@ export default {
   },
   setup(props, { root }) {
     const { user } = useUser();
+    const { getShippingAddresses, searchAddresses } = useUserAddress();
+
     const breadcrumbs = [
       {
         text: 'Home',
@@ -90,6 +93,8 @@ export default {
         : 'My profile';
     });
 
+    searchAddresses();
+
     const changeActivePage = (title) => {
       if (title === 'Log out') {
         return;
@@ -98,9 +103,9 @@ export default {
       root.$router.push(`/my-account/${title.toLowerCase().replace(' ', '-')}`);
     };
 
-    const getShippingAddresses = () => (
-      (user.value.addresses || []).filter(address => (user.value.shippingAddressIds || []).includes(address.id))
-    );
+    // const getShippingAddresses = () => (
+    //   (user.value.addresses || []).filter(address => (user.value.shippingAddressIds || []).includes(address.id))
+    // );
 
     const account = computed(() => ({
       firstName: user.value.firstName,
