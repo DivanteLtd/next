@@ -52,10 +52,12 @@ import LoyaltyCard from './MyAccount/LoyaltyCard';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
 import MyReviews from './MyAccount/MyReviews';
+import auth from '../middleware/auth';
 import useUserAddress from '@vue-storefront/commercetools-composables';
 
 export default {
   name: 'MyAccount',
+  middleware: auth,
   components: {
     SfBreadcrumbs,
     SfContentPages,
