@@ -44,7 +44,7 @@
 </template>
 <script>
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
-import { useUser } from '@vue-storefront/commercetools-composables';
+import { useUser, useUserAddress } from '@vue-storefront/commercetools-composables';
 import { computed } from '@vue/composition-api';
 import MyProfile from './MyAccount/MyProfile';
 import ShippingDetails from './MyAccount/ShippingDetails';
@@ -53,7 +53,6 @@ import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
 import MyReviews from './MyAccount/MyReviews';
 import auth from '../middleware/auth';
-import useUserAddress from '@vue-storefront/commercetools-composables';
 
 export default {
   name: 'MyAccount',
@@ -105,15 +104,12 @@ export default {
       root.$router.push(`/my-account/${title.toLowerCase().replace(' ', '-')}`);
     };
 
-    // const getShippingAddresses = () => (
-    //   (user.value.addresses || []).filter(address => (user.value.shippingAddressIds || []).includes(address.id))
-    // );
-
     const account = computed(() => ({
       firstName: user.value.firstName,
       lastName: user.value.lastName,
       email: user.value.email,
-      shipping: getShippingAddresses(),
+      getShippingAddresses,
+      // TODO: User orders list
       orders: [
         ['#35765', '4th Nov, 2019', 'Visa card', '$12.00', 'In process'],
         ['#35766', '4th Nov, 2019', 'Paypal', '$12.00', 'Finalised'],

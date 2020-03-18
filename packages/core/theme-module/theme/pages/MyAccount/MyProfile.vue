@@ -60,7 +60,7 @@
         <form class="form" @submit.prevent="handleSubmit(updatePassword)">
           <ValidationProvider rules="required" v-slot="{ errors }" vid="password" class="form__element">
             <SfInput
-              v-model="form.currentPassword"
+              v-model="currentPassword"
               type="password"
               name="currentPassword"
               label="Current Password"
@@ -72,7 +72,7 @@
           <div class="form__horizontal">
             <ValidationProvider rules="required|password" v-slot="{ errors }" vid="password" class="form__element">
               <SfInput
-                v-model="form.newPassword"
+                v-model="newPassword"
                 type="password"
                 name="newPassword"
                 label="New Password"
@@ -83,7 +83,7 @@
             </ValidationProvider>
             <ValidationProvider rules="required|confirmed:password" v-slot="{ errors }" class="form__element">
               <SfInput
-                v-model="form.repeatPassword"
+                v-model="repeatPassword"
                 type="password"
                 name="repeatPassword"
                 label="Repeat Password"
@@ -93,7 +93,7 @@
               />
             </ValidationProvider>
           </div>
-          <SfAlert v-if="error" class="alert" type="danger" :message="error" />
+          <SfAlert v-if="error" class="alert" type="danger" :message="error || {}" />
           <SfButton class="form__button">Update password</SfButton>
         </form>
       </ValidationObserver>
@@ -148,51 +148,46 @@ export default {
       default: () => ({})
     }
   },
-  setup() {
-    const resetPassForm = () => ({ currentPassword: '', newPassword: '', repeatPassword: '' });
+  setup({ account }, { emit }) {
     const { user, changePassword, error } = useUser();
-    const form = ref(resetPassForm());
+
+    const currentPassword = ref('');
+    const repeatPassword = ref('');
+    const newPassword = ref('');
+    const firstName = ref(account.firstName || '');
+    const lastName = ref(account.lastName || '');
+    const email = ref(account.email || '');
+
+    const resetPassForm = () => {
+      currentPassword.value = '';
+      repeatPassword.value = '';
+      newPassword.value = '';
+    };
 
     const updatePassword = async () => {
-      await changePassword(form.value.currentPassword, form.value.newPassword);
-      if (!error.value) {
-        form.value = resetPassForm();
-      }
+      await changePassword(currentPassword.value, newPassword.value);
+
+      resetPassForm();
     };
+
+    const updatePersonal = async () => emit('update:personal', {
+      firstName: firstName.value,
+      lastName: lastName.value,
+      email: email.value
+    });
 
     return {
       user,
       error,
-      form,
-      updatePassword
+      currentPassword,
+      newPassword,
+      repeatPassword,
+      firstName,
+      lastName,
+      email,
+      updatePassword,
+      updatePersonal
     };
-  },
-  data() {
-    return {
-      firstName: '',
-      lastName: '',
-      email: ''
-    };
-  },
-  watch: {
-    account: {
-      handler(value) {
-        this.firstName = value.firstName;
-        this.lastName = value.lastName;
-        this.email = value.email;
-      },
-      immediate: true
-    }
-  },
-  methods: {
-    updatePersonal() {
-      const personal = {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email
-      };
-      this.$emit('update:personal', personal);
-    }
   }
 };
 </script>

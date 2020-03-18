@@ -43,6 +43,7 @@ export interface UseUser
   ) => Promise<void>;
   isAuthenticated: Ref<boolean>;
   loading: Ref<boolean>;
+  error: Ref<any>;
 }
 
 export interface UseUserOrders<ORDER> {

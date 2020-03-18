@@ -34,6 +34,7 @@ const authenticate = async (userData: UserData, fn) => {
 };
 
 export default function useUser(): UseUser<Customer, any> {
+  const error = ref(null);
 
   watch(user, async () => {
     if (isAuthenticated.value) {
@@ -78,7 +79,7 @@ export default function useUser(): UseUser<Customer, any> {
       await authenticate({ email: userResponse.data.user.email, password: newPassword }, customerSignMeIn);
       user.value = userResponse.data.user;
     } catch (err) {
-      console.error(err.graphQLErrors ? err.graphQLErrors[0].message : err);
+      error.value = err.graphQLErrors ? err.graphQLErrors[0].message : err;
     }
     loading.value = false;
   };
@@ -91,6 +92,7 @@ export default function useUser(): UseUser<Customer, any> {
     logout,
     changePassword,
     isAuthenticated,
+    error,
     loading: computed(() => loading.value)
   };
 }

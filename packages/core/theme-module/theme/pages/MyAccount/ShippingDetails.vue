@@ -128,7 +128,7 @@
         </p>
         <transition-group tag="div" name="fade" class="shipping-list">
           <div
-            v-for="(address) in account.shipping"
+            v-for="(address) in account.getShippingAddresses()"
             :key="address.id"
             class="shipping"
           >
