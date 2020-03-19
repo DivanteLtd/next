@@ -11,7 +11,6 @@
     "build:core:utils": "cd packages/core/utils && yarn build",
     "build:core:factories": "cd packages/core/factories && yarn build",
     "build:core": "yarn build:core:interfaces && yarn build:core:utils && yarn build:core:factories",
-    "build:prismic": "cd packages/prismic && yarn build",
     "build:ct:api-client": "cd packages/commercetools/api-client && yarn build",
     "build:ct:composables": "cd packages/commercetools/composables && yarn build",
     "build:ct:helpers": "cd packages/commercetools/helpers && yarn build",
@@ -26,7 +25,6 @@
     "test:ct:composables": "cd packages/commercetools/composables && yarn test",
     "test:ct:helpers": "cd packages/commercetools/helpers && yarn test",
     "test:core": "jest -c ./packages/core/jest.config.js",
-    "test:prismic": "cd packages/prismic && yarn test",
     "test:ct": "yarn test:ct:api-client && yarn test:ct:composables && yarn test:ct:helpers",
     "test:ct:ci": "yarn test:ct:api-client && yarn test:ct:composables && yarn test:ct:helpers",
     "start:ct": "cd packages/commercetools/theme && yarn start",
@@ -72,7 +70,6 @@
       "packages/commercetools/*",
       "packages/boilerplate/*",
       "packages/core/*",
-      "packages/prismic",
       "packages/about-you/*"
     ],
     "nohoist": [

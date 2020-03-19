@@ -21,7 +21,6 @@ $ yarn install
 **Verify by building packages:**
 ```sh
 yarn build:core
-yarn build:prismic
 ```
 
 ## Commercetools
