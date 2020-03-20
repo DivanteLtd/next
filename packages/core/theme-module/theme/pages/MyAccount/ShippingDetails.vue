@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <SfTabs
-      v-if="editAddress"
+      v-if="showAddUpdateForm"
       key="edit-address"
       :open-tab="1"
       class="tab-orphan"
@@ -12,7 +12,7 @@
         </p>
 
         <ValidationObserver v-slot="{ handleSubmit }">
-          <form id="shipping-details-form" class="form" @submit.prevent="handleSubmit(updateAddress)">
+          <form id="shipping-details-form" class="form" @submit.prevent="handleSubmit(handleForm)">
             <div class="form__horizontal">
               <ValidationProvider rules="required|min:2" v-slot="{ errors }" class="form__element">
                 <SfInput
@@ -114,7 +114,8 @@
                 :errorMessage="errors[0]"
               />
             </ValidationProvider>
-            <SfButton class="form__button">Update the address</SfButton>
+            <SfButton v-if="formType === 'UPDATE'" :type="submit" class="form__button">Update the address</SfButton>
+            <SfButton v-if="formType === 'CREATE'" :type="submit" class="form__button">Create a new address</SfButton>
           </form>
         </ValidationObserver>
       </SfTab>
@@ -153,18 +154,18 @@
                 size="14px"
                 role="button"
                 class="mobile-only"
-                @click="deleteAddress(address.id)"
+                @click="deleteAddress(address)"
               />
               <SfButton @click="changeAddress(address.id)">Change</SfButton>
               <SfButton
                 class="shipping__button-delete desktop-only"
-                @click="deleteAddress(address.id)"
+                @click="deleteAddress(address)"
                 >Delete</SfButton
               >
             </div>
           </div>
         </transition-group>
-        <SfButton class="action-button" @click="changeAddress(-1)"
+        <SfButton class="action-button" @click="changeAddress()"
           >Add new address</SfButton
         >
       </SfTab>
@@ -180,6 +181,7 @@ import {
   SfIcon
 } from '@storefront-ui/vue';
 import { ref } from '@vue/composition-api';
+import { useUserAddress } from '@vue-storefront/commercetools-composables';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, min, oneOf } from 'vee-validate/dist/rules';
 
@@ -216,9 +218,14 @@ export default {
     }
   },
   setup({ account }) {
-    const editAddress = ref(false);
+    const userAddress = useUserAddress();
+    const showAddUpdateForm = ref(false);
+    const formType = ref('CREATE');
     const editedAddress = ref(-1);
     const countries = [
+      'PL',
+      'DE',
+      'US',
       'Austria',
       'Azerbaijan',
       'Belarus',
@@ -267,6 +274,7 @@ export default {
       'United Kingdom',
       'Vatican City'
     ];
+    const addressId = ref('');
     const firstName = ref('');
     const lastName = ref('');
     const streetName = ref('');
@@ -277,13 +285,15 @@ export default {
     const country = ref('');
     const phone = ref('');
 
-    const changeAddress = (id) => {
-      const address = account.shipping.find(shippingAddress => id === shippingAddress.id);
+    const changeAddress = (id = null) => {
+      const address = id !== null
+        ? account.getShippingAddresses().find(shippingAddress => id === shippingAddress.id)
+        : {};
 
-      if (!address) {
-        return;
-      }
+      formType.value = id === null ? 'CREATE' : 'UPDATE';
+      showAddUpdateForm.value = true;
 
+      addressId.value = id || '';
       firstName.value = address.firstName || account.firstName || '';
       lastName.value = address.lastName || account.lastName || '';
       streetName.value = address.streetName || '';
@@ -292,45 +302,44 @@ export default {
       postalCode.value = address.postalCode || '';
       country.value = address.country || '';
       phone.value = address.contactInfo ? address.contactInfo.phone || '' : '';
-
-      editAddress.value = true;
     };
 
-    const updateAddress = (id) => {
-      console.log(`updateAddress: ${id}`);
-      // TODO: Integrate with API in other task
-      // OLD CODE HERE:
-      // const account = { ...this.account };
-      // const shipping = {
-      //   firstName: this.firstName,
-      //   lastName: this.lastName,
-      //   streetNumber: this.streetNumber,
-      //   streetName: this.streetName,
-      //   city: this.city,
-      //   state: this.state,
-      //   postalCode: this.postalCode,
-      //   country: this.country,
-      //   phone: this.phone
-      // };
-      // const index = this.editedAddress;
-      // if (index > -1) {
-      //   this.$props.addresses[index] = shipping;
-      //   this.editedAddress = -1;
-      // } else {
-      //   this.$props.addresses.push(shipping);
-      // }
-      // this.editAddress = false;
-      // this.$emit('update:shipping', account);
-    };
+    const addAddress = () => userAddress.addAddress(
+      {
+        firstName: firstName.value,
+        lastName: lastName.value,
+        streetName: streetName.value,
+        city: city.value,
+        state: state.value,
+        postalCode: postalCode.value,
+        country: country.value,
+        phone: phone.value
+      },
+      'shipping'
+    );
 
-    const deleteAddress = (id) => {
-      console.log(`deleteAddress: ${id}`);
-      // TODO: Integrate with API in other task
-      // OLD CODE HERE:
-      // const account = { ...this.account };
-      // this.$props.addresses.splice(index, 1);
-      // this.$emit('update:shipping', account);
-    };
+    const updateAddress = () => userAddress.updateAddress({
+      id: addressId.value,
+      firstName: firstName.value,
+      lastName: lastName.value,
+      streetName: streetName.value,
+      city: city.value,
+      state: state.value,
+      postalCode: postalCode.value,
+      country: country.value,
+      phone: phone.value
+    });
+
+    const deleteAddress = (address) => userAddress.deleteAddress(address);
+
+    const handleForm = () => (formType.value === 'CREATE' ? addAddress : updateAddress)()
+      .then(() => {
+        showAddUpdateForm.value = false;
+      })
+      .catch((err) => {
+        // TODO: Need to handle it somehow
+        console.log(err, 'error');
+      });
 
     return {
       countries,
@@ -343,8 +352,11 @@ export default {
       postalCode,
       country,
       phone,
-      editAddress,
+      showAddUpdateForm,
+      formType,
+      handleForm,
       editedAddress,
+      addAddress,
       changeAddress,
       updateAddress,
       deleteAddress

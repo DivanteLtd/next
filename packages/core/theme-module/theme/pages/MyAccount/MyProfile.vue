@@ -148,8 +148,8 @@ export default {
       default: () => ({})
     }
   },
-  setup({ account }, { emit }) {
-    const { user, changePassword, error } = useUser();
+  setup({ account }) {
+    const { user, changePassword, updateUser, error } = useUser();
 
     const currentPassword = ref('');
     const repeatPassword = ref('');
@@ -170,7 +170,7 @@ export default {
       resetPassForm();
     };
 
-    const updatePersonal = async () => emit('update:personal', {
+    const updatePersonal = () => updateUser({
       firstName: firstName.value,
       lastName: lastName.value,
       email: email.value

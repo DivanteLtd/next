@@ -10,7 +10,8 @@ import {
   customerSignMeIn,
   customerSignOut,
   getMe,
-  customerChangeMyPassword
+  customerChangeMyPassword,
+  updateCustomerPersonalDetails
 } from '@vue-storefront/commercetools-api';
 import { cart } from './../useCart';
 
@@ -52,7 +53,12 @@ export default function useUser(): UseUser<Customer, any> {
   });
 
   const updateUser = async (params: any) => {
-    console.log(params);
+    const { data } = await updateCustomerPersonalDetails(user.value, params);
+
+    user.value = {
+      ...user.value,
+      ...data.updateMyCustomer
+    };
   };
 
   const register = async (userData) => {
