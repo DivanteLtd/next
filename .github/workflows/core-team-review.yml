@@ -8,6 +8,7 @@ on:
 
 jobs:
   check_approvals:
+    runs-on: ubuntu-latest
     name: "Checking core changes"
     steps:
       - name: "Checking core changes"
