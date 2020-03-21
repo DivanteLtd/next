@@ -1,7 +1,10 @@
 name: "Core team approval"
 
 on:
-  pull_request: [master, develop]
+  pull_request:
+    branches:
+      - master
+      - develop
 
 jobs:
   check_approvals:
