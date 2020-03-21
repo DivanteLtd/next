@@ -9,4 +9,6 @@ on:
 jobs:
   check_approvals:
     name: "Checking core changes"
-    run: echo 'pr author ${{ github.actor }}.'
+    steps:
+      - name: "Checking core changes"
+        run: echo 'pr author ${{ github.actor }}.'
