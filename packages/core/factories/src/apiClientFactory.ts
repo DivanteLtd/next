@@ -6,7 +6,7 @@ export function apiClientFactory<API_CLIENT_METHODS, API_CLIENT_SETTINGS>(factor
       settings.overrides = { ...settings.overrides, ...overrides };
     },
     setup (config: API_CLIENT_SETTINGS) {
-      settings = { ...factoryParams.defaultSettings, ...config };
+      settings = { ...factoryParams.defaultSettings, overrides: settings.overrides, ...config };
       factoryParams.onSetup(settings);
     },
     update (config: API_CLIENT_SETTINGS) {
