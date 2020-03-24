@@ -7,9 +7,9 @@ describe('[CORE - factories] apiClientFactory', () => {
       defaultSettings: { option: 'option' }
     };
 
-    const { settings } = apiClientFactory<any, any>(params);
+    const { getSettings } = apiClientFactory<any, any>(params);
 
-    expect(settings).toEqual({
+    expect(getSettings()).toEqual({
       option: 'option',
       overrides: {}
     });
@@ -21,11 +21,11 @@ describe('[CORE - factories] apiClientFactory', () => {
       defaultSettings: { option: 'option' }
     };
 
-    const { setup, settings } = apiClientFactory<any, any>(params);
+    const { setup, getSettings } = apiClientFactory<any, any>(params);
 
-    setup({ newOption: 'newOption '});
+    setup({ newOption: 'newOption'});
 
-    expect(settings).toEqual({
+    expect(getSettings()).toEqual({
       option: 'option',
       newOption: 'newOption',
       overrides: {}

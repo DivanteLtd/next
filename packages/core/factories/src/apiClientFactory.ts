@@ -1,15 +1,18 @@
-
 export function apiClientFactory<API_CLIENT_METHODS, API_CLIENT_SETTINGS>(factoryParams: { defaultSettings; onSetup }) {
-  factoryParams.defaultSettings.overrides = {};
+  let settings = { ...factoryParams.defaultSettings };
+  settings.overrides = {};
   return {
     override (overrides: API_CLIENT_METHODS) {
-      factoryParams.defaultSettings.overrides = { ...factoryParams.defaultSettings.overrides, ...overrides };
+      settings.overrides = { ...settings.overrides, ...overrides };
     },
     setup (config: API_CLIENT_SETTINGS) {
-      factoryParams.defaultSettings = { ...factoryParams.defaultSettings, ...config };
-      factoryParams.onSetup(factoryParams.defaultSettings);
+      settings = { ...factoryParams.defaultSettings, ...config };
+      factoryParams.onSetup(settings);
     },
-    settings: factoryParams.defaultSettings
+    update (config: API_CLIENT_SETTINGS) {
+      settings = { ...settings, ...config };
+      factoryParams.onSetup(settings);
+    },
+    getSettings: () => Object.freeze(settings)
   };
 }
-
