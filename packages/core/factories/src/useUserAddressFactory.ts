@@ -85,6 +85,7 @@ export function useUserAddressFactory<USER, ADDRESS, ADDRESS_TYPE = UserAddressT
   return function useUserAddress(): UseUserAddress<ADDRESS, ADDRESS_TYPE> {
     return {
       addresses: computed(() => factoryParams.addresses),
+      totalAddresses: computed(() => (factoryParams.addresses || []).length),
       searchAddresses,
       addAddress,
       updateAddress,
