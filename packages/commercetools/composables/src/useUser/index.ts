@@ -24,19 +24,15 @@ const isAuthenticated = computed(() => user.value && Object.keys(user.value).len
 
 const authenticate = async (userData: UserData, fn) => {
   loading.value = true;
-  try {
-    const userResponse = await fn(userData);
-    user.value = userResponse.data.user.customer;
-    cart.value = userResponse.data.user.cart;
-  } catch (err) {
-    console.error(err.graphQLErrors ? err.graphQLErrors[0].message : err);
-  }
+
+  const userResponse = await fn(userData);
+  user.value = userResponse.data.user.customer;
+  cart.value = userResponse.data.user.cart;
+
   loading.value = false;
 };
 
 export default function useUser(): UseUser<Customer, any> {
-  const error = ref(null);
-
   watch(user, async () => {
     if (isAuthenticated.value) {
       return;
@@ -52,7 +48,14 @@ export default function useUser(): UseUser<Customer, any> {
     loading.value = false;
   });
 
-  const updateUser = async (params: any) => {
+  const updateUser = (data: Customer) => {
+    user.value = {
+      ...user.value,
+      ...data
+    };
+  };
+
+  const updatePersonalDetails = async (params: any) => {
     const { data } = await updateCustomerPersonalDetails(user.value, params);
 
     user.value = {
@@ -78,27 +81,25 @@ export default function useUser(): UseUser<Customer, any> {
 
   const changePassword = async (currentPassword: string, newPassword: string) => {
     loading.value = true;
-    try {
-      const userResponse = await customerChangeMyPassword(user.value.version, currentPassword, newPassword);
-      // we do need to re-authenticate user to acquire new token - otherwise all subsequent requests will fail as unauthorized
-      await logout();
-      await authenticate({ email: userResponse.data.user.email, password: newPassword }, customerSignMeIn);
-      user.value = userResponse.data.user;
-    } catch (err) {
-      error.value = err.graphQLErrors ? err.graphQLErrors[0].message : err;
-    }
+
+    const userResponse = await customerChangeMyPassword(user.value.version, currentPassword, newPassword);
+    // we do need to re-authenticate user to acquire new token - otherwise all subsequent requests will fail as unauthorized
+    await logout();
+    await authenticate({ email: userResponse.data.user.email, password: newPassword }, customerSignMeIn);
+    user.value = userResponse.data.user;
+
     loading.value = false;
   };
 
   return {
     user: computed(() => user.value),
     updateUser,
+    updatePersonalDetails,
     register,
     login,
     logout,
     changePassword,
     isAuthenticated,
-    error,
     loading: computed(() => loading.value)
   };
 }

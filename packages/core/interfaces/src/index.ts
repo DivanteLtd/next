@@ -23,7 +23,8 @@ export interface UseUser
   UPDATE_USER_PARAMS
 > {
   user: ComputedProperty<USER>;
-  updateUser: (params: UPDATE_USER_PARAMS) => Promise<void>;
+  updatePersonalDetails: (params: UPDATE_USER_PARAMS) => Promise<void>;
+  updateUser: (data: USER) => void;
   register: (user: {
     email: string;
     password: string;
@@ -43,7 +44,6 @@ export interface UseUser
   ) => Promise<void>;
   isAuthenticated: Ref<boolean>;
   loading: Ref<boolean>;
-  error: Ref<any>;
 }
 
 export interface UseUserOrders<ORDER> {

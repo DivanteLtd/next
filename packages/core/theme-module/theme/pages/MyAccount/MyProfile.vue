@@ -149,7 +149,7 @@ export default {
     }
   },
   setup({ account }) {
-    const { user, changePassword, updateUser, error } = useUser();
+    const { user, changePassword, updatePersonalDetails, error } = useUser();
 
     const currentPassword = ref('');
     const repeatPassword = ref('');
@@ -170,7 +170,7 @@ export default {
       resetPassForm();
     };
 
-    const updatePersonal = () => updateUser({
+    const updatePersonal = () => updatePersonalDetails({
       firstName: firstName.value,
       lastName: lastName.value,
       email: email.value
