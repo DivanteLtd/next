@@ -1,15 +1,17 @@
-import { BapiClient } from '@aboutyou/backbone';
-import getProductApi from './getProduct';
-import getCategoryApi from './getCategory';
-import addToCartApi from './addToCart';
-import removeFromCartApi from './removeFromCart';
-import clearCartApi from './clearCart';
-import placeOrderApi from './placeOrder';
-import getUserApi from './getUser';
-import addCouponApi from './addCoupon';
-import removeCouponApi from './removeCoupon';
+/* istanbul ignore file */
 
-let api = null;
+import { BapiClient } from '@aboutyou/backbone';
+import getProductApi from './api/getProduct';
+import getCategoryApi from './api/getCategory';
+import addToCartApi from './api/addToCart';
+import removeFromCartApi from './api/removeFromCart';
+import clearCartApi from './api/clearCart';
+import placeOrderApi from './api/placeOrder';
+import getUserApi from './api/getUser';
+import addCouponApi from './api/addCoupon';
+import removeCouponApi from './api/removeCoupon';
+
+let apiClient: BapiClient = null;
 
 let methods = {
   getProduct: getProductApi,
@@ -23,13 +25,14 @@ let methods = {
   removeCoupon: removeCouponApi
 };
 
+// TODO:: TEST THIS!!
 function override(overrides) {
   methods = { ...methods,
     ...overrides };
 }
 
 function setup() {
-  api = new BapiClient({
+  apiClient = new BapiClient({
     host: 'https://boston.backbone-api.demo.aboutyou.cloud/v1/',
     auth: { username: 'aboutyou',
       password: 'OmNErAb96Y5Qn75SFhXr' },
@@ -48,13 +51,6 @@ const getUser = methods.getUser;
 const addCoupon = methods.addCoupon;
 const removeCoupon = methods.removeCoupon;
 
-setup();
-async function getCat() {
-  const cat = await getCategory({ depth: 3 });
-  console.log(JSON.stringify(cat));
-}
-getCat();
-
 export {
   getProduct,
   getCategory,
@@ -67,6 +63,6 @@ export {
   removeCoupon,
   override,
   setup,
-  api
+  apiClient
 };
 

@@ -37,22 +37,20 @@ export default {
       coreDevelopment: true,
       useRawSource: {
         dev: [
-          '@vue-storefront/commercetools-composables',
+          '@vue-storefront/commercetools',
           '@vue-storefront/utils',
           '@vue-storefront/factories'
         ],
         prod: [
-          '@vue-storefront/commercetools-composables',
+          '@vue-storefront/commercetools',
           '@vue-storefront/utils',
           '@vue-storefront/factories'
-
         ]
       }
     }],
     ['@vue-storefront/nuxt-theme', {
       apiClient: '@vue-storefront/commercetools-api',
-      composables: '@vue-storefront/commercetools-composables',
-      helpers: '@vue-storefront/commercetools-helpers'
+      composables: '@vue-storefront/commercetools'
     }]
   ],
   modules: [
