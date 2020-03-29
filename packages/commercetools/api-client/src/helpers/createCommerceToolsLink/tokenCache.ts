@@ -6,10 +6,7 @@ const storeToken = (token: Token) => {
 };
 
 const getToken = (): Token => {
-  const token = onTokenRead();
-  console.log('getToken', token);
-
-  return token;
+  return onTokenRead();
 };
 
 const cleanToken = () => {

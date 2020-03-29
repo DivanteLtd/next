@@ -1,11 +1,14 @@
 /* eslint-disable camelcase, @typescript-eslint/camelcase */
 import { storeToken, getToken, cleanToken } from './../../src/helpers/createCommerceToolsLink/tokenCache';
+import { onTokenSave, onTokenRemove, onTokenRead } from './../../src/index';
 
 jest.unmock('./../../src/helpers/createCommerceToolsLink/tokenCache');
+jest.mock('./../../src/index');
 
 describe('[commercetools-api-client] tokenCache', () => {
   it('returns null', () => {
-    expect(getToken()).toEqual(null);
+    getToken();
+    expect(onTokenRead).toBeCalled();
   });
 
   it('stores token', () => {
@@ -19,22 +22,11 @@ describe('[commercetools-api-client] tokenCache', () => {
 
     storeToken(token);
 
-    expect(getToken()).toEqual(token);
+    expect(onTokenSave).toBeCalledWith(token);
   });
 
   it('clears token', () => {
-    const token = {
-      access_token: 'token',
-      expires_at: 111,
-      expires_in: 222,
-      scope: 'scope',
-      token_type: 'token'
-    };
-
-    storeToken(token);
-    expect(getToken()).toEqual(token);
     cleanToken();
-    expect(getToken()).toEqual(null);
-
+    expect(onTokenRemove).toBeCalled();
   });
 });
