@@ -18,9 +18,9 @@ import updateShippingDetails from './api/updateShippingDetails';
 import customerSignMeUp from './api/customerSignMeUp';
 import customerSignMeIn from './api/customerSignMeIn';
 import customerSignOut from './api/customerSignOut';
-import getStorage from './helpers/createCommerceToolsLink/getStorage';
 import getMyOrders from './api/getMyOrders';
 import customerChangeMyPassword from './api/customerChangeMyPassword';
+import { Token } from './types/setup';
 
 let apolloClient: ApolloClient<any> = null;
 let locale = 'en';
@@ -29,6 +29,9 @@ let country = '';
 let countries = [];
 let currencies = [];
 let locales = [];
+let onTokenSave = (token: Token) => {};
+let onTokenRead = (): Token => null;
+let onTokenRemove = () => {};
 let cookies = {
   currencyCookieName: 'vsf-currency',
   countryCookieName: 'vsf-country',
@@ -51,11 +54,17 @@ const setup = <TCacheShape>(setupConfig: SetupConfig<TCacheShape>): ApolloClient
   currencies = setupConfig.currencies || currencies;
   locales = setupConfig.locales || locales;
   cookies = setupConfig.cookies || cookies;
+  onTokenSave = setupConfig.onTokenSave || onTokenSave;
+  onTokenRead = setupConfig.onTokenRead || onTokenRead;
+  onTokenRemove = setupConfig.onTokenRemove || onTokenRemove;
 
   return apolloClient;
 };
 
 export {
+  onTokenSave,
+  onTokenRead,
+  onTokenRemove,
   apolloClient,
   setup,
   cookies,
@@ -65,7 +74,6 @@ export {
   currency,
   countries,
   currencies,
-  getStorage,
   getProduct,
   getCategory,
   createCart,

@@ -1,10 +1,27 @@
 import { setup } from '@vue-storefront/commercetools-api';
 import { config } from './commercetools-config';
 
-export default () => {
+export default ({ app }) => {
+  const onTokenSave = (token) => {
+    try {
+      app.$cookies.set('vsf-commercetools-token', token);
+    } catch (e) {
+      // Cookies on is set after request has sent.
+    }
+  };
 
-  /**
-   * Setup commercetools API client
-   */
-  setup(config);
+  const onTokenRead = () => {
+    return app.$cookies.get('vsf-commercetools-token');
+  };
+
+  const onTokenRemove = () => {
+    app.$cookies.remove('vsf-commercetools-token');
+  };
+
+  setup({
+    ...config,
+    onTokenSave,
+    onTokenRead,
+    onTokenRemove
+  });
 };

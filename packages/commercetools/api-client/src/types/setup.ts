@@ -39,6 +39,9 @@ export interface SetupConfig<TCacheShape> {
   currencies?: LocaleItem[];
   locales?: LocaleItem[];
   cookies?: CookiesConfig;
+  onTokenSave?: (token: Token) => void;
+  onTokenRead?: () => Token;
+  onTokenRemove?: () => void;
 }
 
 export interface CustomerCredentials {

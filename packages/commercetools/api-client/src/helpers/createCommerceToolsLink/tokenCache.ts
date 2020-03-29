@@ -1,22 +1,19 @@
 import { Token } from './../../types/setup';
-import getStorage from './../../helpers/createCommerceToolsLink/getStorage';
-
-const TOKEN_KEY = 'vsf-commercetools-token';
+import { onTokenSave, onTokenRemove, onTokenRead } from './../../index';
 
 const storeToken = (token: Token) => {
-  const storage = getStorage();
-  storage.setItem(TOKEN_KEY, JSON.stringify(token));
+  onTokenSave(token);
 };
 
 const getToken = (): Token => {
-  const storage = getStorage();
-  const item = storage.getItem(TOKEN_KEY);
-  return item ? JSON.parse(item) : null;
+  const token = onTokenRead();
+  console.log('getToken', token);
+
+  return token;
 };
 
 const cleanToken = () => {
-  const storage = getStorage();
-  storage.removeItem(TOKEN_KEY);
+  onTokenRemove();
 };
 
 export { storeToken, getToken, cleanToken };
