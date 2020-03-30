@@ -67,8 +67,7 @@ export interface CookiesConfig {
 - `tokenEvents?: TokenEvents`
 ```js
 export interface TokenEvents {
-  onTokenSave?: (token: Token) => void;
-  onTokenRead?: () => Token;
+  onTokenChange?: (token: Token) => void;
   onTokenRemove?: () => void;
 }
 ```
