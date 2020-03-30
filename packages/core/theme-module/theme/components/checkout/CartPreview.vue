@@ -108,6 +108,7 @@ import {
 } from '@storefront-ui/vue';
 import { computed, ref } from '@vue/composition-api';
 import { useCart, useCheckout, checkoutGetters, cartGetters } from '<%= options.composables %>';
+import { onSSR } from '@vue-storefront/utils';
 
 export default {
   name: 'CartPreview',
@@ -121,13 +122,17 @@ export default {
   },
   setup() {
     const { chosenShippingMethod } = useCheckout();
-    const { cart, removeFromCart, updateQuantity } = useCart();
+    const { cart, removeFromCart, updateQuantity, refreshCart } = useCart();
     const listIsHidden = ref(false);
     const promoCode = ref('');
     const showPromoCode = ref(false);
     const products = computed(() => cartGetters.getItems(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
+
+    onSSR(async () => {
+      await refreshCart();
+    });
 
     return {
       totalItems,

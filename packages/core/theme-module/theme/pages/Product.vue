@@ -237,7 +237,7 @@ export default {
     const { slug } = context.root.$route.params;
     const { products, search } = useProduct('products');
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
-    const { addToCart, loading } = useCart();
+    const { addToCart, loading, refreshCart } = useCart();
 
     const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: context.root.$route.query })[0]);
     const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
@@ -247,6 +247,7 @@ export default {
     onSSR(async () => {
       await search({ slug });
       await searchRelatedProducts({ catId: [categories.value[0]] });
+      await refreshCart();
     });
 
     const updateFilter = (filter) => {

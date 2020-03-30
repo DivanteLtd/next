@@ -1,5 +1,6 @@
 import { UseCart } from '@vue-storefront/interfaces';
-import { Ref, ref, computed } from '@vue/composition-api';
+import { Ref, ref, computed, isRef } from '@vue/composition-api';
+import { useSSR } from '@vue-storefront/utils';
 
 export type UseCartFactoryParams<CART, CART_ITEM, PRODUCT, COUPON> = {
   cart: Ref<CART>;
@@ -36,6 +37,9 @@ export function useCartFactory<CART, CART_ITEM, PRODUCT, COUPON>(
   const loading: Ref<boolean> = ref<boolean>(false);
 
   return function useCart(): UseCart<CART, CART_ITEM, PRODUCT, COUPON> {
+    const { initialState, saveToInitialState } = useSSR('vsf-cart');
+
+    factoryParams.cart.value = initialState || null;
 
     const addToCart = async (product: PRODUCT, quantity: number) => {
       loading.value = true;
@@ -72,7 +76,11 @@ export function useCartFactory<CART, CART_ITEM, PRODUCT, COUPON>(
     };
 
     const refreshCart = async () => {
-      factoryParams.cart.value = await factoryParams.loadCart();
+      loading.value = true;
+      const cart = await factoryParams.loadCart();
+      saveToInitialState(cart);
+      factoryParams.cart.value = cart;
+      loading.value = false;
     };
 
     const clearCart = async () => {
@@ -111,8 +119,6 @@ export function useCartFactory<CART, CART_ITEM, PRODUCT, COUPON>(
       appliedCoupon.value = updatedCoupon;
       loading.value = false;
     };
-
-    if (!factoryParams.cart.value) refreshCart();
 
     return {
       cart: computed(() => factoryParams.cart.value),

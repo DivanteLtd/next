@@ -1,8 +1,14 @@
 import { useCartFactory, UseCartFactoryParams } from '../src';
 import { UseCart } from '@vue-storefront/interfaces';
-import Vue from 'vue';
-import VueCompositionApi, { ref } from '@vue/composition-api';
-Vue.use(VueCompositionApi);
+import { ref } from '@vue/composition-api';
+
+const saveToInitialState = jest.fn();
+jest.mock('@vue-storefront/utils', () => ({
+  useSSR: () => ({
+    initialState: null,
+    saveToInitialState
+  })
+}));
 
 let useCart: () => UseCart<any, any, any, any>;
 let params: UseCartFactoryParams<any, any, any, any>;
@@ -48,18 +54,6 @@ describe('[CORE - factories] useCartFactory', () => {
       expect(coupon.value).toEqual(null);
       expect(loading.value).toEqual(false);
     });
-
-    it('should load cart if not provided during factory creation', async () => {
-      useCart();
-      expect(params.loadCart).toHaveBeenCalled();
-    });
-
-    it('should not load cart if is provided during factory creation', () => {
-      inputCart = { id: 'existingCart' };
-      createComposable();
-      useCart();
-      expect(params.loadCart).not.toHaveBeenCalled();
-    });
   });
 
   describe('computes', () => {
@@ -85,6 +79,7 @@ describe('[CORE - factories] useCartFactory', () => {
         await refreshCart();
         expect(params.loadCart).toHaveBeenCalled();
         expect(cart.value).toEqual({ id: 'mocked_cart' });
+        expect(saveToInitialState).toBeCalled();
       });
     });
 

@@ -35,6 +35,8 @@ import { SfHeader, SfImage } from '@storefront-ui/vue';
 import uiState from '~/assets/ui-state';
 import { useCart, useUser, cartGetters } from '<%= options.composables %>';
 import { computed } from '@vue/composition-api';
+import { onSSR } from '@vue-storefront/utils';
+
 const { toggleCartSidebar, toggleLoginModal } = uiState;
 
 export default {
@@ -47,12 +49,17 @@ export default {
     const onAccountClicked = () => {
       isAuthenticated && isAuthenticated.value ? root.$router.push('/my-account') : toggleLoginModal();
     };
-    const { cart } = useCart();
+    const { cart, refreshCart } = useCart();
     const cartTotalItems = computed(() => {
       const count = cartGetters.getTotalItems(cart.value);
       // TODO: remove once resolved by UI team: https://github.com/DivanteLtd/storefront-ui/issues/922
       return count ? count.toString() : null;
     });
+
+    onSSR(async () => {
+      await refreshCart();
+    });
+
     return {
       cartTotalItems,
       toggleLoginModal,
