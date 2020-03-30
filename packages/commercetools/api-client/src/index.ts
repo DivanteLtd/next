@@ -1,6 +1,6 @@
 import ApolloClient from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { SetupConfig } from './types/setup';
+import { SetupConfig, TokenEvents } from './types/setup';
 import createCommerceToolsLink from './helpers/createCommerceToolsLink';
 import getProduct from './api/getProduct';
 import getCategory from './api/getCategory';
@@ -29,9 +29,11 @@ let country = '';
 let countries = [];
 let currencies = [];
 let locales = [];
-let onTokenSave = (token: Token) => {};
-let onTokenRead = (): Token => null;
-let onTokenRemove = () => {};
+let tokenEvents: TokenEvents = {
+  onTokenSave: (token: Token) => {},
+  onTokenRead: (): Token => null,
+  onTokenRemove: () => {}
+};
 let cookies = {
   currencyCookieName: 'vsf-currency',
   countryCookieName: 'vsf-country',
@@ -54,17 +56,13 @@ const setup = <TCacheShape>(setupConfig: SetupConfig<TCacheShape>): ApolloClient
   currencies = setupConfig.currencies || currencies;
   locales = setupConfig.locales || locales;
   cookies = setupConfig.cookies || cookies;
-  onTokenSave = setupConfig.onTokenSave || onTokenSave;
-  onTokenRead = setupConfig.onTokenRead || onTokenRead;
-  onTokenRemove = setupConfig.onTokenRemove || onTokenRemove;
+  tokenEvents = setupConfig.tokenEvents || tokenEvents;
 
   return apolloClient;
 };
 
 export {
-  onTokenSave,
-  onTokenRead,
-  onTokenRemove,
+  tokenEvents,
   apolloClient,
   setup,
   cookies,

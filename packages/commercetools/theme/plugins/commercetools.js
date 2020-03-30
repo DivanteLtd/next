@@ -20,8 +20,10 @@ export default ({ app }) => {
 
   setup({
     ...config,
-    onTokenSave,
-    onTokenRead,
-    onTokenRemove
+    tokenEvents: {
+      onTokenSave,
+      onTokenRead,
+      onTokenRemove
+    }
   });
 };

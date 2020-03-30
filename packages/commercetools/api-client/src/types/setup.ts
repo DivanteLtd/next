@@ -29,6 +29,12 @@ export interface LocaleItem {
   label: string;
 }
 
+export interface TokenEvents {
+  onTokenSave?: (token: Token) => void;
+  onTokenRead?: () => Token;
+  onTokenRemove?: () => void;
+}
+
 export interface SetupConfig<TCacheShape> {
   api?: ApiConfig;
   customOptions?: ApolloClientOptions<TCacheShape>;
@@ -39,9 +45,7 @@ export interface SetupConfig<TCacheShape> {
   currencies?: LocaleItem[];
   locales?: LocaleItem[];
   cookies?: CookiesConfig;
-  onTokenSave?: (token: Token) => void;
-  onTokenRead?: () => Token;
-  onTokenRemove?: () => void;
+  tokenEvents?: TokenEvents;
 }
 
 export interface CustomerCredentials {

@@ -1,6 +1,6 @@
 /* eslint-disable camelcase, @typescript-eslint/camelcase */
 import loadAccessToken from './../../src/helpers/createCommerceToolsLink/loadAccessToken';
-import { onTokenSave, onTokenRead } from './../../src/index';
+import { tokenEvents } from './../../src/index';
 
 jest.mock('@commercetools/sdk-auth', () =>
   jest.fn().mockImplementation(() => ({
@@ -23,11 +23,11 @@ describe('[commercetools-api-client] loadAccessToken', () => {
       scopes: []
     });
 
-    expect(onTokenSave).toBeCalled();
+    expect(tokenEvents.onTokenSave).toBeCalled();
   });
 
   it('loads current access token', async () => {
-    (onTokenRead as any).mockImplementation(() => ({
+    (tokenEvents.onTokenRead as any).mockImplementation(() => ({
       expires_at: Date.now() + 10000,
       access_token: 'current token'
     }));
@@ -41,7 +41,7 @@ describe('[commercetools-api-client] loadAccessToken', () => {
       scopes: []
     });
 
-    expect(onTokenRead).toBeCalled();
+    expect(tokenEvents.onTokenRead).toBeCalled();
     expect(token).toBe('current token');
   });
 });

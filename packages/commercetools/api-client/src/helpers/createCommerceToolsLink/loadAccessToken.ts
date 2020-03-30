@@ -1,11 +1,11 @@
 import { ApiConfig, CustomerCredentials } from './../../types/setup';
-import { onTokenSave, onTokenRead } from './../../index';
+import { tokenEvents } from './../../index';
 import createAccessTokenFlow from './tokenFlow';
 
 const loadAccessToken = async (config: ApiConfig, customerCredentials?: CustomerCredentials): Promise<string> => {
-  const token = await createAccessTokenFlow(config, { currentToken: onTokenRead(), customerCredentials });
+  const token = await createAccessTokenFlow(config, { currentToken: tokenEvents.onTokenRead(), customerCredentials });
 
-  onTokenSave(token);
+  tokenEvents.onTokenSave(token);
 
   return token.access_token;
 };

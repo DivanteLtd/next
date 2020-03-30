@@ -15,7 +15,9 @@ setup({
     countryCookieName: 'test-vsf-country',
     localeCookieName: 'test-vsf-locale'
   },
-  onTokenSave: jest.fn(),
-  onTokenRead: jest.fn(),
-  onTokenRemove: jest.fn()
+  tokenEvents: {
+    onTokenSave: jest.fn(),
+    onTokenRead: jest.fn(),
+    onTokenRemove: jest.fn()
+  }
 });
