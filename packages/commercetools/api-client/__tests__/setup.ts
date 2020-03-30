@@ -4,7 +4,6 @@ jest.mock('./../src/helpers/createCommerceToolsLink');
 jest.mock('./../src/api/updateCart', () => jest.fn((arg) => arg));
 jest.mock('./../src/api/createMyOrderFromCart', () => jest.fn((arg) => arg));
 jest.mock('apollo-client');
-jest.mock('./../src/helpers/createCommerceToolsLink/tokenCache');
 
 setup({
   api: {} as any,
@@ -15,5 +14,8 @@ setup({
     currencyCookieName: 'test-vsf-currency',
     countryCookieName: 'test-vsf-country',
     localeCookieName: 'test-vsf-locale'
-  }
+  },
+  onTokenSave: jest.fn(),
+  onTokenRead: jest.fn(),
+  onTokenRemove: jest.fn()
 });

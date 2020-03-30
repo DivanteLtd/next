@@ -1,7 +1,7 @@
 ---
 platform: Commercetools
 ---
- 
+
 
 <IncludeContent content-key="api-client" />
 
@@ -32,7 +32,7 @@ setup({
 **`setup`** accepts following properties:
 
 
-- `api: ApiConfig` 
+- `api: ApiConfig`
 ```js
 export interface ApiConfig {
   uri: string;
@@ -64,6 +64,9 @@ export interface CookiesConfig {
   localeCookieName: string;
 }
 ```
+- `onTokenSave?: (token: Token) => void`
+- `onTokenRead?: () => Token`
+- `onTokenRemove?: () => void`
 :::
 
 ::: slot methods
