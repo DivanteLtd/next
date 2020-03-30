@@ -64,9 +64,14 @@ export interface CookiesConfig {
   localeCookieName: string;
 }
 ```
-- `onTokenSave?: (token: Token) => void`
-- `onTokenRead?: () => Token`
-- `onTokenRemove?: () => void`
+- `tokenEvents?: TokenEvents`
+```js
+export interface TokenEvents {
+  onTokenSave?: (token: Token) => void;
+  onTokenRead?: () => Token;
+  onTokenRemove?: () => void;
+}
+```
 :::
 
 ::: slot methods
