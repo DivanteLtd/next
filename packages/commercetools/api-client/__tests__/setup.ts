@@ -4,6 +4,11 @@ jest.mock('./../src/helpers/createCommerceToolsLink');
 jest.mock('./../src/api/updateCart', () => jest.fn((arg) => arg));
 jest.mock('./../src/api/createMyOrderFromCart', () => jest.fn((arg) => arg));
 jest.mock('apollo-client');
+jest.mock('@commercetools/sdk-auth', () => jest.fn(() => ({
+  anonymousFlow: () => Promise.resolve('anonymous flow'),
+  customerPasswordFlow: () => Promise.resolve('customer password flow'),
+  refreshTokenFlow: () => Promise.resolve('refresh token flow')
+})));
 
 setup({
   api: {} as any,
@@ -16,8 +21,7 @@ setup({
     localeCookieName: 'test-vsf-locale'
   },
   tokenEvents: {
-    onTokenSave: jest.fn(),
-    onTokenRead: jest.fn(),
+    onTokenChange: jest.fn(),
     onTokenRemove: jest.fn()
   }
 });

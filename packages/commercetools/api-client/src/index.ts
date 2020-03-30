@@ -1,6 +1,6 @@
 import ApolloClient from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { SetupConfig, TokenEvents } from './types/setup';
+import { SetupConfig, TokenEvents, ApiConfig } from './types/setup';
 import createCommerceToolsLink from './helpers/createCommerceToolsLink';
 import getProduct from './api/getProduct';
 import getCategory from './api/getCategory';
@@ -20,6 +20,8 @@ import customerSignMeIn from './api/customerSignMeIn';
 import customerSignOut from './api/customerSignOut';
 import getMyOrders from './api/getMyOrders';
 import customerChangeMyPassword from './api/customerChangeMyPassword';
+import createAccessToken from './helpers/createAccessToken';
+
 import { Token } from './types/setup';
 
 let apolloClient: ApolloClient<any> = null;
@@ -29,9 +31,10 @@ let country = '';
 let countries = [];
 let currencies = [];
 let locales = [];
+let currentToken: Token = null;
+let api: ApiConfig = null;
 let tokenEvents: TokenEvents = {
-  onTokenSave: (token: Token) => {},
-  onTokenRead: (): Token => null,
+  onTokenChange: (token: Token) => {},
   onTokenRemove: () => {}
 };
 let cookies = {
@@ -41,14 +44,7 @@ let cookies = {
 };
 
 const setup = <TCacheShape>(setupConfig: SetupConfig<TCacheShape>): ApolloClient<TCacheShape> => {
-  if (setupConfig.api) {
-    apolloClient = new ApolloClient({
-      link: createCommerceToolsLink(setupConfig.api),
-      cache: new InMemoryCache(),
-      ...setupConfig.customOptions
-    });
-  }
-
+  api = setupConfig.api || api;
   locale = setupConfig.locale || locale;
   currency = setupConfig.currency || currency;
   country = setupConfig.country || country;
@@ -57,11 +53,23 @@ const setup = <TCacheShape>(setupConfig: SetupConfig<TCacheShape>): ApolloClient
   locales = setupConfig.locales || locales;
   cookies = setupConfig.cookies || cookies;
   tokenEvents = setupConfig.tokenEvents || tokenEvents;
+  currentToken = setupConfig.currentToken || currentToken;
+
+  if (setupConfig.api) {
+    apolloClient = new ApolloClient({
+      link: createCommerceToolsLink(),
+      cache: new InMemoryCache(),
+      ...setupConfig.customOptions
+    });
+  }
 
   return apolloClient;
 };
 
 export {
+  api,
+  currentToken,
+  createAccessToken,
   tokenEvents,
   apolloClient,
   setup,

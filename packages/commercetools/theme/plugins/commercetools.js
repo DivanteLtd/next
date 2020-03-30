@@ -2,16 +2,16 @@ import { setup } from '@vue-storefront/commercetools-api';
 import { config } from './commercetools-config';
 
 export default ({ app }) => {
-  const onTokenSave = (token) => {
+  const currentToken = app.$cookies.get('vsf-commercetools-token');
+
+  const onTokenChange = (token) => {
     try {
-      app.$cookies.set('vsf-commercetools-token', token);
+      if (!process.server) {
+        app.$cookies.set('vsf-commercetools-token', token);
+      }
     } catch (e) {
       // Cookies on is set after request has sent.
     }
-  };
-
-  const onTokenRead = () => {
-    return app.$cookies.get('vsf-commercetools-token');
   };
 
   const onTokenRemove = () => {
@@ -20,9 +20,9 @@ export default ({ app }) => {
 
   setup({
     ...config,
+    currentToken,
     tokenEvents: {
-      onTokenSave,
-      onTokenRead,
+      onTokenChange,
       onTokenRemove
     }
   });

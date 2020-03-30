@@ -30,6 +30,9 @@ export default {
     './plugins/commercetools.js',
     './plugins/i18n.js'
   ],
+  router: {
+    middleware: 'commercetools'
+  },
   buildModules: [
     // to core
     '@nuxt/typescript-build',

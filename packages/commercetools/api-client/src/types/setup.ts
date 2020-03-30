@@ -30,13 +30,13 @@ export interface LocaleItem {
 }
 
 export interface TokenEvents {
-  onTokenSave?: (token: Token) => void;
-  onTokenRead?: () => Token;
+  onTokenChange?: (token: Token) => void;
   onTokenRemove?: () => void;
 }
 
 export interface SetupConfig<TCacheShape> {
   api?: ApiConfig;
+  currentToken?: Token;
   customOptions?: ApolloClientOptions<TCacheShape>;
   currency?: string;
   locale?: string;
