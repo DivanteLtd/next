@@ -12,16 +12,10 @@
     >
       <SfContentCategory title="Personal Details">
         <SfContentPage title="My profile">
-          <MyProfile
-            :account="account"
-            @update:personal="account = { ...account, ...$event }"
-          />
+          <MyProfile :account="account" />
         </SfContentPage>
         <SfContentPage title="Shipping details">
-          <ShippingDetails
-            :account="account"
-            @update:shipping="account = { ...account, ...$event }"
-          />
+          <ShippingDetails :account="account" />
         </SfContentPage>
         <SfContentPage title="Loyalty card">
           <LoyaltyCard />
@@ -44,7 +38,7 @@
 </template>
 <script>
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
-import { useUser, useUserAddress } from '@vue-storefront/commercetools-composables';
+import { useUser, useUserAddress } from '<%= options.composables %>';
 import { computed } from '@vue/composition-api';
 import MyProfile from './MyAccount/MyProfile';
 import ShippingDetails from './MyAccount/ShippingDetails';

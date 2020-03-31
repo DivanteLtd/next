@@ -23,8 +23,7 @@ export interface UseUser
   UPDATE_USER_PARAMS
 > {
   user: ComputedProperty<USER>;
-  updatePersonalDetails: (params: UPDATE_USER_PARAMS) => Promise<void>;
-  updateUser: (data: USER) => void;
+  updateUser: (params: UPDATE_USER_PARAMS) => void;
   register: (user: {
     email: string;
     password: string;
@@ -61,7 +60,7 @@ export interface UseUserOrders<ORDER> {
 export type UserAddressType = 'billing' | 'shipping';
 
 /** check if we always have those addresses together or we need pagination  */
-export interface UseUserAddress<ADDRESS, ADDRESS_TYPE = UserAddressType, SEARCH_PARAMS = { [x: string]: any; }> {
+export interface UseUserAddress<ADDRESS, ADDRESS_TYPE = UserAddressType, SEARCH_PARAMS = { [x: string]: any }> {
   addresses: ComputedProperty<ADDRESS[]>;
   totalAddresses: ComputedProperty<number>;
   addAddress: (address: ADDRESS, type: ADDRESS_TYPE) => Promise<void>;

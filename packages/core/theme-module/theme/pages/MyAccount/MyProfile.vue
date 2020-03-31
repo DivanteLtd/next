@@ -93,7 +93,7 @@
               />
             </ValidationProvider>
           </div>
-          <SfAlert v-if="error" class="alert" type="danger" :message="error || {}" />
+          <SfAlert v-if="error" class="alert" type="danger" :message="'Something went wrong'" />
           <SfButton class="form__button">Update password</SfButton>
         </form>
       </ValidationObserver>
@@ -149,7 +149,9 @@ export default {
     }
   },
   setup({ account }) {
-    const { user, changePassword, updatePersonalDetails, error } = useUser();
+    const { user, changePassword, updateUser } = useUser();
+
+    const error = ref(false);
 
     const currentPassword = ref('');
     const repeatPassword = ref('');
@@ -170,7 +172,7 @@ export default {
       resetPassForm();
     };
 
-    const updatePersonal = () => updatePersonalDetails({
+    const updatePersonal = () => updateUser({
       firstName: firstName.value,
       lastName: lastName.value,
       email: email.value

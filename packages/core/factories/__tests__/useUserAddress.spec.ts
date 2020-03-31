@@ -1,26 +1,30 @@
 import Vue from 'vue';
-import VueCompositionApi, { ref } from '@vue/composition-api';
+import VueCompositionApi from '@vue/composition-api';
 Vue.use(VueCompositionApi);
 import { useUserAddressFactory, UseUserAddressFactoryParams } from '../src';
 import { UseUserAddress } from '@vue-storefront/interfaces';
 
 let useUserAddress: () => UseUserAddress<any, any>;
+
 let params: UseUserAddressFactoryParams<any, any>;
 let inputAddresses: any = [];
 
 const transform = (addresses: any[]) => ({
-  addresses
+  addresses,
+  updateUserParams: {}
 });
 
-const createComposable = () => {
-  params = {
+const createComposable = (overrideParams?: UseUserAddressFactoryParams<any, any>) => {
+  params = overrideParams || {
+    userComposable: {
+      updateUser: async () => {}
+    } as any,
     addresses: inputAddresses,
-    loading: ref(false),
     searchAddresses: jest.fn().mockResolvedValueOnce(['address1', 'address2', 'address3']),
     addAddress: jest.fn().mockResolvedValueOnce(transform(['address1', 'address2', 'address3', 'address4'])),
     deleteAddress: jest.fn().mockResolvedValueOnce(transform(['address1', 'address2'])),
-    getBillingAddresses: jest.fn().mockResolvedValueOnce(['address1']),
-    getShippingAddresses: jest.fn().mockResolvedValueOnce(['address2', 'address3']),
+    getBillingAddresses: jest.fn().mockReturnValueOnce(['address1']),
+    getShippingAddresses: jest.fn().mockReturnValueOnce(['address2', 'address3']),
     updateAddress: jest.fn().mockResolvedValueOnce(transform(['address1', 'updatedAddress', 'address3']))
   };
 
@@ -38,24 +42,42 @@ describe('[CORE - factories] useUserAddressFactory', () => {
     it('should have proper initial properties', () => {
       const { addresses, loading } = useUserAddress();
 
-      expect(Array.isArray(addresses)).toBeTruthy();
-      expect(addresses).toHaveLength(3);
+      expect(Array.isArray(addresses.value)).toBeTruthy();
+      expect(addresses.value).toHaveLength(0);
       expect(loading.value).toBeFalsy();
     });
+  });
 
-    it('should load user addresses if not proided during factory creation', async () => {
-      useUserAddress();
+  describe('error handling', () => {
+    it('should throw an error', async () => {
+      createComposable({
+        ...params,
+        addAddress: async () => {
+          throw new Error('mocked error');
+        }
+      });
 
-      expect(params.searchAddresses).toHaveBeenCalled();
+      const { addAddress } = useUserAddress();
+
+      let errorMessage = '';
+
+      try {
+        await addAddress('any', 'any');
+      } catch (error) {
+        errorMessage = error.message;
+      }
+
+      expect(errorMessage).toBe('mocked error');
     });
+  });
 
-    it('should not load user addresses if is provided during factory creation', () => {
-      inputAddresses = ['testAddress'];
-      createComposable();
-      useUserAddress();
+  describe('computed', () => {
+    it('should have correct totalAddresses', async () => {
+      const { searchAddresses, totalAddresses } = useUserAddress();
 
-      expect(params.searchAddresses).not.toHaveBeenCalled();
-      expect(params.addresses).toHaveLength(1);
+      await searchAddresses();
+
+      expect(totalAddresses.value).toEqual(3);
     });
   });
 
@@ -94,7 +116,9 @@ describe('[CORE - factories] useUserAddressFactory', () => {
 
     describe('getBillingAddresses', () => {
       it('should return billing addresses', async () => {
-        const { getBillingAddresses } = useUserAddress();
+        const { searchAddresses, getBillingAddresses } = useUserAddress();
+
+        await searchAddresses();
 
         const addresses = getBillingAddresses();
 
@@ -104,13 +128,17 @@ describe('[CORE - factories] useUserAddressFactory', () => {
     });
 
     describe('getShippingAddresses', () => {
-      const { getShippingAddresses } = useUserAddress();
+      it('should return shipping addresses', async () => {
+        const { searchAddresses, getShippingAddresses } = useUserAddress();
 
-      const addresses = getShippingAddresses();
+        await searchAddresses();
 
-      expect(addresses).toHaveLength(2);
-      expect(addresses[0]).toEqual('address2');
-      expect(addresses[1]).toEqual('address3');
+        const addresses = getShippingAddresses();
+
+        expect(addresses).toHaveLength(2);
+        expect(addresses[0]).toEqual('address2');
+        expect(addresses[1]).toEqual('address3');
+      });
     });
   });
 });

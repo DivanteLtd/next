@@ -1,39 +1,38 @@
-import { UseUserAddress, UserAddressType } from '@vue-storefront/interfaces';
-import { useUser } from '@vue-storefront/commercetools-composables';
+import { UseUserAddress, UserAddressType, UseUser } from '@vue-storefront/interfaces';
 import { Ref, ref, computed } from '@vue/composition-api';
-import { Customer } from 'commercetools/api-client/lib/src/types/GraphQL';
 
-export interface UpdatedUserAddresses<USER, ADDRESS> {
+export interface UpdatedUserAddresses<ADDRESS, UPDATE_USER_PARAMS> {
   addresses: ADDRESS[];
-  user?: USER;
+  updateUserParams?: UPDATE_USER_PARAMS;
 }
 
 export type UseUserAddressFactoryParams<
   USER,
   ADDRESS,
   ADDRESS_TYPE = UserAddressType,
-  SEARCH_PARAMS = { [x: string]: any }
+  SEARCH_PARAMS = { [x: string]: any },
+  UPDATE_USER_PARAMS = any,
 > = {
   addresses: ADDRESS[];
-  loading: Ref<boolean>;
   searchAddresses: (params?: SEARCH_PARAMS) => Promise<ADDRESS[]>;
-  addAddress: (address: ADDRESS, type: ADDRESS_TYPE) => Promise<UpdatedUserAddresses<USER, ADDRESS>>;
-  deleteAddress: (address: ADDRESS) => Promise<UpdatedUserAddresses<USER, ADDRESS>>;
-  updateAddress: (address: ADDRESS) => Promise<UpdatedUserAddresses<USER, ADDRESS>>;
+  addAddress: (address: ADDRESS, type: ADDRESS_TYPE) => Promise<UpdatedUserAddresses<ADDRESS, UPDATE_USER_PARAMS>>;
+  deleteAddress: (address: ADDRESS) => Promise<UpdatedUserAddresses<ADDRESS, UPDATE_USER_PARAMS>>;
+  updateAddress: (address: ADDRESS) => Promise<UpdatedUserAddresses<ADDRESS, UPDATE_USER_PARAMS>>;
   getBillingAddresses: () => ADDRESS[];
   getShippingAddresses: () => ADDRESS[];
+  userComposable?: UseUser<USER, UPDATE_USER_PARAMS>;
 }
 
-export function useUserAddressFactory<USER, ADDRESS, ADDRESS_TYPE = UserAddressType, SEARCH_PARAMS = { [x: string]: any }> (factoryParams: UseUserAddressFactoryParams<USER, ADDRESS, ADDRESS_TYPE, SEARCH_PARAMS>) {
+export function useUserAddressFactory<USER, ADDRESS, ADDRESS_TYPE = UserAddressType, SEARCH_PARAMS = { [x: string]: any }, UPDATE_USER_PARAMS = any> (factoryParams: UseUserAddressFactoryParams<USER, ADDRESS, ADDRESS_TYPE, SEARCH_PARAMS>) {
   const loading: Ref<boolean> = ref(false);
 
-  const { updateUser } = useUser();
-
-  const updateData = (data: UpdatedUserAddresses<USER, ADDRESS>) => {
+  const updateData = async (data: UpdatedUserAddresses<ADDRESS, UPDATE_USER_PARAMS>) => {
     factoryParams.addresses.length = 0;
     data.addresses.forEach(address => factoryParams.addresses.push(address));
-    // TODO: waiting for user factory
-    data.user && updateUser(data.user as any as Customer);
+
+    if (factoryParams.userComposable && data.updateUserParams) {
+      await factoryParams.userComposable.updateUser(data.updateUserParams);
+    }
 
     loading.value = false;
   };
@@ -85,7 +84,7 @@ export function useUserAddressFactory<USER, ADDRESS, ADDRESS_TYPE = UserAddressT
   return function useUserAddress(): UseUserAddress<ADDRESS, ADDRESS_TYPE> {
     return {
       addresses: computed(() => factoryParams.addresses),
-      totalAddresses: computed(() => (factoryParams.addresses || []).length),
+      totalAddresses: computed(() => factoryParams.addresses.length),
       searchAddresses,
       addAddress,
       updateAddress,

@@ -181,7 +181,7 @@ import {
   SfIcon
 } from '@storefront-ui/vue';
 import { ref } from '@vue/composition-api';
-import { useUserAddress } from '@vue-storefront/commercetools-composables';
+import { useUserAddress } from '<%= options.composables %>';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, min, oneOf } from 'vee-validate/dist/rules';
 
