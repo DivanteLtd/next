@@ -1,6 +1,6 @@
 import ApolloClient from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { SetupConfig, Auth, ApiConfig, Token } from './types/setup';
+import { SetupConfig, Auth, ApiConfig, Token, PaginationDefaults } from './types/setup';
 import createCommerceToolsLink from './helpers/createCommerceToolsLink';
 import getProduct from './api/getProduct';
 import getCategory from './api/getCategory';
@@ -41,7 +41,7 @@ let cookies = {
   countryCookieName: 'vsf-country',
   localeCookieName: 'vsf-locale'
 };
-let pagination = {
+let pagination: PaginationDefaults = {
   global: { pageSize: 20 },
   products: { pageSize: 20 },
   orders: { pageSize: 10 }

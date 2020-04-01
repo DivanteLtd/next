@@ -29,7 +29,10 @@ const productResponse = {
 };
 
 jest.mock('@vue-storefront/commercetools-api', () => ({
-  getProduct: jest.fn(() => Promise.resolve(productResponse))
+  getProduct: jest.fn(() => Promise.resolve(productResponse)),
+  pagination: {
+    global: { pageSize: 20 }
+  }
 }));
 
 jest.mock('./../../src/helpers/internals/enhanceProduct', () => jest.fn((args) => args));
@@ -48,7 +51,7 @@ describe('[commercetools-composables] useProduct', () => {
       data: [product('prod1', 'prod-1', 'xxx1'), product('prod2', 'prod-2', 'xxx2')],
       total: 54
     });
-    expect(getProduct).toBeCalledWith({ id: 'product-id' });
+    expect(getProduct).toBeCalledWith({ id: 'product-id', limit: 20, offset: 0 });
     expect(enhanceProducts).toBeCalledWith(productResponse);
   });
 });

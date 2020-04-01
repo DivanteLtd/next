@@ -1,8 +1,9 @@
 import { getProduct } from '@vue-storefront/commercetools-api';
-import { enhanceProduct, mapPaginationParams } from './../helpers/internals';
+import { enhanceProduct } from './../helpers/internals';
 import { ProductVariant } from './../types/GraphQL';
 import { useProductFactory } from '@vue-storefront/factories';
 import { SearchResult } from '@vue-storefront/interfaces';
+import mapPaginationParams from '../helpers/mapPaginationParams';
 
 const productsSearch = async (params: {
   perPage?: number;
@@ -13,7 +14,7 @@ const productsSearch = async (params: {
 }): Promise<SearchResult<ProductVariant>> => {
   const apiSearchParams = {
     ...params,
-    ...mapPaginationParams(params)
+    ...mapPaginationParams(params, 'products')
   };
   const productResponse = await getProduct(apiSearchParams);
   const enhancedProductResponse = enhanceProduct(productResponse);
