@@ -310,15 +310,11 @@ import {
 } from '@storefront-ui/vue';
 import { computed, ref, watch } from '@vue/composition-api';
 import { useCategory, useProduct, productGetters, categoryGetters } from '<%= options.composables %>';
+import { pagination } from '<%= options.apiClient %>';
 import { onSSR } from '@vue-storefront/utils';
 
-// TODO: move to composable when core is ready: https://github.com/DivanteLtd/next/issues/296
-const defaultPagination = {
-  page: 1,
-  itemsPerPage: 20
-};
-
-const perPageOptions = [20, 40, 100];
+const defaultPageSize = pagination.products ? pagination.products.pageSize : pagination.global.pageSize;
+const perPageOptions = [defaultPageSize, defaultPageSize * 2, defaultPageSize * 4];
 
 const sortByOptions = [
   { value: 'latest', label: 'Latest' },
@@ -385,8 +381,8 @@ export default {
 
     const { categories, search, loading } = useCategory('categories');
     const { products: categoryProducts, totalProducts, search: productsSearch, loading: productsLoading } = useProduct('categoryProducts');
-    const currentPage = ref(parseInt(query.page, 10) || defaultPagination.page);
-    const itemsPerPage = ref(parseInt(query.items, 10) || defaultPagination.itemsPerPage);
+    const currentPage = ref(parseInt(query.page, 10) || 1);
+    const itemsPerPage = ref(parseInt(query.items, 10) || defaultPageSize);
 
     onSSR(async () => {
       await search({ slug: lastSlug });
@@ -405,8 +401,8 @@ export default {
           perPage: itemsPerPage.value
         });
         context.root.$router.push({ query: {
-          items: itemsPerPage.value !== defaultPagination.itemsPerPage ? itemsPerPage.value : undefined,
-          page: currentPage.value !== defaultPagination.page ? currentPage.value : undefined
+          items: itemsPerPage.value !== defaultPageSize ? itemsPerPage.value : undefined,
+          page: currentPage.value !== 1 ? currentPage.value : undefined
         }});
       }
     });
