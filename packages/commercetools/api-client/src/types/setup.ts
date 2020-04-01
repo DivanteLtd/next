@@ -34,6 +34,15 @@ export interface Auth {
   onTokenRemove?: () => void;
 }
 
+export type Pagination = {
+  global: PaginationOptions;
+  [prop: string]: PaginationOptions;
+}
+
+export interface PaginationOptions {
+  pageSize: number;
+}
+
 export interface SetupConfig<TCacheShape> {
   api?: ApiConfig;
   currentToken?: Token;
@@ -46,6 +55,7 @@ export interface SetupConfig<TCacheShape> {
   locales?: LocaleItem[];
   cookies?: CookiesConfig;
   auth?: Auth;
+  pagination?: Pagination;
 }
 
 export interface CustomerCredentials {

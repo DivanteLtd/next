@@ -32,6 +32,7 @@ let locales = [];
 let currentToken: Token = null;
 let api: ApiConfig = null;
 let auth: Auth = {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   onTokenChange: (token: Token) => {},
   onTokenRemove: () => {}
 };
@@ -39,6 +40,11 @@ let cookies = {
   currencyCookieName: 'vsf-currency',
   countryCookieName: 'vsf-country',
   localeCookieName: 'vsf-locale'
+};
+let pagination = {
+  global: { pageSize: 20 },
+  products: { pageSize: 20 },
+  orders: { pageSize: 10 }
 };
 
 const setup = <TCacheShape>(setupConfig: SetupConfig<TCacheShape>): ApolloClient<TCacheShape> => {
@@ -52,6 +58,7 @@ const setup = <TCacheShape>(setupConfig: SetupConfig<TCacheShape>): ApolloClient
   cookies = setupConfig.cookies || cookies;
   auth = setupConfig.auth || auth;
   currentToken = setupConfig.currentToken || currentToken;
+  pagination = setupConfig.pagination || pagination;
 
   if (setupConfig.api) {
     apolloClient = new ApolloClient({
@@ -69,6 +76,7 @@ export {
   currentToken,
   createAccessToken,
   auth,
+  pagination,
   apolloClient,
   setup,
   cookies,
