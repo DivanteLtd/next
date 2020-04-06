@@ -24,6 +24,6 @@ const { products, search } = useProduct()
 
 search({ id: '12345' })
 
-const attributes = computed(() => productGetters.getAttributes(product.value[0]))
+const attributes = computed(() => productGetters.getAttributes(products.value[0]))
 ```
 :::
