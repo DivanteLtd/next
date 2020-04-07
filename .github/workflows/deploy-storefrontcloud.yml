@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - feature/commit_preview_on_storefrontcloud
 jobs:
   build:
     runs-on: ubuntu-latest
