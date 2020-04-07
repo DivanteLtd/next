@@ -34,7 +34,7 @@ jobs:
           initial_status: in_progress
       - name: Deploy on Storefrontcloud.io
         id: deploy
-        uses: storefrontcloud/storefrontcloud-preview-deploy@feature/universal_checker
+        uses: storefrontcloud/storefrontcloud-preview-deploy@0.1.0
         with:
           token: "${{ github.token }}"
           namespace: "vsf-next-demo"
