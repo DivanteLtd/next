@@ -30,6 +30,9 @@ export default {
     './plugins/commercetools.js',
     './plugins/i18n.js'
   ],
+  router: {
+    middleware: 'commercetools'
+  },
   buildModules: [
     // to core
     '@nuxt/typescript-build',
@@ -37,12 +40,12 @@ export default {
       coreDevelopment: true,
       useRawSource: {
         dev: [
-          '@vue-storefront/commercetools-composables',
+          '@vue-storefront/commercetools',
           '@vue-storefront/utils',
           '@vue-storefront/factories'
         ],
         prod: [
-          '@vue-storefront/commercetools-composables',
+          '@vue-storefront/commercetools',
           '@vue-storefront/utils',
           '@vue-storefront/factories'
         ]
@@ -50,12 +53,12 @@ export default {
     }],
     ['@vue-storefront/nuxt-theme', {
       apiClient: '@vue-storefront/commercetools-api',
-      composables: '@vue-storefront/commercetools-composables',
-      helpers: '@vue-storefront/commercetools-helpers'
+      composables: '@vue-storefront/commercetools'
     }]
   ],
   modules: [
-    'nuxt-i18n'
+    'nuxt-i18n',
+    'cookie-universal-nuxt'
   ],
   build: {
     transpile: [

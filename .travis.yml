@@ -71,12 +71,6 @@ jobs:
       after_script:
         - cat ./packages/commercetools/composables/coverage/lcov.info | coveralls
 
-    - stage: test commercetools
-      script: yarn test:ct:helpers --coverage
-      name: Test helpers
-      after_script:
-        - cat ./packages/commercetools/helpers/coverage/lcov.info | coveralls
-
     - stage: test about you
       script: yarn test:ay:api-client --coverage
       name: Test api-client
@@ -100,9 +94,9 @@ jobs:
       script: lhci autorun --rc-overrides.upload.target=temporary-public-storage --collect.startServerCommand="yarn start:ct" --collect.url=http://localhost:3000
 
     - build_image:
-      if: type != pull_request
+      if: type = pull_request
       name: "Build docker image"
-      stage: docker_build
+      stage: docker build
       script:
         - docker build --build-arg COMMIT -t registry.storefrontcloud.io/vsf-next-demo-storefrontcloud-io/vue-storefront:$COMMIT -f dev/docker/Dockerfile .
         - echo $DOCKER_PASSWORD | docker login  -u="$DOCKER_USERNAME" --password-stdin registry.storefrontcloud.io
