@@ -35,10 +35,12 @@ jobs:
           initial_status: in_progress
       - name: Deploy on Storefrontcloud.io
         id: deploy
-        uses: storefrontcloud/storefrontcloud-preview-deploy@master
+        uses: storefrontcloud/storefrontcloud-preview-deploy@feature/universal_checker
         with:
           token: "${{ github.token }}"
           namespace: "vsf-next-demo"
+          username: ${{ secrets.CLOUD_USERNAME }}
+          password: ${{ secrets.CLOUD_PASSWORD }}
       - name: Comment PR
         if: success()
         uses: storefrontcloud/storefrontcloud-comment-pr-preview-deploy@master
