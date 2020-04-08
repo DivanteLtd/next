@@ -14,5 +14,9 @@
     "vuepress": "^1.2.0"
   },
   "author": "DivanteLtd",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^3.0.2",
+    "lodash": "^4.17.15"
+  }
 }

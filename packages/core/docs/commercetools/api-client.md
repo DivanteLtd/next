@@ -6,7 +6,7 @@ platform: Commercetools
 <IncludeContent content-key="api-client" />
 
 <!-- Code example for setup method -->
-::: slot setup
+<!-- @partial-setup -->
 ```javascript
 import { setup } from '@vue-storefront/commercetools-api'
 
@@ -115,14 +115,14 @@ const serverMiddleware = async ({ app }) => {
 export default serverMiddleware;
 ```
 
-:::
+<!-- @partial-setup-end -->
 
 ::: slot methods
 
 You can find detailed information about all API Client methods [here](./api-client/index.html)
 :::
 
-::: slot override
+<!-- @partial-override -->
 
 ```js
 import { override } from '@vue-storefront/commercetools-api'
@@ -137,4 +137,4 @@ override({
   // ...
 })
 ```
-:::
+<!-- @partial-override-end -->
