@@ -26,9 +26,10 @@
           <span class="property">Gross value</span>
           <span class="value">${{orderGetters.getGrossValue(order)}}</span>
         </div>
-        <div class="order-details__summary__item">
-          <span class="property">Tax included</span>
-          <span class="value">${{orderGetters.getTaxValue(order)}} ({{orderGetters.getTaxRate(order)}}%)</span>
+        <p class="order-details__summary__tax-title">Taxes included</p>
+        <div :key="i" v-for="(tax, i) in orderGetters.getTaxes(order)" class="order-details__summary__item">
+          <span class="property">{{orderGetters.getTaxName(tax)}}</span>
+          <span class="value">${{orderGetters.getTaxValue(tax)}} ({{orderGetters.getTaxRate(tax)}}%)</span>
         </div>
       </div>
 
@@ -96,6 +97,10 @@ export default {
   }
 
   &__summary {
+    &__tax-title {
+      font-weight: 500;
+    }
+
     &__item {
       display: flex;
       flex-direction: row;

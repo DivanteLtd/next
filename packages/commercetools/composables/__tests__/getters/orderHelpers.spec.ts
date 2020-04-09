@@ -7,6 +7,8 @@ import {
   getOrderItems,
   getOrderNetValue,
   getOrderGrossValue,
+  getOrderTaxes,
+  getOrderTaxName,
   getOrderTaxValue,
   getOrderTaxRate,
   getOrderBillingAddress,
@@ -32,8 +34,14 @@ const order: Order = Object.freeze({
     totalGross: generatePrice(2222),
     taxPortions: [
       {
+        name: '15% incl.',
         amount: generatePrice(3333),
         rate: 0.15
+      },
+      {
+        name: '25% incl.',
+        amount: generatePrice(4444),
+        rate: 0.25
       }
     ]
   },
@@ -82,6 +90,7 @@ describe('[commercetools-getters] order getters', () => {
 
     expect(getOrderNumber(order)).toEqual('abcdef');
     expect(getOrderNumber(orderWithoutNumber)).toEqual('just-id');
+    expect(getOrderNumber(null as any)).toEqual('');
   });
 
   it('returns status', () => {
@@ -94,22 +103,44 @@ describe('[commercetools-getters] order getters', () => {
 
   it('returns net value', () => {
     expect(getOrderNetValue(order)).toEqual(11.11);
+    expect(getOrderNetValue(null as any)).toBeNull();
   });
 
   it('returns gross value', () => {
     expect(getOrderGrossValue(order)).toEqual(22.22);
+    expect(getOrderGrossValue(null as any)).toBeNull();
+  });
+
+  it('returns taxes', () => {
+    expect(getOrderTaxes(order)).toHaveLength(2);
+    expect(getOrderTaxes(null as any)).toHaveLength(0);
+  });
+
+  it('returns taxes names', () => {
+    const taxes = getOrderTaxes(order);
+
+    expect(getOrderTaxName(taxes[0])).toEqual('15% incl.');
+    expect(getOrderTaxName(taxes[1])).toEqual('25% incl.');
+    expect(getOrderTaxName({} as any)).toEqual('');
   });
 
   it('returns tax value', () => {
-    expect(getOrderTaxValue(order)).toEqual(33.33);
+    const taxes = getOrderTaxes(order);
+
+    expect(getOrderTaxValue(taxes[0])).toEqual(33.33);
+    expect(getOrderTaxValue(taxes[1])).toEqual(44.44);
+    expect(getOrderTaxValue({} as any)).toBe(null);
   });
 
   it('returns tax rate', () => {
-    expect(getOrderTaxRate(order)).toEqual(15);
+    const taxes = getOrderTaxes(order);
+
+    expect(getOrderTaxRate(taxes[0])).toEqual(15);
+    expect(getOrderTaxRate(taxes[1])).toEqual(25);
+    expect(getOrderTaxRate({} as any)).toEqual(0);
   });
 
   it('returns billing address', () => {
-    const orderWithoutAddress = {} as Order;
     const address = getOrderBillingAddress(order);
 
     expect(Object.keys(address)).toHaveLength(4);
@@ -117,11 +148,10 @@ describe('[commercetools-getters] order getters', () => {
     expect(address.firstName).toEqual('Vue');
     expect(address.lastName).toEqual('Developer');
     expect(address.__typename).toEqual('Address');
-    expect(getOrderBillingAddress(orderWithoutAddress)).toBeNull();
+    expect(getOrderBillingAddress(null as any)).toBeNull();
   });
 
   it('returns shipping address', () => {
-    const orderWithoutAddress = {} as Order;
     const address = getOrderShippingAddress(order);
 
     expect(Object.keys(address)).toHaveLength(4);
@@ -129,7 +159,7 @@ describe('[commercetools-getters] order getters', () => {
     expect(address.firstName).toEqual('Java');
     expect(address.lastName).toEqual('Script');
     expect(address.__typename).toEqual('Address');
-    expect(getOrderShippingAddress(orderWithoutAddress)).toBeNull();
+    expect(getOrderShippingAddress(null as any)).toBeNull();
   });
 
   it('returns transformed billing address values', () => {
@@ -141,6 +171,7 @@ describe('[commercetools-getters] order getters', () => {
     expect(values[1].property).toEqual('Last Name');
     expect(values[0].value).toEqual('Vue');
     expect(values[1].value).toEqual('Developer');
+    expect(getOrderBillingAddressValues({} as any)).toHaveLength(0);
   });
 
   it('returns transformed shipping address values', () => {
@@ -152,6 +183,7 @@ describe('[commercetools-getters] order getters', () => {
     expect(values[1].property).toEqual('Last Name');
     expect(values[0].value).toEqual('Java');
     expect(values[1].value).toEqual('Script');
+    expect(getOrderShippingAddressValues({} as any)).toHaveLength(0);
   });
 
   it('returns line items', () => {
@@ -161,5 +193,6 @@ describe('[commercetools-getters] order getters', () => {
     expect(items).toHaveLength(2);
     expect(items[0].id).toEqual('product-1');
     expect(items[1].id).toEqual('product-2');
+    expect(getOrderItems(null as any)).toHaveLength(0);
   });
 });

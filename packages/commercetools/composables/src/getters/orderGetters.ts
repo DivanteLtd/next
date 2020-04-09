@@ -1,5 +1,5 @@
 import { UserOrderGetters, AgnosticOrderStatus } from '@vue-storefront/interfaces';
-import { Order, OrderState, LineItem, Money, Address } from './../types/GraphQL';
+import { Order, OrderState, LineItem, Money, Address, TaxPortion } from './../types/GraphQL';
 
 export const getOrderDate = (order: Order): string => order?.createdAt || '';
 
@@ -14,7 +14,7 @@ const orderStatusMap = {
   [OrderState.Cancelled]: AgnosticOrderStatus.Cancelled
 };
 
-const getPrice = (money: Money): number | null => money && money.centAmount ? money.centAmount / 100 : null;
+const getPrice = (money: Money): number | null => money?.centAmount ? money.centAmount / 100 : null;
 
 export const getOrderStatus = (order: Order): AgnosticOrderStatus | '' => order?.orderState ? orderStatusMap[order.orderState] : '';
 
@@ -26,9 +26,13 @@ export const getOrderNetValue = (order: Order): number | null => getPrice(order?
 
 export const getOrderGrossValue = (order: Order): number | null => getPrice(order?.taxedPrice?.totalGross);
 
-export const getOrderTaxValue = (order: Order): number | null => getPrice(order?.taxedPrice?.taxPortions[0]?.amount);
+export const getOrderTaxes = (order: Order): TaxPortion[] => order?.taxedPrice?.taxPortions || [];
 
-export const getOrderTaxRate = (order: Order): number => (order?.taxedPrice?.taxPortions[0]?.rate || 0) * 100;
+export const getOrderTaxName = (taxPortion: TaxPortion): string => taxPortion.name || '';
+
+export const getOrderTaxValue = (taxPortion: TaxPortion): number | null => getPrice(taxPortion.amount);
+
+export const getOrderTaxRate = (taxPortion: TaxPortion): number => (taxPortion.rate || 0) * 100;
 
 export const getOrderBillingAddress = (order: Order): Address | null => order?.billingAddress || null;
 
@@ -39,7 +43,7 @@ type KeyValueAddress = { property: string; value: string }[];
 const transformAddressToArray = (address: Address | object): KeyValueAddress => Object.entries(address)
   .filter(([property, value]) => value !== null && !['id', '__typename'].includes(property))
   .map(([property, value]) => ({
-    property: (property || '')
+    property: String(property)
       .replace(/([A-Z])/g, ' $1')
       .replace(/^./, (str) => str.toUpperCase()),
     value
@@ -58,6 +62,8 @@ const orderGetters: UserOrderGetters<Order> = {
   getItems: getOrderItems,
   getNetValue: getOrderNetValue,
   getGrossValue: getOrderGrossValue,
+  getTaxes: getOrderTaxes,
+  getTaxName: getOrderTaxName,
   getTaxValue: getOrderTaxValue,
   getTaxRate: getOrderTaxRate,
   getBillingAddress: getOrderBillingAddress,
