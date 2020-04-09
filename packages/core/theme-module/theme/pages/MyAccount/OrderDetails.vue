@@ -1,6 +1,5 @@
 <template>
-  <section class="order-details">
-    <div v-if="orderId">
+  <section v-if="orderId" class="order-details">
       <h2>Order #{{orderGetters.getNumber(order)}}</h2>
       <p>Status: <strong>{{orderGetters.getStatus(order)}}</strong></p>
       <p>Date: <strong>{{orderGetters.getDate(order)}}</strong></p>
@@ -20,7 +19,7 @@
       <div class="order-details__summary">
         <div class="order-details__summary__item">
           <span class="property">Total price</span>
-          <span class="value">${{orderGetters.getPrice(order)}}</span>
+          <span class="value">${{orderGetters.getPrice(order).regular}}</span>
         </div>
       </div>
 
@@ -35,16 +34,14 @@
           <div v-html="orderGetters.getShippingAddress(order)" />
         </div>
       </div>
-    </div>
-    <div v-else>
-      <p>Order not found</p>
-    </div>
   </section>
+  <p v-else>Order not found</p>
 </template>
 
 <script>
 import { computed } from '@vue/composition-api';
 import { SfCollectedProduct } from '@storefront-ui/vue';
+import { onSSR } from '@vue-storefront/utils';
 import { useUserOrders, orderGetters, cartGetters } from '<%= options.composables %>';
 
 export default {
@@ -56,7 +53,9 @@ export default {
   setup({ orderId }) {
     const { searchOrders, orders } = useUserOrders();
 
-    orderId && searchOrders({ id: orderId });
+    onSSR(async () => {
+      await searchOrders({ id: orderId });
+    });
 
     return {
       cartGetters,

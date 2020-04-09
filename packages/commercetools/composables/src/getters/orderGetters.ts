@@ -1,4 +1,4 @@
-import { UserOrderGetters, AgnosticOrderStatus } from '@vue-storefront/interfaces';
+import { UserOrderGetters, AgnosticOrderStatus, AgnosticPrice } from '@vue-storefront/interfaces';
 import { Order, OrderState, LineItem, Money, Address } from './../types/GraphQL';
 
 export const getOrderDate = (order: Order): string => order?.createdAt || '';
@@ -14,13 +14,15 @@ const orderStatusMap = {
   [OrderState.Cancelled]: AgnosticOrderStatus.Cancelled
 };
 
-const getPrice = (money: Money): number | null => money?.centAmount ? money.centAmount / 100 : null;
+const getPrice = (money: Money): AgnosticPrice => ({
+  regular: money?.centAmount ? money.centAmount / 100 : 0
+});
 
 export const getOrderStatus = (order: Order): AgnosticOrderStatus | '' => order?.orderState ? orderStatusMap[order.orderState] : '';
 
 export const getOrderItems = (order: Order): LineItem[] => order?.lineItems || [];
 
-export const getOrderPrice = (order: Order): number | null => getPrice(order?.totalPrice);
+export const getOrderPrice = (order: Order): AgnosticPrice => getPrice(order?.totalPrice);
 
 const transformAddressToString = (address: Address): string => (
   `${address.country}, ${address.postalCode}, ${address.city}, ${address.streetName}, ${address.streetNumber}`
@@ -30,7 +32,7 @@ export const getOrderBillingAddress = (order: Order): string => transformAddress
 
 export const getOrderShippingAddress = (order: Order): string => transformAddressToString(order?.shippingAddress || {} as Address);
 
-const orderGetters: UserOrderGetters<Order> = {
+const orderGetters: UserOrderGetters<Order, LineItem> = {
   getDate: getOrderDate,
   getId: getOrderId,
   getNumber: getOrderNumber,

@@ -63,8 +63,12 @@ describe('[commercetools-getters] order getters', () => {
   it('returns default values', () => {
     expect(getOrderDate(null)).toBe('');
     expect(getOrderId(null)).toBe('');
+    expect(getOrderNumber(null as any)).toEqual('');
     expect(getOrderStatus(null)).toBe('');
-    expect(getOrderPrice(null)).toBe(null);
+    expect(typeof getOrderPrice(null)).toBe('object');
+    expect(typeof getOrderBillingAddress(null as any)).toEqual('string');
+    expect(typeof getOrderShippingAddress(null as any)).toEqual('string');
+    expect(getOrderItems(null as any)).toHaveLength(0);
   });
 
   it('returns date', () => {
@@ -82,7 +86,6 @@ describe('[commercetools-getters] order getters', () => {
 
     expect(getOrderNumber(order)).toEqual('abcdef');
     expect(getOrderNumber(orderWithoutNumber)).toEqual('just-id');
-    expect(getOrderNumber(null as any)).toEqual('');
   });
 
   it('returns status', () => {
@@ -90,17 +93,15 @@ describe('[commercetools-getters] order getters', () => {
   });
 
   it('returns total gross', () => {
-    expect(getOrderPrice(order)).toEqual(123.45);
+    expect(getOrderPrice(order).regular).toEqual(123.45);
   });
 
   it('returns billing address', () => {
     expect(typeof getOrderBillingAddress(order)).toEqual('string');
-    expect(typeof getOrderBillingAddress(null as any)).toEqual('string');
   });
 
   it('returns shipping address', () => {
     expect(typeof getOrderShippingAddress(order)).toEqual('string');
-    expect(typeof getOrderShippingAddress(null as any)).toEqual('string');
   });
 
   it('returns line items', () => {
@@ -110,6 +111,5 @@ describe('[commercetools-getters] order getters', () => {
     expect(items).toHaveLength(2);
     expect(items[0].id).toEqual('product-1');
     expect(items[1].id).toEqual('product-2');
-    expect(getOrderItems(null as any)).toHaveLength(0);
   });
 });
