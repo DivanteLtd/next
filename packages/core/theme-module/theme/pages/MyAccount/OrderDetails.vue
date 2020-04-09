@@ -1,52 +1,57 @@
 <template>
   <section class="order-details">
-    <h2>Order #{{orderGetters.getNumber()}}</h2>
-    <p>Status: <strong>{{orderGetters.getStatus(order)}}</strong></p>
-    <p>Date: <strong>{{orderGetters.getDate(order)}}</strong></p>
+    <div v-if="orderId">
+      <h2>Order #{{orderGetters.getNumber(order)}}</h2>
+      <p>Status: <strong>{{orderGetters.getStatus(order)}}</strong></p>
+      <p>Date: <strong>{{orderGetters.getDate(order)}}</strong></p>
 
-    <h3 class="title">Items</h3>
-    <SfCollectedProduct
-      v-for="product in orderGetters.getItems(order)"
-      :key="cartGetters.getItemSku(product)"
-      :image="cartGetters.getItemImage(product)"
-      :title="cartGetters.getItemName(product)"
-      :regular-price="'$' + cartGetters.getItemPrice(product).regular"
-      :qty="cartGetters.getItemQty(product)"
-      class="ordered-product"
-    />
+      <h3 class="title">Items</h3>
+      <SfCollectedProduct
+        v-for="product in orderGetters.getItems(order)"
+        :key="cartGetters.getItemSku(product)"
+        :image="cartGetters.getItemImage(product)"
+        :title="cartGetters.getItemName(product)"
+        :regular-price="'$' + cartGetters.getItemPrice(product).regular"
+        :qty="cartGetters.getItemQty(product)"
+        class="ordered-product"
+      />
 
-    <h3 class="title">Summary</h3>
-    <div class="order-details__summary">
-      <div class="order-details__summary__item">
-        <span class="property">Net value</span>
-        <span class="value">${{orderGetters.getNetValue(order)}}</span>
+      <h3 class="title">Summary</h3>
+      <div class="order-details__summary">
+        <div class="order-details__summary__item">
+          <span class="property">Net value</span>
+          <span class="value">${{orderGetters.getNetValue(order)}}</span>
+        </div>
+        <div class="order-details__summary__item">
+          <span class="property">Gross value</span>
+          <span class="value">${{orderGetters.getGrossValue(order)}}</span>
+        </div>
+        <div class="order-details__summary__item">
+          <span class="property">Tax included</span>
+          <span class="value">${{orderGetters.getTaxValue(order)}} ({{orderGetters.getTaxRate(order)}}%)</span>
+        </div>
       </div>
-      <div class="order-details__summary__item">
-        <span class="property">Gross value</span>
-        <span class="value">${{orderGetters.getGrossValue(order)}}</span>
-      </div>
-      <div class="order-details__summary__item">
-        <span class="property">Tax included</span>
-        <span class="value">${{orderGetters.getTaxValue(order)}} ({{orderGetters.getTaxRate(order)}}%)</span>
+
+      <h3 class="title">Order addresses</h3>
+      <div class="order-details__addresses">
+        <div class="order-details__addresses__item">
+          <p class="order-details__addresses__item__title">Billing Address</p>
+          <div class="order-details__addresses__item__field" :key="address.property" v-for="address in orderGetters.getBillingAddressValues(order)">
+            <span class="property">{{address.property}}</span>
+            <span class="value">{{address.value}}</span>
+          </div>
+        </div>
+        <div class="order-details__addresses__item">
+          <p class="order-details__addresses__item__title">Shipping Address</p>
+          <div class="order-details__addresses__item__field" :key="address.property" v-for="address in orderGetters.getShippingAddressValues(order)">
+            <span class="property">{{address.property}}</span>
+            <span class="value">{{address.value}}</span>
+          </div>
+        </div>
       </div>
     </div>
-
-    <h3 class="title">Order addresses</h3>
-    <div class="order-details__addresses">
-      <div class="order-details__addresses__item">
-        <p class="order-details__addresses__item__title">Billing Address</p>
-        <div class="order-details__addresses__item__field" :key="address.property" v-for="address in orderGetters.getBillingAddressValues(order)">
-          <span class="property">{{address.property}}</span>
-          <span class="value">{{address.value}}</span>
-        </div>
-      </div>
-      <div class="order-details__addresses__item">
-        <p class="order-details__addresses__item__title">Shipping Address</p>
-        <div class="order-details__addresses__item__field" :key="address.property" v-for="address in orderGetters.getShippingAddressValues(order)">
-          <span class="property">{{address.property}}</span>
-          <span class="value">{{address.value}}</span>
-        </div>
-      </div>
+    <div v-else>
+      <p>Order not found</p>
     </div>
   </section>
 </template>
