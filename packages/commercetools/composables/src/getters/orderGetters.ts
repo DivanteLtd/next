@@ -27,7 +27,7 @@ const transformAddressToString = (address: Address | object): string => Object.e
   .map(([property, value]) => (
     `${property.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}: ${value}`
   ))
-  .join('');
+  .join(', ');
 
 export const getOrderBillingAddress = (order: Order): string => transformAddressToString(order?.billingAddress || {});
 
