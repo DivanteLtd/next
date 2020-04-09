@@ -25,10 +25,7 @@ export const getOrderPrice = (order: Order): number | null => getPrice(order?.to
 const transformAddressToString = (address: Address | object): string => Object.entries(address)
   .filter(([property, value]) => value !== null && !['id', '__typename'].includes(property))
   .map(([property, value]) => (
-    '<div class="order-details__addresses__item__field">' +
-    `<span class="property">${property.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}</span>` +
-    `<span class="value">${value}</span>` +
-    '</div>'
+    `${property.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}: ${value}`
   ))
   .join('');
 
