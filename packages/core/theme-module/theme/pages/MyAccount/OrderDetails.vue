@@ -19,17 +19,8 @@
       <h3 class="title">Summary</h3>
       <div class="order-details__summary">
         <div class="order-details__summary__item">
-          <span class="property">Net value</span>
-          <span class="value">${{orderGetters.getNetValue(order)}}</span>
-        </div>
-        <div class="order-details__summary__item">
-          <span class="property">Gross value</span>
-          <span class="value">${{orderGetters.getGrossValue(order)}}</span>
-        </div>
-        <p class="order-details__summary__tax-title">Taxes included</p>
-        <div :key="i" v-for="(tax, i) in orderGetters.getTaxes(order)" class="order-details__summary__item">
-          <span class="property">{{orderGetters.getTaxName(tax)}}</span>
-          <span class="value">${{orderGetters.getTaxValue(tax)}} ({{orderGetters.getTaxRate(tax)}}%)</span>
+          <span class="property">Total price</span>
+          <span class="value">${{orderGetters.getPrice(order)}}</span>
         </div>
       </div>
 
@@ -37,17 +28,11 @@
       <div class="order-details__addresses">
         <div class="order-details__addresses__item">
           <p class="order-details__addresses__item__title">Billing Address</p>
-          <div class="order-details__addresses__item__field" :key="address.property" v-for="address in orderGetters.getBillingAddressValues(order)">
-            <span class="property">{{address.property}}</span>
-            <span class="value">{{address.value}}</span>
-          </div>
+          <div v-html="orderGetters.getBillingAddress(order)" />
         </div>
         <div class="order-details__addresses__item">
           <p class="order-details__addresses__item__title">Shipping Address</p>
-          <div class="order-details__addresses__item__field" :key="address.property" v-for="address in orderGetters.getShippingAddressValues(order)">
-            <span class="property">{{address.property}}</span>
-            <span class="value">{{address.value}}</span>
-          </div>
+          <div v-html="orderGetters.getShippingAddress(order)" />
         </div>
       </div>
     </div>
@@ -111,17 +96,6 @@ export default {
     }
   }
 
-  @include for-desktop {
-    &__addresses {
-      display: flex;
-      justify-content: space-between;
-
-      &__item {
-        flex: 1;
-      }
-    }
-  }
-
   &__addresses__item {
     &__title {
       font-weight: 500;
@@ -136,6 +110,8 @@ export default {
 </style>
 
 <style lang="scss">
+@import "~@storefront-ui/vue/styles";
+
 .order-details {
   .ordered-product {
     input {
@@ -144,6 +120,25 @@ export default {
 
     .sf-collected-product__remove {
       display: none;
+    }
+  }
+
+  @include for-desktop {
+    &__addresses {
+      display: flex;
+      justify-content: space-between;
+
+      &__item {
+        flex: 1;
+
+        &__field {
+          display: flex;
+
+          .property {
+            min-width: 10rem;
+          }
+        }
+      }
     }
   }
 }
