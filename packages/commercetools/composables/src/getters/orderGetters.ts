@@ -22,16 +22,13 @@ export const getOrderItems = (order: Order): LineItem[] => order?.lineItems || [
 
 export const getOrderPrice = (order: Order): number | null => getPrice(order?.totalPrice);
 
-const transformAddressToString = (address: Address | object): string => Object.entries(address)
-  .filter(([property, value]) => value !== null && !['id', '__typename'].includes(property))
-  .map(([property, value]) => (
-    `${property.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}: ${value}`
-  ))
-  .join(', ');
+const transformAddressToString = (address: Address): string => (
+  `${address.country}, ${address.postalCode}, ${address.city}, ${address.streetName}, ${address.streetNumber}`
+);
 
-export const getOrderBillingAddress = (order: Order): string => transformAddressToString(order?.billingAddress || {});
+export const getOrderBillingAddress = (order: Order): string => transformAddressToString(order?.billingAddress || {} as Address);
 
-export const getOrderShippingAddress = (order: Order): string => transformAddressToString(order?.shippingAddress || {});
+export const getOrderShippingAddress = (order: Order): string => transformAddressToString(order?.shippingAddress || {} as Address);
 
 const orderGetters: UserOrderGetters<Order> = {
   getDate: getOrderDate,
