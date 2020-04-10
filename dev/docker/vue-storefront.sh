@@ -2,7 +2,7 @@
 set -e
 
 if [ "$VS_ENV" = 'dev' ]; then
-  yarn start:ct
+  HOST=0.0.0.0 yarn start:ct
 else
-  yarn start:ct
+  HOST=0.0.0.0 yarn start:ct
 fi
