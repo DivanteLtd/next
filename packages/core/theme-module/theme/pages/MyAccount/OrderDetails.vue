@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { computed } from '@vue/composition-api';
+import { ref, computed } from '@vue/composition-api';
 import { SfCollectedProduct } from '@storefront-ui/vue';
 import { onSSR } from '@vue-storefront/utils';
 import { useUserOrders, orderGetters, cartGetters } from '<%= options.composables %>';
@@ -49,15 +49,17 @@ export default {
   components: {
     SfCollectedProduct
   },
-  props: ['orderId'],
-  setup({ orderId }) {
+  setup(props, { root }) {
     const { searchOrders, orders } = useUserOrders();
+    const orderId = ref(root.$route.params.id || null);
 
     onSSR(async () => {
-      await searchOrders({ id: orderId });
+      await searchOrders({ id: orderId.value });
     });
 
     return {
+      orderId,
+      // TODO: cartGetters is a temporary getter to provide product information. It's been proposed to extend orderGetters functionality here: https://github.com/DivanteLtd/next/issues/363
       cartGetters,
       orderGetters,
       order: computed(() => orders.value[0] || {})

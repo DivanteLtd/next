@@ -38,8 +38,7 @@
           <MyReviews />
         </SfContentPage>
         <SfContentPage title="Order details">
-          <OrderDetails v-if="entityId" :orderId="entityId" />
-          <p v-else>Not found</p>
+          <OrderDetails />
         </SfContentPage>
       </SfContentCategory>
       <SfContentPage title="Log out" />
