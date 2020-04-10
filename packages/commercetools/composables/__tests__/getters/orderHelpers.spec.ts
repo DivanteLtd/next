@@ -1,7 +1,6 @@
 import {
   getOrderDate,
   getOrderId,
-  getOrderNumber,
   getOrderStatus,
   getOrderPrice,
   getOrderItems,
@@ -18,7 +17,6 @@ const generatePrice = (centAmount: number) => ({
 const order: Order = Object.freeze({
   createdAt: 123456789,
   id: '645ygdf',
-  orderNumber: 'abcdef',
   orderState: OrderState.Complete,
   totalPrice: generatePrice(12345),
   taxedPrice: {
@@ -63,7 +61,6 @@ describe('[commercetools-getters] order getters', () => {
   it('returns default values', () => {
     expect(getOrderDate(null)).toBe('');
     expect(getOrderId(null)).toBe('');
-    expect(getOrderNumber(null as any)).toEqual('');
     expect(getOrderStatus(null)).toBe('');
     expect(typeof getOrderPrice(null)).toBe('object');
     expect(typeof getOrderBillingAddress(null as any)).toEqual('string');
@@ -77,15 +74,6 @@ describe('[commercetools-getters] order getters', () => {
 
   it('returns order id', () => {
     expect(getOrderId(order)).toEqual('645ygdf');
-  });
-
-  it('returns order number', () => {
-    const orderWithoutNumber = {
-      id: 'just-id'
-    } as Order;
-
-    expect(getOrderNumber(order)).toEqual('abcdef');
-    expect(getOrderNumber(orderWithoutNumber)).toEqual('just-id');
   });
 
   it('returns status', () => {

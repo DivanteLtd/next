@@ -1,6 +1,6 @@
 <template>
   <section v-if="orderId" class="order-details">
-      <h2>Order #{{orderGetters.getNumber(order)}}</h2>
+      <h2>Order #{{orderGetters.getId(order)}}</h2>
       <p>Status: <strong>{{orderGetters.getStatus(order)}}</strong></p>
       <p>Date: <strong>{{orderGetters.getDate(order)}}</strong></p>
 

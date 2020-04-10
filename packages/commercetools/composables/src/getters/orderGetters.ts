@@ -5,8 +5,6 @@ export const getOrderDate = (order: Order): string => order?.createdAt || '';
 
 export const getOrderId = (order: Order): string => order?.id || '';
 
-export const getOrderNumber = (order: Order): string => order?.orderNumber || getOrderId(order);
-
 const orderStatusMap = {
   [OrderState.Open]: AgnosticOrderStatus.Open,
   [OrderState.Confirmed]: AgnosticOrderStatus.Confirmed,
@@ -24,6 +22,7 @@ export const getOrderItems = (order: Order): LineItem[] => order?.lineItems || [
 
 export const getOrderPrice = (order: Order): AgnosticPrice => getPrice(order?.totalPrice);
 
+// TODO: billing and shipping addresses are returned as string temporary. It's a part of discussion now: https://github.com/DivanteLtd/next/pull/361
 const transformAddressToString = (address: Address): string => (
   `${address.country}, ${address.postalCode}, ${address.city}, ${address.streetName}, ${address.streetNumber}`
 );
@@ -35,7 +34,6 @@ export const getOrderShippingAddress = (order: Order): string => transformAddres
 const orderGetters: UserOrderGetters<Order, LineItem> = {
   getDate: getOrderDate,
   getId: getOrderId,
-  getNumber: getOrderNumber,
   getStatus: getOrderStatus,
   getPrice: getOrderPrice,
   getItems: getOrderItems,
