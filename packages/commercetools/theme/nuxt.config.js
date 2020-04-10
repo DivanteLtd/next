@@ -6,7 +6,7 @@ const localeNames = config.locales.map(l => l.name);
 export default {
   mode: 'universal',
   server: {
-    port: 4000,
+    port: 3000,
     host: '0.0.0.0'
   },
   head: {
