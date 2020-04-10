@@ -89,10 +89,10 @@ jobs:
       after_script:
         - cat ./packages/prismic/coverage/lcov.info | coveralls
 
-    - stage: lighthouse
-      name: commercetools
-      script: lhci autorun --rc-overrides.upload.target=temporary-public-storage --collect.startServerCommand="yarn start:ct" --collect.url=http://localhost:3000
-
+    # - stage: lighthouse
+    #   name: commercetools
+    #   script: lhci autorun --rc-overrides.upload.target=temporary-public-storage --collect.startServerCommand="yarn start:ct" --collect.url=http://localhost:3000 --collect.startServerReadyPattern="Listening"
+   
     # - build_image:
     #   if: type = pull_request
     #   name: "Build docker image"
@@ -110,3 +110,4 @@ jobs:
     #   stage: deploy
     #   script:
     #     - "curl -u $CLOUD_USERNAME:$CLOUD_PASSWORD -H 'Content-Type: application/json' -X POST -d \"{\\\"code\\\":\\\"vsf-next-demo\\\", \\\"frontContainerVersion\\\":\\\"$COMMIT\\\"}\" https://farmer.storefrontcloud.io/instances"
+
