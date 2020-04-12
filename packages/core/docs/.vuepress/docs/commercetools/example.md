@@ -1,3 +1,4 @@
+<!-- @template api-client -->
 Example
 <%= a %>
 
