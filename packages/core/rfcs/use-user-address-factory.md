@@ -2,127 +2,155 @@
 
 ## Motivation
 
-We'd like to separate a logic for the user addresses according to single responsibility principle. It's also more agnostic approach.
+We need to extend useUserAddress type to show and modify user addresses.
+Also, some eCommerce platforms requires updating user entity with every address modification (for example: CommerceTools).
 
 ## Factory interface
+I have actually two proposition. The one feels more agnostic while the second one is shorter.
 
+### 1st approach (more agnostic):
 ```TS
-// factory schema
 export interface UseUserAddressFactory<ADDRESS, SEARCH_PARAMS> {
   addresses: ComputedProperty<ADDRESS[]>;
+  shippingAddresses: ComputedProperty<ADDRESS[]>;
+  billingAddresses: ComputedProperty<ADDRESS[]>;
   totalAddresses: ComputedProperty<number>;
-  searchAddresses: (params?: SEARCH_PARAMS) => Promise<void>;
+  loadAddresses: (params?: SEARCH_PARAMS) => Promise<void>;
+  addAddress: (address: ADDRESS) => Promise<void>;
   addShippingAddress: (address: ADDRESS) => Promise<void>;
   addBillingAddress: (address: ADDRESS) => Promise<void>;
-  getShippingAddresses: () => ADDRESS[];
-  getBillingAddresses: () => ADDRESS[];
-  deleteAddress: (address: ADDRESS) => Promise<void>;
   updateAddress: (address: ADDRESS) => Promise<void>;
+  deleteAddress: (address: ADDRESS) => Promise<void>;
+  deleteBillingAddress: (address: ADDRESS) => Promise<void>;
+  deleteShippingAddress: (address: ADDRESS) => Promise<void>;
+  loading: ComputedProperty<boolean>;
+}
+```
+
+### 2nd approach (shorter):
+```TS
+export interface UseUserAddressFactory<ADDRESS, ADDRESS_TYPE = 'billing' | 'shipping', SEARCH_PARAMS> {
+  addresses: ComputedProperty<ADDRESS[]>;
+  shippingAddresses: ComputedProperty<ADDRESS[]>;
+  billingAddresses: ComputedProperty<ADDRESS[]>;
+  totalAddresses: ComputedProperty<number>;
+  loadAddresses: (params?: SEARCH_PARAMS) => Promise<void>;
+  addAddress: (address: ADDRESS, type?: ADDRESS_TYPE) => Promise<void>;
+  updateAddress: (address: ADDRESS) => Promise<void>;
+  deleteAddress: (address: ADDRESS, type?: ADDRESS_TYPE) => Promise<void>;
   loading: ComputedProperty<boolean>;
 }
 ```
 
 ## Factory params
 
+### 1st: depending on agnostic approach
 ```TS
 // factory params schema
 export type UseUserAddressFactoryParams<ADDRESS, SEARCH_PARAMS> = {
   searchAddresses: (params?: SEARCH_PARAMS) => Promise<ADDRESS[]>;
-  addShippingAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
-  addBillingAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
-  getShippingAddresses: () => ADDRESS[];
   getBillingAddresses: () => ADDRESS[];
-  deleteAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
-  updateAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
-}
-```
-
-## User address for Commerce Tools purposes
-CT GraphQL API requires from us to update user addresses through the user entity.
-That means every successfull request increments user's version field.
-
-In this case it's required to update the user object after every (expect readonly) request. There are several ways to do this:
-
-1. Provide useUser composable as a dependency to the factory:
-2. Any factory param that affects user address will return both updated entities: `user` and `address`
-3. Mutate the user (or any other required object) directly in composable
-
-### 1st approach: dependency injection
-That was proposed here: https://github.com/DivanteLtd/next/pull/335 but they way of providing dependency isn't still decided.
-
-### 2nd approach: mutate user and address
-Example based on adding a new address.
-
-```TS
-// factory params
-interface UseUserAddressFactoryParams<USER, ADDRESS, SEARCH_PARAMS> {
-  addAddress: (address: ADDRESS) => { updatedUser: USER, updatedAddresses: ADDRESS[] };
-}
-```
-
-```TS
-// factory schema
-interface UseUserAddressFactory {
-  addAddress: (address: ADDRESS) => Promise<void>;
-}
-```
-
-```TS
-// factory usage
-import { user } from 'somewhere, where is shared user for factories';
-
-export function useUserAddressFactory<USER, ADDRESS, SEARCH_PARAMS>(factoryParams) {
-  const addresses = ref([]);
-
-  const addAddress = async (address) => {
-    const { updatedUser, updatedAddresses } = await factoryParams.addAddress(address);
-
-    user.value = updatedUser;
-    addresses.value = updatedAddresses;
-  };
-}
-```
-
-### 3rd approach: mutate related entities in a composable
-Example based on adding a new address.
-
-```TS
-// factory params
-interface UseUserAddressFactoryParams<USER, ADDRESS, SEARCH_PARAMS> {
+  getShippingAddresses: () => ADDRESS[];
   addAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
+  addBillingAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
+  addShippingAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
+  updateAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
+  deleteAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
+  deleteBillingAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
+  deleteShippingAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
+}
+```
 
+### 2nd: shorter one
+```TS
+// factory params schema
+export type UseUserAddressFactoryParams<ADDRESS, ADDRESS_TYPE = 'billing' | 'shipping', SEARCH_PARAMS> = {
+  searchAddresses: (params?: SEARCH_PARAMS) => Promise<ADDRESS[]>;
+  getByType: (type: ADDRESS_TYPE) => ADDRESS[];
+  addAddress: (address: ADDRESS, type?: ADDRESS_TYPE) => Promise<ADDRESS[]>;
+  updateAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
+  deleteAddress: (address: ADDRESS, type?: ADDRESS_TYPE) => Promise<ADDRESS[]>;
+}
+```
+
+##  Other changes requirements:
+We need to add a possibility to update a user
+```TS
+// FACTORY INTERFACE
+export interface UseUser
+<
+  USER,
+  UPDATE_USER_PARAMS
+> {
+  // ...leave all the stuff as they are now
+
+  // needed to add this:
+  setUser: (newUser: USER) => void;
+  useUser: () => USER;
 }
 ```
 
 ```TS
-// factory schema
-interface UseUserAddressFactory {
-  addAddress: (address: ADDRESS) => Promise<void>;
-}
-```
+// FACTORY IMPLEMENTATION
+export function useUserFactory<USER, UPDATE_USER_PARAMS, REGISTER_USER_PARAMS extends { email: string; password: string }>(
+  factoryParams: UseUserFactoryParams<USER, UPDATE_USER_PARAMS, REGISTER_USER_PARAMS>
+) {
+  // ...leave all the stuff as they are now
 
-```TS
-// factory usage
-export function useUserAddressFactory<ADDRESS, SEARCH_PARAMS>(factoryParams) {
-  const addresses = ref([]);
-
-  const addAddress = async (address) => {
-    addresses.value = await factoryParams.addAddress(address);
+  // needed to add this:
+  const setUser = (newUser: USER) => {
+    user.value = newUser;
   };
+  const useUser = () => user;
+
+  return {
+      user: computed(() => user.value),
+      setUser,  // these both are required to be added
+      useUser,  //
+      updateUser,
+      register,
+      login,
+      logout,
+      isAuthenticated,
+      changePassword,
+      refreshUser,
+      loading: computed(() => loading.value)
+    };
 }
 ```
 
+## Commerce Tools Integration
+In order to integrate CT we need a user instance to update it. It's required, because addresses are being updated through user update endpoint.
+
+Below example when adding an address
+
+### Factory params
 ```TS
-// CT factory params
-import { user } from 'useUserComposable';
+import { setUser } from './useUser';
 
-export const params: UseUserAddressFactoryParams<ADDRESS, SEARCH_PARAMS> = {
-  addAddress: async (address: ADDRESS) => {
-    const updatedUser = await apiAddAddress(address);
+const factoryParams = {
+  addAddress: async (address) => {
+    const { user } = await apiAddAddress(address);
 
-    user.value = updatedUser;
+    setUser(user);
 
-    return user.value.addresses;
+    return user.addresses;
   }
-}
+};
+```
+
+### Factory content
+```TS
+const useUserAddressFactory = () => {
+  const addresses: ref([]);
+  const loading: ref(false);
+
+  const addAddress: async (address) => {
+    loading.value = true;
+
+    addresses.value = await factoryParams.addAddress(address);
+
+    loading.value = false;
+  }
+};
 ```
