@@ -86,7 +86,6 @@ export interface UseUser
 
   // needed to add this:
   setUser: (newUser: USER) => void;
-  useUser: () => USER;
 }
 ```
 
@@ -101,12 +100,10 @@ export function useUserFactory<USER, UPDATE_USER_PARAMS, REGISTER_USER_PARAMS ex
   const setUser = (newUser: USER) => {
     user.value = newUser;
   };
-  const useUser = () => user;
 
   return {
       user: computed(() => user.value),
-      setUser,  // these both are required to be added
-      useUser,  //
+      setUser,  // required to be added
       updateUser,
       register,
       login,
