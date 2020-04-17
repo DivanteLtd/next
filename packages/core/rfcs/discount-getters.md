@@ -46,7 +46,7 @@ And also we don't need a coupon property anomore:
 ```ts
 export interface UseCart {
   // ...
-  coupon: ComputedProperty<COUPON | null>;
+  coupon: ComputedProperty<COUPON | null>; // to be removed
   // ...
 }
 ```
