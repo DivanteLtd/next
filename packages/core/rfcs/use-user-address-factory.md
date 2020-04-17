@@ -6,70 +6,29 @@ We need to extend useUserAddress type to show and modify user addresses.
 Also, some eCommerce platforms requires updating user entity with every address modification (for example: CommerceTools).
 
 ## Factory interface
-I have actually two proposition. The one feels more agnostic while the second one is shorter.
-
-### 1st approach (more agnostic):
 ```TS
-export interface UseUserAddressFactory<ADDRESS, SEARCH_PARAMS> {
+export interface UseUserAddressFactory<ADDRESS, SEARCH_PARAMS, ADDRESS_OPTIONS = unknown> {
   addresses: ComputedProperty<ADDRESS[]>;
   shippingAddresses: ComputedProperty<ADDRESS[]>;
   billingAddresses: ComputedProperty<ADDRESS[]>;
-  totalAddresses: ComputedProperty<number>;
   loadAddresses: (params?: SEARCH_PARAMS) => Promise<void>;
-  addAddress: (address: ADDRESS) => Promise<void>;
-  addShippingAddress: (address: ADDRESS) => Promise<void>;
-  addBillingAddress: (address: ADDRESS) => Promise<void>;
-  updateAddress: (address: ADDRESS) => Promise<void>;
-  deleteAddress: (address: ADDRESS) => Promise<void>;
-  deleteBillingAddress: (address: ADDRESS) => Promise<void>;
-  deleteShippingAddress: (address: ADDRESS) => Promise<void>;
-  loading: ComputedProperty<boolean>;
-}
-```
-
-### 2nd approach (shorter):
-```TS
-export interface UseUserAddressFactory<ADDRESS, ADDRESS_TYPE = 'billing' | 'shipping', SEARCH_PARAMS> {
-  addresses: ComputedProperty<ADDRESS[]>;
-  shippingAddresses: ComputedProperty<ADDRESS[]>;
-  billingAddresses: ComputedProperty<ADDRESS[]>;
-  totalAddresses: ComputedProperty<number>;
-  loadAddresses: (params?: SEARCH_PARAMS) => Promise<void>;
-  addAddress: (address: ADDRESS, type?: ADDRESS_TYPE) => Promise<void>;
-  updateAddress: (address: ADDRESS) => Promise<void>;
-  deleteAddress: (address: ADDRESS, type?: ADDRESS_TYPE) => Promise<void>;
+  addAddress: (address: ADDRESS, options?: ADDRESS_OPTIONS) => Promise<void>;
+  updateAddress: (address: ADDRESS, options?: ADDRESS_OPTIONS) => Promise<void>;
+  deleteAddress: (address: ADDRESS, options?: ADDRESS_OPTIONS) => Promise<void>;
   loading: ComputedProperty<boolean>;
 }
 ```
 
 ## Factory params
-
-### 1st: depending on agnostic approach
 ```TS
 // factory params schema
-export type UseUserAddressFactoryParams<ADDRESS, SEARCH_PARAMS> = {
-  searchAddresses: (params?: SEARCH_PARAMS) => Promise<ADDRESS[]>;
+export type UseUserAddressFactoryParams<ADDRESS, SEARCH_PARAMS, ADDRESS_OPTIONS = unknown> = {
+  loadAddresses: (params?: SEARCH_PARAMS) => Promise<ADDRESS[]>;
   getBillingAddresses: () => ADDRESS[];
   getShippingAddresses: () => ADDRESS[];
-  addAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
-  addBillingAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
-  addShippingAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
-  updateAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
-  deleteAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
-  deleteBillingAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
-  deleteShippingAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
-}
-```
-
-### 2nd: shorter one
-```TS
-// factory params schema
-export type UseUserAddressFactoryParams<ADDRESS, ADDRESS_TYPE = 'billing' | 'shipping', SEARCH_PARAMS> = {
-  searchAddresses: (params?: SEARCH_PARAMS) => Promise<ADDRESS[]>;
-  getByType: (type: ADDRESS_TYPE) => ADDRESS[];
-  addAddress: (address: ADDRESS, type?: ADDRESS_TYPE) => Promise<ADDRESS[]>;
-  updateAddress: (address: ADDRESS) => Promise<ADDRESS[]>;
-  deleteAddress: (address: ADDRESS, type?: ADDRESS_TYPE) => Promise<ADDRESS[]>;
+  addAddress: (address: ADDRESS, options?: ADDRESS_OPTIONS) => Promise<ADDRESS[]>;
+  updateAddress: (address: ADDRESS, options?: ADDRESS_OPTIONS) => Promise<ADDRESS[]>;
+  deleteAddress: (address: ADDRESS, options?: ADDRESS_OPTIONS) => Promise<ADDRESS[]>;
 }
 ```
 
