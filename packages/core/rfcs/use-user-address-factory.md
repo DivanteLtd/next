@@ -5,9 +5,9 @@
 We need to extend useUserAddress type to show and modify user addresses.
 Also, some eCommerce platforms requires updating user entity with every address modification (for example: CommerceTools).
 
-## Factory interface
+## Composable interface
 ```TS
-export interface UseUserAddressFactory<ADDRESS, SEARCH_PARAMS, ADDRESS_OPTIONS = unknown> {
+export interface UseUserAddress<ADDRESS, SEARCH_PARAMS, ADDRESS_OPTIONS = unknown> {
   addresses: ComputedProperty<ADDRESS[]>;
   shippingAddresses: ComputedProperty<ADDRESS[]>;
   billingAddresses: ComputedProperty<ADDRESS[]>;
@@ -19,13 +19,13 @@ export interface UseUserAddressFactory<ADDRESS, SEARCH_PARAMS, ADDRESS_OPTIONS =
 }
 ```
 
-## Factory params
+## Factory params interface
 ```TS
 // factory params schema
 export type UseUserAddressFactoryParams<ADDRESS, SEARCH_PARAMS, ADDRESS_OPTIONS = unknown> = {
   loadAddresses: (params?: SEARCH_PARAMS) => Promise<ADDRESS[]>;
-  getBillingAddresses: () => ADDRESS[];
-  getShippingAddresses: () => ADDRESS[];
+  getBillingAddresses: (addresses: ADDRESS[]) => ADDRESS[];
+  getShippingAddresses: (addresses: ADDRESS[]) => ADDRESS[];
   addAddress: (address: ADDRESS, options?: ADDRESS_OPTIONS) => Promise<ADDRESS[]>;
   updateAddress: (address: ADDRESS, options?: ADDRESS_OPTIONS) => Promise<ADDRESS[]>;
   deleteAddress: (address: ADDRESS, options?: ADDRESS_OPTIONS) => Promise<ADDRESS[]>;
@@ -78,7 +78,7 @@ export function useUserFactory<USER, UPDATE_USER_PARAMS, REGISTER_USER_PARAMS ex
 ## Commerce Tools Integration
 In order to integrate CT we need a user instance to update it. It's required, because addresses are being updated through user update endpoint.
 
-Below example when adding an address
+Below example when adding an address:
 
 ### Factory params
 ```TS
@@ -97,16 +97,24 @@ const factoryParams = {
 
 ### Factory content
 ```TS
-const useUserAddressFactory = () => {
+export function useUserAddressFactory = (factoryParams) => {
   const addresses: ref([]);
   const loading: ref(false);
 
-  const addAddress: async (address) => {
-    loading.value = true;
+  return function useUserAddress(): UseUserAddress<ADDRESS, SEARCH_PARAMS, ADDRESS_OPTIONS> {
+    const addAddress: async (address) => {
+      loading.value = true;
+      addresses.value = await factoryParams.addAddress(address);
+      loading.value = false;
+    }
 
-    addresses.value = await factoryParams.addAddress(address);
+    // and other methods
 
-    loading.value = false;
+    return {
+      addresses: computed(() => addresses.value);
+      addAddress,
+      // ...And other stuff mentioned in interfaces section
+    }
   }
 };
 ```
